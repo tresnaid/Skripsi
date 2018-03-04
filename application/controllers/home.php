@@ -1,0 +1,170 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Home extends CI_Controller {
+
+	/**
+	 * Index Page for this controller.
+	 *
+	 * Maps to the following URL
+	 * 		http://example.com/index.php/welcome
+	 *	- or -
+	 * 		http://example.com/index.php/welcome/index
+	 *	- or -
+	 * Since this controller is set as the default controller in
+	 * config/routes.php, it's displayed at http://example.com/
+	 *
+	 * So any other public methods not prefixed with an underscore will
+	 * map to /index.php/welcome/<method_name>
+	 * @see https://codeigniter.com/user_guide/general/urls.html
+	 */
+	public function index()
+	{	
+
+		if ($_SESSION['login'] == TRUE) {
+			redirect('home/dashboard','refresh');
+		}
+		else{	
+		$this->load->view('index.php');
+		}
+	}
+	public function dashboard()
+	{
+		$this->load->view('dashboard.php');
+	}
+	public function youranalisis()
+	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+      	$data['data_objective'] = $this->User_model->joingetwhere('t_objective', 't_t', 't_objective.id_objective=t_t.id_objective', 'id_user', $id);
+		$data['content'] = 'content/youranalisis';
+		$this->load->view('dashboard.php', $data);
+	}
+	
+	public function input()
+	{      	
+		$objective = $this->input->post('objective');
+		$measure = $this->input->post('measure');
+		$action = $this->input->post('action');
+		$isneed = $this->input->post('isneed');
+
+		$jumlah_measure =$this->input->post('jumlah_measure');
+		$jumlah_action =$this->input->post('jumlah_action');
+		$jumlah_isneed =$this->input->post('jumlah_isneed');
+		$jumlah_max = $jumlah_measure;
+		$jumlah_min = $jumlah_measure;
+
+		if($jumlah_max<$jumlah_action) {
+			$jumlah_max = $jumlah_action;
+			if ($jumlah_max<$jumlah_isneed) {
+				$jumlah_max = $jumlah_isneed;
+			}
+		}elseif ($jumlah_max<$jumlah_isneed) {
+			$jumlah_max = $jumlah_isneed;
+		}	
+		
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+
+		$data_input =  array(
+			'id_user' => $id, 
+			'objective' => $objective 
+		);
+
+		$this->User_model->insertData('t_objective', $data_input);
+		$id_objective = $this->User_model->checkidobjective($id);
+		$data_input = array(
+				'measure' => $measure,
+				'id_objective' => $id_objective,
+				'action' => $action,
+				'isneed' => $isneed
+		);
+
+		$this->User_model->insertData('t_t', $data_input);
+
+		
+		
+		if ($jumlah_measure>0) {
+			$measureadd = $this->input->post('measureadd');
+			if ($jumlah_measure<$jumlah_max) {
+				for ($i=$jumlah_measure; $i < $jumlah_max; $i++) { 
+					$measureadd[$i] = ' ';
+				}
+			}
+		}
+		else{
+			for ($i=0; $i < $jumlah_max; $i++) { 
+				$measureadd[$i] = ' ';
+			}
+		}
+		if ($jumlah_action>0) {
+			$actionadd = $this->input->post('actionadd');
+			if ($jumlah_action<$jumlah_max) {
+				for ($i=$jumlah_action; $i < $jumlah_max; $i++) { 
+					$actionadd[$i] = ' ';
+				}
+			}
+		}else{
+			for ($i=0; $i < $jumlah_max; $i++) { 
+			$actionadd[$i] = ' ';
+			}
+		}
+		if ($jumlah_isneed>0) {
+			$isneedadd = $this->input->post('isneedadd');
+			if ($jumlah_isneed<$jumlah_max) {
+				for ($i=$jumlah_isneed; $i < $jumlah_max; $i++) { 
+					$isneedadd[$i] = ' ';
+				}
+			}
+		}else{
+			for ($i=0; $i < $jumlah_max; $i++) { 
+			$isneedadd[$i] = ' ';
+			}
+		}
+
+
+		for ($i=0; $i < $jumlah_max; $i++) { 
+			$data_input = array(
+				'measure' => $measureadd[$i],
+				'action' => $actionadd[$i],
+				'isneed' => $isneedadd[$i],
+				'id_objective' => $id_objective
+			);
+			
+			$this->User_model->insertData('t_t', $data_input);
+		}
+		
+		redirect('home/youranalisis','refresh');
+
+	}
+
+	public function logout()
+	{
+		$data = array('login' => FALSE);
+		$this->session->set_userdata($data);
+		redirect('Home','refresh');
+	}
+	
+	public function check_login()
+	{
+		$username = $this->input->post('username');
+			$password = $this->input->post('password');
+
+			if($this->User_model->CheckLogin($username, $password)==TRUE){
+				$data = array(
+					'login' => TRUE,
+					'list' => $this->User_model->getOneData('t_user','username',$username)
+				);
+				$this->session->set_userdata($data);
+				redirect('home/dashboard');
+			}else{
+				$this->session->set_flashdata('message', 'username atau password yang anda masukkan salah');
+				redirect('home','refresh');
+			}
+		
+	}
+}
