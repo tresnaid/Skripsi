@@ -155,6 +155,12 @@ class User_model extends CI_Model {
                 $this->db->update($table, $data);
                 
         }
+        public function updateDataAnalisis($table, $where, $tableId, $data)
+        {
+                $this->db->where($where, $tableId);
+                $this->db->update($table, $data);
+                
+        }
 
         public function CheckUser($email){
                 $sql = "SELECT * FROM t_user WHERE email = '".$email."'";

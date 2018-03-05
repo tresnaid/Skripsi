@@ -54,7 +54,6 @@ class Home extends CI_Controller {
 		$jumlah_action =$this->input->post('jumlah_action');
 		$jumlah_isneed =$this->input->post('jumlah_isneed');
 		$jumlah_max = $jumlah_measure;
-		$jumlah_min = $jumlah_measure;
 
 		if($jumlah_max<$jumlah_action) {
 			$jumlah_max = $jumlah_action;
@@ -140,6 +139,137 @@ class Home extends CI_Controller {
 		
 		redirect('home/youranalisis','refresh');
 
+	}
+
+	public function input1()
+	{      	
+		$objective = $this->input->post('objective');
+		$measure = $this->input->post('measure');
+		$action = $this->input->post('action');
+		$isneed = $this->input->post('isneed');
+		$id_objective = $this->input->post('id_objective');
+		$id_analisis = $this->input->post('id_analisis');
+
+		// $jumlah_measure =$this->input->post('jumlah_measure'.$id_analisis);
+		// $jumlah_action =$this->input->post('jumlah_action'.$id_analisis);
+		// $jumlah_isneed =$this->input->post('jumlah_isneed'.$id_analisis);
+		// $jumlah_max = $jumlah_measure;
+			
+		// if($jumlah_max<$jumlah_action) {
+		// 	$jumlah_max = $jumlah_action;
+		// 	if ($jumlah_max<$jumlah_isneed) {
+		// 		$jumlah_max = $jumlah_isneed;
+		// 	}
+		// }elseif ($jumlah_max<$jumlah_isneed) {
+		// 	$jumlah_max = $jumlah_isneed;
+		// }	
+		
+		
+		$data_input = array(
+				'measure' => $measure,
+				'id_objective' => $id_objective,
+				'action' => $action,
+				'isneed' => $isneed
+		);
+
+		$this->User_model->insertData('t_t', $data_input);
+
+		
+		// if ($jumlah_measure>0) {
+		// 	$measureadd = $this->input->post('measure1');
+		// 	if ($jumlah_measure<$jumlah_max) {
+		// 		for ($i=$jumlah_measure; $i < $jumlah_max; $i++) { 
+		// 			$measureadd[$i] = ' ';
+		// 		}
+		// 	}
+		// }
+		// else{
+		// 	for ($i=0; $i < $jumlah_max; $i++) { 
+		// 		$measureadd[$i] = ' ';
+		// 	}
+		// }
+		// if ($jumlah_action>0) {
+		// 	$actionadd = $this->input->post('action1');
+		// 	if ($jumlah_action<$jumlah_max) {
+		// 		for ($i=$jumlah_action; $i < $jumlah_max; $i++) { 
+		// 			$actionadd[$i] = ' ';
+		// 		}
+		// 	}
+		// }else{
+		// 	for ($i=0; $i < $jumlah_max; $i++) { 
+		// 	$actionadd[$i] = ' ';
+		// 	}
+		// }
+		// if ($jumlah_isneed>0) {
+		// 	$isneedadd = $this->input->post('isneed1');
+		// 	if ($jumlah_isneed<$jumlah_max) {
+		// 		for ($i=$jumlah_isneed; $i < $jumlah_max; $i++) { 
+		// 			$isneedadd[$i] = ' ';
+		// 		}
+		// 	}
+		// }else{
+		// 	for ($i=0; $i < $jumlah_max; $i++) { 
+		// 	$isneedadd[$i] = ' ';
+		// 	}
+		// }
+
+
+		// for ($i=0; $i < $jumlah_max; $i++) { 
+		// 	$data_input = array(
+		// 		'measure' => $measureadd[$i],
+		// 		'action' => $actionadd[$i],
+		// 		'isneed' => $isneedadd[$i],
+		// 		'id_objective' => $id_objective
+		// 	);
+			
+		// 	$this->User_model->insertData('t_t', $data_input);
+		// }
+		
+		redirect('home/youranalisis','refresh');
+
+	}
+
+	public function edit()
+	{
+		$id_objective = $this->input->post('id_objective');
+		$id_analisis = $this->input->post('id_analisis');
+		$objective = $this->input->post('objective');
+		$measure = $this->input->post('measure');
+		$action = $this->input->post('action');
+		$isneed = $this->input->post('isneed');
+
+		$data_update_objective = array(
+				'objective' => $objective,
+				'id_objective' => $id_objective,
+				'tanggal' => 'CURRENT_TIMESTAMP'
+		);
+
+		$data_update_analisis = array(
+				'id_analisis' => $id_analisis,
+				'measure' => $measure,
+				'action' => $action,
+				'isneed' => $isneed,
+			);
+
+		$this->User_model->updateData('t_objective', 'id_objective', $id_objective, $data_update_objective);
+		$this->User_model->updateDataAnalisis('t_t', 'id_analisis', $id_analisis, $data_update_analisis);
+
+		redirect('home/youranalisis','refresh');
+	}
+	public function hapus()
+	{
+		$hapuschoice = $this->input->post('hapuschoice');
+		$id_objective = $this->input->post('id_objective');
+		$id_analisis = $this->input->post('id_analisis');
+
+		if ($hapuschoice == 'all') {
+			$this->User_model->delete('t_objective', 'id_objective', $id_objective);
+			$this->User_model->delete('t_t', 'id_objective', $id_objective);
+		}elseif ($hapuschoice == 'analisis') {
+			$this->User_model->delete('t_t', 'id_analisis', $id_analisis);
+		}	
+
+		redirect('home/youranalisis','refresh');	
 	}
 
 	public function logout()
