@@ -8,6 +8,15 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
+        public function getOneData($table, $where, $data)
+        {
+            $query = $this->db->select('*')->from($table)->where($where, $data)->get()->result_array(); 
+            if($query){
+                    return $query;
+            }else{
+                    return 0;
+            } 
+        }
         public function getDataarray($table)
         {
                 $this->db->select("*");
@@ -15,13 +24,10 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result_array();
         }
-         public function getDataWhere($table, $where)
+         public function getDataWhere($table, $where, $same)
         {
-                $this->db->select("*");
-                $this->db->from($table);
-                $this->db->where($where);
-                $query = $this->db->get();
-                return $query->result();
+                $query = $this->db->get_where($table, array($where => $same));
+                return $query->result_array();
         }
 
         public function countwhere($table, $where, $where2)
@@ -33,27 +39,32 @@ class User_model extends CI_Model {
                 $rowcount = $query->num_rows();
                 return $rowcount;
         }
-        public function countwhereor($table, $where, $where2,$where3)
+
+        public function countmax($jumlah_measure, $jumlah_action, $jumlah_isneed)
         {
-                $this->db->select("*");
-                $this->db->from($table);
-                $this->db->where($where, $where2);
-                $this->db->or_where($where, $where3);
-                $query = $this->db->get();
-                $rowcount = $query->num_rows();
-                return $rowcount;
+            if ($jumlah_measure ==0 && $jumlah_action ==0 && $jumlah_isneed ==0) {
+                $nama = 'kosong';
+                $jumlah_max = 0;
+            }else{       
+               $jumlah_max = $jumlah_measure;
+               $nama = 'measure';
+                if($jumlah_max<$jumlah_action) {
+                    $jumlah_max = $jumlah_action;
+                    $nama = 'action';
+                    if ($jumlah_max<$jumlah_isneed) {
+                        $jumlah_max = $jumlah_isneed;
+                        $nama = 'isneed';
+                    }
+                }elseif ($jumlah_max<$jumlah_isneed) {
+                    $jumlah_max = $jumlah_isneed;
+                        $nama = 'isneed';
+
+                }
+            }
+            $maksimal = array('nama' => $nama, 'jumlah' => $jumlah_max);
+            return $maksimal;
         }
-        public function countwhereor3($table, $where, $where2,$where3, $where4)
-        {
-                $this->db->select("*");
-                $this->db->from($table);
-                $this->db->where($where, $where2);
-                $this->db->or_where($where, $where3);
-                $this->db->or_where($where, $where4);
-                $query = $this->db->get();
-                $rowcount = $query->num_rows();
-                return $rowcount;
-        }
+
         public function join($table1, $table2, $where)
         {
                 $this->db->select('*');
@@ -112,11 +123,7 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
-         public function getDataWhere1($table, $where, $same)
-        {
-                $query = $this->db->get_where($table, array($where => $same));
-                return $query->result();
-        }
+      
         public function count($table){
                 $this->db->select("*");
                 $this->db->from($table);
@@ -124,15 +131,7 @@ class User_model extends CI_Model {
                 $rowcount = $query->num_rows();
                 return $rowcount;
         }
-        public function getOneData($table, $where, $data)
-        {
-            $query = $this->db->select('*')->from($table)->where($where, $data)->get()->result_array(); 
-            if($query){
-                    return $query;
-            }else{
-                    return 0;
-            } 
-        }
+        
         public function getOneDatadesc($table, $where, $data,$sort)
         {
                 $this->db->select('*');

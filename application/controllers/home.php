@@ -42,7 +42,154 @@ class Home extends CI_Controller {
 		$data['content'] = 'content/youranalisis';
 		$this->load->view('dashboard.php', $data);
 	}
+
+	public function analisis()
+	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+      	$data['data_objective'] = $this->User_model->getDataWhere('t_objective', 'id_user', $id);
+		$data['content'] = 'content/analisis';
+		$this->load->view('dashboard.php', $data);
+	}
+
+	public function generate_table_analisis()
+	{
+		# code...
+	}
+	public function inputAnalisis()
+	{
+		$objective = $this->input->post('objective');
+		$measure = $this->input->post('measure');
+		$action = $this->input->post('action');
+		$isneed = $this->input->post('isneed');
+
+		$jumlah_measure =$this->input->post('jumlah_measure');
+		$jumlah_action =$this->input->post('jumlah_action');
+		$jumlah_isneed =$this->input->post('jumlah_isneed');
+		$jumlah_max = $this->User_model->countmax($jumlah_measure, $jumlah_action, $jumlah_isneed);
+
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+
+		$data_input =  array(
+			'id_user' => $id, 
+			'objective' => $objective 
+		);
+
+		$this->User_model->insertData('t_objective', $data_input);
+		$id_objective = $this->User_model->checkidobjective($id);
+		
+		$data_input_measure = array(
+				'measure' => $measure,
+				'id_objective' => $id_objective
+		);
+		$data_input_action = array(
+				'action' => $action,
+				'id_objective' => $id_objective
+		);
+		$data_input_isneed = array(
+				'isneed' => $isneed,
+				'id_objective' => $id_objective
+		);
+
+		$this->User_model->insertData('t_measure', $data_input_measure);
+		$this->User_model->insertData('t_action', $data_input_action);
+		$this->User_model->insertData('t_isneed', $data_input_isneed);
+
+		
+		if ($jumlah_measure>0) {
+			$measureadd = $this->input->post('measureadd');
+			for ($i=0; $i < $jumlah_measure; $i++) { 
+				$data_input_measure = array(
+					'measure' => $measureadd[$i],
+					'id_objective' => $id_objective
+				);
+			$this->User_model->insertData('t_measure', $data_input_measure);
+			}
+		}
+		if ($jumlah_action>0) {
+			$actionadd = $this->input->post('actionadd');
+			for ($i=0; $i < $jumlah_action; $i++) { 
+				$data_input_action = array(
+					'action' => $actionadd[$i],
+					'id_objective' => $id_objective
+				);
+			$this->User_model->insertData('t_action', $data_input_action);
+			}
+		}
+		if ($jumlah_isneed>0) {
+			$isneedadd = $this->input->post('isneedadd');
+			for ($i=0; $i < $jumlah_isneed; $i++) { 
+				$data_input_isneed = array(
+					'isneed' => $isneedadd[$i],
+					'id_objective' => $id_objective
+				);
+				$this->User_model->insertData('t_isneed', $data_input_isneed);			
+			}
+		
+		}
+		
+		redirect('home/analisis','refresh');
+	}
+
+	public function deleteAnalisis()
+	{
+		$id = $this->input->post('id_objective');
+
+		$this->User_model->delete('t_objective', 'id_objective', $id);
+		$this->User_model->delete('t_measure', 'id_objective', $id);
+		$this->User_model->delete('t_action', 'id_objective', $id);
+		$this->User_model->delete('t_isneed', 'id_objective', $id);
+
+		redirect('home/analisis','refresh');	
+	}
+
+
+	public function editAnalisis()
+	{
+		$id_objective = $this->input->post('id_objective');
+		$objective = $this->input->post('objective');
+		$measure = $this->input->post('measure');
+		$id_measure = $this->input->post('id_measure');
+		$action = $this->input->post('action');
+		$id_action = $this->input->post('id_action');
+		$isneed = $this->input->post('isneed');
+		$id_isneed = $this->input->post('id_isneed');
 	
+		$data_update_objective = array(
+				'objective' => $objective,
+				'id_objective' => $id_objective,
+				'tanggal' => 'CURRENT_TIMESTAMP'
+		);
+		$this->User_model->updateData('t_objective', 'id_objective', $id_objective, $data_update_objective);
+
+		foreach ($measure as $key=> $value) {
+			$data_update = array(
+					'measure' => $value
+				);
+			$this->User_model->updateData('t_measure', 'id_measure', $id_measure[$key], $data_update);
+		}
+		foreach ($action as $key=> $value) {
+			$data_update = array(
+					'action' => $value
+				);
+			$this->User_model->updateData('t_action', 'id_action', $id_action[$key], $data_update);
+		}
+		foreach ($isneed as $key=> $value) {
+			$data_update = array(
+					'isneed' => $value
+				);
+			$this->User_model->updateData('t_isneed', 'id_isneed', $id_isneed[$key], $data_update);
+		}
+
+
+		redirect('home/analisis','refresh');
+	}
+
 	public function input()
 	{      	
 		$objective = $this->input->post('objective');
@@ -282,7 +429,7 @@ class Home extends CI_Controller {
 	public function check_login()
 	{
 		$username = $this->input->post('username');
-			$password = $this->input->post('password');
+		$password = $this->input->post('password');
 
 			if($this->User_model->CheckLogin($username, $password)==TRUE){
 				$data = array(
