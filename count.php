@@ -20,9 +20,21 @@ function countmax($jumlah_measure, $jumlah_action, $jumlah_isneed)
         }
 
 
-$jumlah = countmax(5,9,7);
-echo $jumlah;
-
-
-
  ?>
+<html>
+<head>
+    <title>Space Clicker</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    var clicks = 0;
+    function onClick() {
+        clicks += 1;
+        document.getElementById("clicks").innerHTML = " ";
+    };
+    </script>
+    <button type="button" onClick="onClick()">Click me</button>
+    <p>Clicks: <a id="clicks">0</a></p>
+
+</body></html>

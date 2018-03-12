@@ -32,6 +32,11 @@ class Home extends CI_Controller {
 	{
 		$this->load->view('dashboard.php');
 	}
+	public function test()
+	{
+		$moremeasurearray = $this->input->post('moremeasurearray');
+		print_r($moremeasurearray);
+	}
 	public function youranalisis()
 	{
 		$datauser = $_SESSION['list'];
@@ -166,28 +171,75 @@ class Home extends CI_Controller {
 				'tanggal' => 'CURRENT_TIMESTAMP'
 		);
 		$this->User_model->updateData('t_objective', 'id_objective', $id_objective, $data_update_objective);
-
-		foreach ($measure as $key=> $value) {
-			$data_update = array(
-					'measure' => $value
-				);
-			$this->User_model->updateData('t_measure', 'id_measure', $id_measure[$key], $data_update);
+		if (!empty($measure)) {
+			foreach ($measure as $key=> $value) {
+				if ($value==' ' || $value==NULL) {
+					$this->User_model->delete('t_measure', 'id_measure', $id_measure[$key]);
+				}else{
+					$data_update = array(
+						'measure' => $value
+					);
+				$this->User_model->updateData('t_measure', 'id_measure', $id_measure[$key], $data_update);
+				}
+			}
 		}
+		if (!empty($action)) {
 		foreach ($action as $key=> $value) {
-			$data_update = array(
+			if ($value==' ' || $value==NULL) {
+				$this->User_model->delete('t_action', 'id_action', $id_action[$key]);
+			}else{
+				$data_update = array(
 					'action' => $value
 				);
 			$this->User_model->updateData('t_action', 'id_action', $id_action[$key], $data_update);
+			}
 		}
+		}
+		if (!empty($isneed)) {
 		foreach ($isneed as $key=> $value) {
-			$data_update = array(
+			if ($value==' ' || $value==NULL) {
+				$this->User_model->delete('t_isneed', 'id_isneed', $id_isneed[$key]);
+			}else{
+				$data_update = array(
 					'isneed' => $value
 				);
 			$this->User_model->updateData('t_isneed', 'id_isneed', $id_isneed[$key], $data_update);
+			}
+		}
 		}
 
-
-		redirect('home/analisis','refresh');
+		
+		// if (!empty($moremeasurearray)) {
+		// 	$moremeasurearray = $this->input->post('moremeasurearray');
+		// 	foreach ($moremeasurearray as $key) {
+		// 		$data_insert = array(
+		// 			'id_objective' => $id_objective,
+		// 			'measure' => $key
+		// 		);
+		// 		$this->User_model->insertData('t_measure', $data_insert);
+		// 	}
+		// }
+		// if (!empty($moremeasurearray)) {
+		// 	$moreactionarray = $this->input->post('moreactionrray');
+		// 	foreach ($moreactionrray as $key) {
+		// 		$data_insert = array(
+		// 			'id_objective' => $id_objective,
+		// 			'action' => $key
+		// 		);
+		// 		$this->User_model->insertData('t_action', $data_insert);
+		// 	}
+		// }
+		// if (!empty($moremeasurearray)) {
+		// 	$moreisneedarray = $this->input->post('moreisneedarray');
+		// 	foreach ($moreisneedarray as $key) {
+		// 		$data_insert = array(
+		// 			'id_objective' => $id_objective,
+		// 			'isneed' => $key
+		// 		);
+		// 		$this->User_model->insertData('t_isneed', $data_insert);
+		// 	}
+		// }
+	  redirect('home/analisis','refresh');
 	}
 
 	public function input()

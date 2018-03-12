@@ -42,20 +42,30 @@
         jumlah_isneed += 1;
         document.getElementById("jisneed").value = jumlah_isneed;
     };
-    </script>
+   
+    function kliktambahmeasure(link) {
+      var jumlah_measure_baru = parseInt(document.getElementById(link).value);
+      jumlah_measure_baru += 1;
+      document.getElementById(link).value = jumlah_measure_baru;
+    }
+    function kliktambahaction(link) {
+      var jumlah_action_baru = parseInt(document.getElementById(link).value);
+      jumlah_action_baru += 1;
+      document.getElementById(link).value = jumlah_action_baru;
+    }
+    function kliktambahisneed(link) {
+      var jumlah_isneed_baru = parseInt(document.getElementById(link).value);
+      jumlah_isneed_baru += 1;
+      document.getElementById(link).value = jumlah_isneed_baru;
+    }
+    $(function tambahmeasurebaru(link, button){
+        $("#button").click(function(event){
+            $("#link").append("<input type='text' name='moremeasurearray[]' placeholder='' required></input>");
+            $("#link").append("\n<br />");
+        });
+    });   
+  </script>
 
-<script type="text/javascript">
-          var ids = 0;
- function removeElement(parentDiv, childDiv, ids){
-      if (document.getElementById(childDiv)) {     
-           var child = document.getElementById(childDiv);
-           var parent = document.getElementById(parentDiv);
-           idss += 1;
-           document.getElementById("cekhapus[]").innerHTML = idss;
-           parent.removeChild(child);
-      }
- }
-</script>
 <div id="tambahanalisis" class="modal fade" role="dialog" >
       <div class="modal-dialog">
         <div class="modal-content">
@@ -129,7 +139,6 @@
         </div>
         <div class="panel panel-default">
           <div class="panel-body">
-
             <table class="table table-striped table-bordered" style="margin:0px;">
               <thead>
                 <tr>
@@ -188,46 +197,78 @@
                       <form action="<?php echo base_url();?>home/editAnalisis" method="POST">
                       <div class="modal-body">
                         <div class="row">
+
                           <div class="col-md-3">
                             <label>Objective</label>
                           </div>
                           <div class="col-md-9">
                             <input type="text" name="objective" value="<?php echo $row['objective']?>" style="width: 95%"  required>
                           </div>
+
                           <div class="col-md-3">
                             <label>Measure</label><a href="" id="cekhapus[]"></a>
                           </div>
                           <div class="col-md-9">
+                          <?php $im = 0; ?>
                           <?php foreach ($data_measure as $key): ?>
+                            <script type="text/javascript">
+                              function hapusmeasure<?php echo $im ?>() {
+                                document.getElementById("measure[<?php echo $im ?>]").value = " ";
+                              }
+                            </script>
                             <input type="hidden" name="id_measure[]" value="<?php echo $key['id_measure'] ?>">
-                            <div id="parent<?php echo $row['id_objective'] ?><?php echo $key['id_measure'] ?>">
-                              <div id="child<?php echo $row['id_objective'] ?><?php echo $key['id_measure'] ?>">
-                                <input type="text" name="measure[]" value="<?php echo $key['measure']?>" style="width: 80%"> 
-                                <input type="hidden" name="cekhapus<?php echo $key['id_measure'] ?>" id="cekhapus<?php echo $key['id_measure'] ?>" value="0">
-                                <input type="button" value="hapus" onClick="removeElement('parent<?php echo $row['id_objective'] ?><?php echo $key['id_measure'];?>','child<?php echo $row['id_objective'] ?><?php echo $key['id_measure'];?>', '<?php echo $key['id_measure'] ?>');"> 
-                              </div>
-                            </div>
-                                
+                            <input type="text" id=measure[<?php echo $im ?>] name="measure[]" value="<?php echo $key['measure']?>" style="width: 80%"> 
+                            <button onclick="hapusmeasure<?php echo $im ?>();" class="btn btn-default">hapus</button> 
+                            <?php 
+                                $im++;
+                             ?>
                           <?php endforeach ?>
+                          <!-- <div id="moremeasure"></div> -->
+                          
+                          <input type="button" id=moremeasurebutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahmeasure('tambahanmeasure[<?php echo($row['id_objective']) ?>]')">
+                          <input type="text" name="tambahanmeasure[<?php echo($row['id_objective']) ?>]" id="tambahanmeasure[<?php echo($row['id_objective']) ?>]" value="0"> 
                           </div>
+
                           <div class="col-md-3">
                             <label>Action CSF</label>
                           </div>
                           <div class="col-md-9">
+                            <?php $ia=0; ?>
                           <?php foreach ($data_action as $key): ?>
+                            <script type="text/javascript">
+                              function hapusaction<?php echo $ia ?>() {
+                                document.getElementById("action[<?php echo $ia ?>]").value = " ";
+                              }
+                            </script>
                             <input type="hidden" name="id_action[]" value="<?php echo $key['id_action'] ?>">
-                            <input type="text" name="action[]" value="<?php echo $key['action']?>" style="width: 95%">
+                            <input type="text" id="action[<?php echo $ia ?>]" name="action[]" value="<?php echo $key['action']?>" style="width: 80%">
+                            <button onclick="hapusaction<?php echo $ia ?>();" class="btn btn-default">hapus</button>
+                            <?php $ia++; ?>
                           <?php endforeach ?>
+                          <input type="button" id=moreactionbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahaction('tambahanaction[<?php echo($row['id_objective']) ?>]')">
+                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanaction[<?php echo($row['id_objective']) ?>]" value="0"> 
                           </div>
+
                           <div class="col-md-3">
                             <label>IS Need</label>
                           </div>
                           <div class="col-md-9">
+                            <?php $ii=0; ?>
                           <?php foreach ($data_isneed as $key): ?>
+                            <script type="text/javascript">
+                              function hapusisneed<?php echo $ii ?>() {
+                                document.getElementById("isneed[<?php echo $ii ?>]").value = " ";
+                              }
+                            </script>
                             <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
-                            <input type="text" name="isneed[]" value="<?php echo $key['isneed']?>" style="width: 95%">
+                            <input type="text" id="isneed[<?php echo $ii ?>]" name="isneed[]" value="<?php echo $key['isneed']?>" style="width: 80%">
+                            <button onclick="hapusisneed<?php echo $ii ?>();" class="btn btn-default">hapus</button>
+                            <?php $ii++; ?>
                           <?php endforeach ?>
+                          <input type="button" id=moreisneedbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahisneed('tambahanisneed[<?php echo($row['id_objective']) ?>]')">
+                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanisneed[<?php echo($row['id_objective']) ?>]" value="0"> 
                           </div>
+
                         </div>
                       </div>
                       <input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
@@ -239,68 +280,6 @@
                   </div>
                 </div>
               </div>
-                  <!-- 
-                  <div id="tambah1analisis<?php echo $row->id_objective?>" class="modal fade" role="dialog" >
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title">Tambah Satu Baris Analisis</h4>
-                        </div>
-                        <div class="modal-body">
-                          <form action="<?php echo base_url();?>home/input1" method="POST">
-                            <div class="row">
-                              <div class="col-md-4">
-                                <label>Objective</label>
-                              </div>
-                              <div class="col-md-8">
-                                <input type="text" name="objective" value="<?php echo $row->objective ?>" disabled>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-4">
-                                <label>Measure</label>
-                              </div>
-                              <div class="col-md-8">
-                                <input type="text" name="measure" required>
-                           
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-4">
-                                <label>Action</label>
-                              </div>
-                              <div class="col-md-8">
-                                <input type="text" name="action" required>
-                           
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-4">
-                                <label>IS Need</label>
-                              </div>
-                              <div class="col-md-8">
-                                <input type="text" name="isneed" required>
-                            
-                              </div>
-                            </div>
-                        </div>
-                        <input type="hidden" name="huhu[]" value="s">
-                        <input type="hidden" name="huhu[]" value="W">
-                        <input type="hidden" name="huhu[]" value="e">
-                        <input type="hidden" name="huhu[]" value="q">
-                        <input type="hidden" name="id_objective" value="<?php echo $row->id_objective ?>">
-                        <input type="hidden" name="id_analisis" value="<?php echo $row->id_analisis ?>">
-                       
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-default" name="submitted"><i class="fa fa-cross"></i> Tambah</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-cross"></i> Close</button>
-                      </div>
-                      </form>
-                    </div>
-                 </div>
-              </div> -->
-                
                   <?php
 
                     if ($nama_max == 'measure'): {
@@ -324,11 +303,11 @@
                           <?php else: ?>
                             <td> </td>
                           <?php endif ?>
+                         
                           <?php if ($counter == 1): ?>
                           <td rowspan="<?php echo $jumlah_max; ?>">
                             <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
                             <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a> 
-                            <a href="" data-toggle="modal" data-target="#tambah1analisis<?php echo $row['id_objective'] ?>"><i class="fa fa-plus"></i></a>
                           </td>
                           <?php endif ?>
                         </tr>
@@ -355,12 +334,15 @@
                           <td ><?php echo $data_isneed[$key]['isneed']?></td>
                         <?php else: ?>
                           <td> </td>
+
                         <?php endif ?>
-                        <td>
+                        
+                        <?php if ($counter == 1): ?>
+                        <td rowspan="<?php echo $jumlah_max; ?>">
                           <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
                           <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a> 
-                          <a href="" data-toggle="modal" data-target="#tambah1analisis<?php echo $row['id_objective'] ?>"><i class="fa fa-plus"></i></a>
                         </td>
+                        <?php endif ?>
                       </tr>
                       <?php
                       $counter++;
@@ -386,12 +368,13 @@
                         <?php endif ?>
 
                         <td ><?php echo $value['isneed']?></td>
-
-                      <td>
+                        
+                        <?php if ($counter == 1): ?>
+                      <td rowspan="<?php echo $jumlah_max; ?>">
                         <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
-                        <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a> 
-                        <a href="" data-toggle="modal" data-target="#tambah1analisis<?php echo $row['id_objective'] ?>"><i class="fa fa-plus"></i></a>
+                        <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a>
                       </td>
+                      <?php endif ?>
                     </tr>
                   <?php
                   $counter++;
@@ -406,7 +389,6 @@
                     <td>
                       <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
                         <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a> 
-                        <a href="" data-toggle="modal" data-target="#tambah1analisis<?php echo $row['id_objective'] ?>"><i class="fa fa-plus"></i></a>
                       </td>
                   </tr>
                   <?php
