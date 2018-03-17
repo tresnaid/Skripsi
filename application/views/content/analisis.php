@@ -1,3 +1,9 @@
+<style type="text/css">
+  .activesub{
+    background-color: grey;
+  }
+
+</style>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
     $(function(){
@@ -58,6 +64,17 @@
       jumlah_isneed_baru += 1;
       document.getElementById(link).value = jumlah_isneed_baru;
     }
+      document.getElementById("isneed[]").addEventListener("keyup", function(event) {
+          event.preventDefault();
+      });
+      document.getElementById("measure[]").addEventListener("keyup", function(event) {
+          event.preventDefault();
+      });
+      document.getElementById("action[]").addEventListener("keyup", function(event) {
+          event.preventDefault();
+      });
+
+
     $(function tambahmeasurebaru(link, button){
         $("#button").click(function(event){
             $("#link").append("<input type='text' name='moremeasurearray[]' placeholder='' required></input>");
@@ -65,7 +82,7 @@
         });
     });   
   </script>
-
+        
 <div id="tambahanalisis" class="modal fade" role="dialog" >
       <div class="modal-dialog">
         <div class="modal-content">
@@ -115,6 +132,7 @@
           		</div>
           </div>
 
+          <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
           <input type="hidden" name="jumlah_measure" id="jmeasure">
           <input type="hidden" name="jumlah_action" id="jaction">
           <input type="hidden" name="jumlah_isneed" id="jisneed">
@@ -132,8 +150,33 @@
 <div class="row services">
   <div class="col-md-12">
     <h2 class="heading">Analisis Anda</h2>
+    <div id="navigation" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="
+          <?php if($kategori == 'FNC'): ?>
+            activesub
+          <?php endif ?>
+         "
+        ><a href="<?php echo base_url(); ?>home/analisis/1">Financial</a></li>
+        <li class="
+          <?php if($kategori == 'CST'): ?>
+            activesub
+          <?php endif ?>
+         "><a href="<?php echo base_url(); ?>home/analisis/2">Customer</a></li>
+        <li class="
+          <?php if($kategori == 'INT'): ?>
+            activesub
+          <?php endif ?>
+         "><a href="<?php echo base_url(); ?>home/analisis/3">Internal Process</a></li>
+        <li class="
+          <?php if($kategori == 'LEA'): ?>
+            activesub
+          <?php endif ?>
+         "><a href="<?php echo base_url(); ?>home/analisis/4">Inovation and Growth</a></li>
+      </ul>
+    </div>
     <div class="row">
-      <div class="container" style="margin-top:50px">
+      <div class="container">
         <div class="btn-group">
           <a class="btn btn-default" data-toggle="modal" data-target="#tambahanalisis"><span>Tambah Analisis</span></a>
         </div>
@@ -178,6 +221,7 @@
                             <h5>Apakah Anda Yakin Ingin Menghapus Analisis Ini ?</h5>
                           </div>
                           <form action="<?php echo base_url();?>home/deleteAnalisis" method="POST">
+                          <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
                           <input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
                         <div class="modal-footer">
                           <button type="submit" class="btn btn-default"><i class="fa fa-cross"></i> Hapus</button>
@@ -198,6 +242,7 @@
                       <div class="modal-body">
                         <div class="row">
 
+                          <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
                           <div class="col-md-3">
                             <label>Objective</label>
                           </div>
@@ -213,6 +258,10 @@
                           <?php foreach ($data_measure as $key): ?>
                             <script type="text/javascript">
                               function hapusmeasure<?php echo $im ?>() {
+                                // var input = document.getElementById("measure[]");
+                                // input.addEventListener("keyup", function(event) {
+                                //     event.preventDefault();
+                                // });
                                 document.getElementById("measure[<?php echo $im ?>]").value = " ";
                               }
                             </script>
@@ -225,8 +274,10 @@
                           <?php endforeach ?>
                           <!-- <div id="moremeasure"></div> -->
                           
-                          <input type="button" id=moremeasurebutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahmeasure('tambahanmeasure[<?php echo($row['id_objective']) ?>]')">
-                          <input type="text" name="tambahanmeasure[<?php echo($row['id_objective']) ?>]" id="tambahanmeasure[<?php echo($row['id_objective']) ?>]" value="0"> 
+                            <!-- <input type="button" id=moremeasurebutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahmeasure('tambahanmeasure[<?php echo($row['id_objective']) ?>]')">
+                            <input type="text" name="tambahanmeasure[<?php echo($row['id_objective']) ?>]" id="tambahanmeasure[<?php echo($row['id_objective']) ?>]" value="0">  -->
+
+                            <input type="text" name="moremeasure" id="moremeasure" style="width: 80%;" placeholder="tambah measure disini">
                           </div>
 
                           <div class="col-md-3">
@@ -237,6 +288,10 @@
                           <?php foreach ($data_action as $key): ?>
                             <script type="text/javascript">
                               function hapusaction<?php echo $ia ?>() {
+                                // var input = document.getElementById("action[]");
+                                // input.addEventListener("keyup", function(event) {
+                                //     event.preventDefault();
+                                // });
                                 document.getElementById("action[<?php echo $ia ?>]").value = " ";
                               }
                             </script>
@@ -245,8 +300,9 @@
                             <button onclick="hapusaction<?php echo $ia ?>();" class="btn btn-default">hapus</button>
                             <?php $ia++; ?>
                           <?php endforeach ?>
-                          <input type="button" id=moreactionbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahaction('tambahanaction[<?php echo($row['id_objective']) ?>]')">
-                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanaction[<?php echo($row['id_objective']) ?>]" value="0"> 
+                            <input type="text" name="moreaction" id="moreaction" style="width: 80%;" placeholder="tambah action disini">
+                         <!--  <input type="button" id=moreactionbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahaction('tambahanaction[<?php echo($row['id_objective']) ?>]')">
+                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanaction[<?php echo($row['id_objective']) ?>]" value="0">  -->
                           </div>
 
                           <div class="col-md-3">
@@ -257,6 +313,11 @@
                           <?php foreach ($data_isneed as $key): ?>
                             <script type="text/javascript">
                               function hapusisneed<?php echo $ii ?>() {
+                                // var input = document.getElementById("isneed[]");
+                                // input.addEventListener("keyup", function(event) {
+                                //     event.preventDefault();
+                                // });
+
                                 document.getElementById("isneed[<?php echo $ii ?>]").value = " ";
                               }
                             </script>
@@ -265,8 +326,9 @@
                             <button onclick="hapusisneed<?php echo $ii ?>();" class="btn btn-default">hapus</button>
                             <?php $ii++; ?>
                           <?php endforeach ?>
-                          <input type="button" id=moreisneedbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahisneed('tambahanisneed[<?php echo($row['id_objective']) ?>]')">
-                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanisneed[<?php echo($row['id_objective']) ?>]" value="0"> 
+                            <input type="text" name="moreisneed" id="moreisneed" style="width: 80%;" placeholder="tambah isneed disini">
+                          <!-- <input type="button" id=moreisneedbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahisneed('tambahanisneed[<?php echo($row['id_objective']) ?>]')">
+                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanisneed[<?php echo($row['id_objective']) ?>]" value="0">  -->
                           </div>
 
                         </div>

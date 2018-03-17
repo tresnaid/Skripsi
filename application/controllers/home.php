@@ -20,49 +20,78 @@ class Home extends CI_Controller {
 	 */
 	public function index()
 	{	
-
-		if ($_SESSION['login'] == TRUE) {
-			redirect('home/dashboard','refresh');
-		}
-		else{	
-		$this->load->view('index.php');
+		if (!empty($_SESSION)) {
+			if ($_SESSION['login'] == TRUE) {
+				redirect('home/dashboard','refresh');
+			}
+			else{	
+			$this->load->view('index.php');
+			}
+		}else{
+			$this->load->view('index.php');
 		}
 	}
 	public function dashboard()
 	{
-		$this->load->view('dashboard.php');
-	}
-	public function test()
-	{
-		$moremeasurearray = $this->input->post('moremeasurearray');
-		print_r($moremeasurearray);
-	}
-	public function youranalisis()
-	{
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
       	}
-      	$data['data_objective'] = $this->User_model->joingetwhere('t_objective', 't_t', 't_objective.id_objective=t_t.id_objective', 'id_user', $id);
-		$data['content'] = 'content/youranalisis';
+      	$data['page'] = 'timeline';
+      	$data['content'] = 'content/timeline';
+      	$data['table'] = $this->User_model->timeline('t_objective', 't_user', 't_objective.id_user=t_user.id_user');
+
 		$this->load->view('dashboard.php', $data);
 	}
-
-	public function analisis()
+	public function finalisasi($perspective)
 	{
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
       	}
-      	$data['data_objective'] = $this->User_model->getDataWhere('t_objective', 'id_user', $id);
+      	$data['page'] = 'finalisasi';
+      	$data['content'] = 'content/finalisasi';
+      	$data['table'] = $this->User_model->getData('t_user');
+		if ($perspective == '1') {
+      		$data['kategori'] ='FNC';
+      	}else if ($perspective == '2') {
+      		$data['kategori'] ='CST';
+      	}
+      	else if ($perspective == '3') {
+      		$data['kategori'] ='INT';
+      	}else if ($perspective == '4') {
+      		$data['kategori'] ='LEA';
+      	}
+		$this->load->view('dashboard.php', $data);
+	}
+	
+
+	public function analisis($perspective)
+	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+      	$data['page'] = 'analisis';
 		$data['content'] = 'content/analisis';
+      	if ($perspective == '1') {
+      		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'FNC');
+      		$data['kategori'] ='FNC';
+      	}else if ($perspective == '2') {
+      		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'CST');
+      		$data['kategori'] ='CST';
+      	}
+      	else if ($perspective == '3') {
+      		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'INT');
+      		$data['kategori'] ='INT';
+      	}else if ($perspective == '4') {
+      		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'LEA');
+      		$data['kategori'] ='LEA';
+      	}
 		$this->load->view('dashboard.php', $data);
 	}
 
-	public function generate_table_analisis()
-	{
-		# code...
-	}
+	
 	public function inputAnalisis()
 	{
 		$objective = $this->input->post('objective');
@@ -75,13 +104,16 @@ class Home extends CI_Controller {
 		$jumlah_isneed =$this->input->post('jumlah_isneed');
 		$jumlah_max = $this->User_model->countmax($jumlah_measure, $jumlah_action, $jumlah_isneed);
 
+		$kategori = $this->input->post('kategori');
+
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
       	}
 
 		$data_input =  array(
-			'id_user' => $id, 
+			'id_user' => $id,
+			'id_kategori_analisis' => $kategori,
 			'objective' => $objective 
 		);
 
@@ -90,14 +122,20 @@ class Home extends CI_Controller {
 		
 		$data_input_measure = array(
 				'measure' => $measure,
+				'id_user' => $id,
+				'id_kategori_analisis' => $kategori, 
 				'id_objective' => $id_objective
 		);
 		$data_input_action = array(
 				'action' => $action,
+				'id_user' => $id,
+				'id_kategori_analisis' => $kategori, 
 				'id_objective' => $id_objective
 		);
 		$data_input_isneed = array(
 				'isneed' => $isneed,
+				'id_user' => $id,
+				'id_kategori_analisis' => $kategori, 
 				'id_objective' => $id_objective
 		);
 
@@ -105,12 +143,13 @@ class Home extends CI_Controller {
 		$this->User_model->insertData('t_action', $data_input_action);
 		$this->User_model->insertData('t_isneed', $data_input_isneed);
 
-		
 		if ($jumlah_measure>0) {
 			$measureadd = $this->input->post('measureadd');
 			for ($i=0; $i < $jumlah_measure; $i++) { 
 				$data_input_measure = array(
 					'measure' => $measureadd[$i],
+					'id_user' => $id,
+					'id_kategori_analisis' => $kategori, 
 					'id_objective' => $id_objective
 				);
 			$this->User_model->insertData('t_measure', $data_input_measure);
@@ -121,6 +160,8 @@ class Home extends CI_Controller {
 			for ($i=0; $i < $jumlah_action; $i++) { 
 				$data_input_action = array(
 					'action' => $actionadd[$i],
+					'id_user' => $id,
+					'id_kategori_analisis' => $kategori, 
 					'id_objective' => $id_objective
 				);
 			$this->User_model->insertData('t_action', $data_input_action);
@@ -131,14 +172,25 @@ class Home extends CI_Controller {
 			for ($i=0; $i < $jumlah_isneed; $i++) { 
 				$data_input_isneed = array(
 					'isneed' => $isneedadd[$i],
+					'id_user' => $id,
+					'id_kategori_analisis' => $kategori, 
 					'id_objective' => $id_objective
 				);
 				$this->User_model->insertData('t_isneed', $data_input_isneed);			
 			}
 		
 		}
-		
-		redirect('home/analisis','refresh');
+		if ($kategori == 'FNC') {
+			redirect('home/analisis/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/analisis/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/analisis/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/analisis/4','refresh');
+		}else{
+			echo $kategori;
+		}
 	}
 
 	public function deleteAnalisis()
@@ -149,13 +201,28 @@ class Home extends CI_Controller {
 		$this->User_model->delete('t_measure', 'id_objective', $id);
 		$this->User_model->delete('t_action', 'id_objective', $id);
 		$this->User_model->delete('t_isneed', 'id_objective', $id);
+		$kategori = $this->input->post('kategori');
 
-		redirect('home/analisis','refresh');	
+		if ($kategori == 'FNC') {
+			redirect('home/analisis/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/analisis/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/analisis/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/analisis/4','refresh');
+		}else{
+			echo $kategori;
+		}	
 	}
 
 
 	public function editAnalisis()
 	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
 		$id_objective = $this->input->post('id_objective');
 		$objective = $this->input->post('objective');
 		$measure = $this->input->post('measure');
@@ -164,13 +231,14 @@ class Home extends CI_Controller {
 		$id_action = $this->input->post('id_action');
 		$isneed = $this->input->post('isneed');
 		$id_isneed = $this->input->post('id_isneed');
+		$kategori = $this->input->post('kategori');
 	
 		$data_update_objective = array(
 				'objective' => $objective,
 				'id_objective' => $id_objective,
-				'tanggal' => 'CURRENT_TIMESTAMP'
 		);
 		$this->User_model->updateData('t_objective', 'id_objective', $id_objective, $data_update_objective);
+		
 		if (!empty($measure)) {
 			foreach ($measure as $key=> $value) {
 				if ($value==' ' || $value==NULL) {
@@ -208,7 +276,33 @@ class Home extends CI_Controller {
 		}
 		}
 
-		
+		if (!empty($this->input->post('moremeasure'))) {
+			$moremeasure = $this->input->post('moremeasure');
+			$data_input = array('measure' => $moremeasure,
+								'id_objective' => $id_objective,
+								'id_kategori_analisis' => $kategori, 
+								'id_user' => $id
+								 );
+			$this->User_model->insertData('t_measure', $data_input);
+		}
+		if (!empty($this->input->post('moreaction'))) {
+			$moreaction = $this->input->post('moreaction');
+			$data_input = array('action' => $moreaction,
+								'id_objective' => $id_objective,
+								'id_kategori_analisis' => $kategori, 
+								'id_user' => $id
+								 );
+			$this->User_model->insertData('t_action', $data_input);
+		}
+		if (!empty($this->input->post('moreisneed'))) {
+			$moreisneed = $this->input->post('moreisneed');
+			$data_input = array('isneed' => $moreisneed,
+								'id_objective' => $id_objective,
+								'id_kategori_analisis' => $kategori, 
+								'id_user' => $id
+								 );
+			$this->User_model->insertData('t_isneed', $data_input);
+		}
 		// if (!empty($moremeasurearray)) {
 		// 	$moremeasurearray = $this->input->post('moremeasurearray');
 		// 	foreach ($moremeasurearray as $key) {
@@ -239,236 +333,32 @@ class Home extends CI_Controller {
 		// 		$this->User_model->insertData('t_isneed', $data_insert);
 		// 	}
 		// }
-	  redirect('home/analisis','refresh');
-	}
-
-	public function input()
-	{      	
-		$objective = $this->input->post('objective');
-		$measure = $this->input->post('measure');
-		$action = $this->input->post('action');
-		$isneed = $this->input->post('isneed');
-
-		$jumlah_measure =$this->input->post('jumlah_measure');
-		$jumlah_action =$this->input->post('jumlah_action');
-		$jumlah_isneed =$this->input->post('jumlah_isneed');
-		$jumlah_max = $jumlah_measure;
-
-		if($jumlah_max<$jumlah_action) {
-			$jumlah_max = $jumlah_action;
-			if ($jumlah_max<$jumlah_isneed) {
-				$jumlah_max = $jumlah_isneed;
-			}
-		}elseif ($jumlah_max<$jumlah_isneed) {
-			$jumlah_max = $jumlah_isneed;
-		}	
-		
-		$datauser = $_SESSION['list'];
-      	foreach ($datauser as $row) {
-	        $id = $row['id_user'];
-      	}
-
-		$data_input =  array(
-			'id_user' => $id, 
-			'objective' => $objective 
-		);
-
-		$this->User_model->insertData('t_objective', $data_input);
-		$id_objective = $this->User_model->checkidobjective($id);
-		$data_input = array(
-				'measure' => $measure,
-				'id_objective' => $id_objective,
-				'action' => $action,
-				'isneed' => $isneed
-		);
-
-		$this->User_model->insertData('t_t', $data_input);
-
-		
-		
-		if ($jumlah_measure>0) {
-			$measureadd = $this->input->post('measureadd');
-			if ($jumlah_measure<$jumlah_max) {
-				for ($i=$jumlah_measure; $i < $jumlah_max; $i++) { 
-					$measureadd[$i] = ' ';
-				}
-			}
-		}
-		else{
-			for ($i=0; $i < $jumlah_max; $i++) { 
-				$measureadd[$i] = ' ';
-			}
-		}
-		if ($jumlah_action>0) {
-			$actionadd = $this->input->post('actionadd');
-			if ($jumlah_action<$jumlah_max) {
-				for ($i=$jumlah_action; $i < $jumlah_max; $i++) { 
-					$actionadd[$i] = ' ';
-				}
-			}
+	  if ($kategori == 'FNC') {
+			redirect('home/analisis/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/analisis/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/analisis/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/analisis/4','refresh');
 		}else{
-			for ($i=0; $i < $jumlah_max; $i++) { 
-			$actionadd[$i] = ' ';
-			}
+			echo $kategori;
 		}
-		if ($jumlah_isneed>0) {
-			$isneedadd = $this->input->post('isneedadd');
-			if ($jumlah_isneed<$jumlah_max) {
-				for ($i=$jumlah_isneed; $i < $jumlah_max; $i++) { 
-					$isneedadd[$i] = ' ';
-				}
-			}
-		}else{
-			for ($i=0; $i < $jumlah_max; $i++) { 
-			$isneedadd[$i] = ' ';
-			}
-		}
-
-
-		for ($i=0; $i < $jumlah_max; $i++) { 
-			$data_input = array(
-				'measure' => $measureadd[$i],
-				'action' => $actionadd[$i],
-				'isneed' => $isneedadd[$i],
-				'id_objective' => $id_objective
-			);
-			
-			$this->User_model->insertData('t_t', $data_input);
-		}
-		
-		redirect('home/youranalisis','refresh');
-
 	}
-
-	public function input1()
-	{      	
-		$objective = $this->input->post('objective');
-		$measure = $this->input->post('measure');
-		$action = $this->input->post('action');
-		$isneed = $this->input->post('isneed');
-		$id_objective = $this->input->post('id_objective');
-		$id_analisis = $this->input->post('id_analisis');
-
-		// $jumlah_measure =$this->input->post('jumlah_measure'.$id_analisis);
-		// $jumlah_action =$this->input->post('jumlah_action'.$id_analisis);
-		// $jumlah_isneed =$this->input->post('jumlah_isneed'.$id_analisis);
-		// $jumlah_max = $jumlah_measure;
-			
-		// if($jumlah_max<$jumlah_action) {
-		// 	$jumlah_max = $jumlah_action;
-		// 	if ($jumlah_max<$jumlah_isneed) {
-		// 		$jumlah_max = $jumlah_isneed;
-		// 	}
-		// }elseif ($jumlah_max<$jumlah_isneed) {
-		// 	$jumlah_max = $jumlah_isneed;
-		// }	
-		
-		
-		$data_input = array(
-				'measure' => $measure,
-				'id_objective' => $id_objective,
-				'action' => $action,
-				'isneed' => $isneed
-		);
-
-		$this->User_model->insertData('t_t', $data_input);
-
-		
-		// if ($jumlah_measure>0) {
-		// 	$measureadd = $this->input->post('measure1');
-		// 	if ($jumlah_measure<$jumlah_max) {
-		// 		for ($i=$jumlah_measure; $i < $jumlah_max; $i++) { 
-		// 			$measureadd[$i] = ' ';
-		// 		}
-		// 	}
-		// }
-		// else{
-		// 	for ($i=0; $i < $jumlah_max; $i++) { 
-		// 		$measureadd[$i] = ' ';
-		// 	}
-		// }
-		// if ($jumlah_action>0) {
-		// 	$actionadd = $this->input->post('action1');
-		// 	if ($jumlah_action<$jumlah_max) {
-		// 		for ($i=$jumlah_action; $i < $jumlah_max; $i++) { 
-		// 			$actionadd[$i] = ' ';
-		// 		}
-		// 	}
-		// }else{
-		// 	for ($i=0; $i < $jumlah_max; $i++) { 
-		// 	$actionadd[$i] = ' ';
-		// 	}
-		// }
-		// if ($jumlah_isneed>0) {
-		// 	$isneedadd = $this->input->post('isneed1');
-		// 	if ($jumlah_isneed<$jumlah_max) {
-		// 		for ($i=$jumlah_isneed; $i < $jumlah_max; $i++) { 
-		// 			$isneedadd[$i] = ' ';
-		// 		}
-		// 	}
-		// }else{
-		// 	for ($i=0; $i < $jumlah_max; $i++) { 
-		// 	$isneedadd[$i] = ' ';
-		// 	}
-		// }
-
-
-		// for ($i=0; $i < $jumlah_max; $i++) { 
-		// 	$data_input = array(
-		// 		'measure' => $measureadd[$i],
-		// 		'action' => $actionadd[$i],
-		// 		'isneed' => $isneedadd[$i],
-		// 		'id_objective' => $id_objective
-		// 	);
-			
-		// 	$this->User_model->insertData('t_t', $data_input);
-		// }
-		
-		redirect('home/youranalisis','refresh');
-
-	}
-
-	public function edit()
+	public function inputkomentar()
 	{
+		$id = $this->input->post('id');
 		$id_objective = $this->input->post('id_objective');
-		$id_analisis = $this->input->post('id_analisis');
-		$objective = $this->input->post('objective');
-		$measure = $this->input->post('measure');
-		$action = $this->input->post('action');
-		$isneed = $this->input->post('isneed');
-
-		$data_update_objective = array(
-				'objective' => $objective,
-				'id_objective' => $id_objective,
-				'tanggal' => 'CURRENT_TIMESTAMP'
+		$komentar = $this->input->post('komentar');
+		
+		$data_input= array(
+			'id_user' => $id,
+			'id_objective' => $id_objective,
+			'komentar' => $komentar
 		);
+		$this->User_model->insertData('t_komentar_timeline', $data_input);
 
-		$data_update_analisis = array(
-				'id_analisis' => $id_analisis,
-				'measure' => $measure,
-				'action' => $action,
-				'isneed' => $isneed,
-			);
-
-		$this->User_model->updateData('t_objective', 'id_objective', $id_objective, $data_update_objective);
-		$this->User_model->updateDataAnalisis('t_t', 'id_analisis', $id_analisis, $data_update_analisis);
-
-		redirect('home/youranalisis','refresh');
-	}
-	public function hapus()
-	{
-		$hapuschoice = $this->input->post('hapuschoice');
-		$id_objective = $this->input->post('id_objective');
-		$id_analisis = $this->input->post('id_analisis');
-
-		if ($hapuschoice == 'all') {
-			$this->User_model->delete('t_objective', 'id_objective', $id_objective);
-			$this->User_model->delete('t_t', 'id_objective', $id_objective);
-		}elseif ($hapuschoice == 'analisis') {
-			$this->User_model->delete('t_t', 'id_analisis', $id_analisis);
-		}	
-
-		redirect('home/youranalisis','refresh');	
+		redirect('home/dashboard','refresh');
 	}
 
 	public function logout()

@@ -29,6 +29,11 @@ class User_model extends CI_Model {
                 $query = $this->db->get_where($table, array($where => $same));
                 return $query->result_array();
         }
+        public function getDataWhere2($table, $where, $same, $where2, $same2)
+        {
+
+                $query = $this->db->get_where($table, array($where => $same, $where2 => $same2));
+                return $query->result_array();        }
 
         public function countwhere($table, $where, $where2)
         {
@@ -70,6 +75,15 @@ class User_model extends CI_Model {
                 $this->db->select('*');
                 $this->db->from($table1);
                 $this->db->join($table2, $where);
+                $query = $this->db->get();
+                return $query->result();
+        }
+        public function timeline($table1, $table2, $where)
+        {
+                $this->db->select('*');
+                $this->db->from($table1);
+                $this->db->join($table2, $where);
+                $this->db->order_by('tanggal', 'desc');
                 $query = $this->db->get();
                 return $query->result();
         }

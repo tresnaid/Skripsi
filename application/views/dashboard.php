@@ -8,7 +8,10 @@
     <!-- Google fonts - Roboto Condensed for headings, Open Sans for copy-->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:300,700%7COpen+Sans:300,400,700">
     <!-- theme stylesheet-->
-
+ 
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/timeline.css">
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
  	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.default.css" id="theme-stylesheet">
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom.css">
@@ -44,10 +47,20 @@
           <div class="container">
             <div id="navigation" class="collapse navbar-collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="<?php echo base_url(); ?>home/dashboard">Beranda</a></li>
-                <li><a href="<?php echo base_url(); ?>home#kriteria">Lini Masa</a></li>
-                <li><a href="<?php echo base_url(); ?>home/youranalisis">Analisis</a></li>
-                <li><a href="<?php echo base_url(); ?>home/penilaiankriteria">Finalisasi</a></li>
+                <li class="
+                <?php if($page == 'timeline'): ?>
+                  active
+                <?php endif ?>"
+                ><a href="<?php echo base_url(); ?>home/dashboard">Beranda</a></li>
+                <li class="
+                  <?php if($page == 'analisis'): ?>
+                    active
+                  <?php endif ?>"
+                ><a href="<?php echo base_url(); ?>home/analisis/1">Analisis</a></li>
+                <li class="
+                  <?php if($page == 'finalisasi'): ?>
+                    active
+                  <?php endif ?>"><a href="<?php echo base_url(); ?>home/finalisasi/1">Finalisasi</a></li>
                 <li><a href="<?php echo base_url(); ?>home/penilaianalternatif">Rekomendasi</a></li>
                 <li><a href="<?php echo base_url(); ?>home/logout">keluar</a></li>
               </ul>
@@ -57,7 +70,7 @@
       </div>
     </header>
     
-	selamat datang <?php echo $nama ?>
+	<!-- selamat datang <?php echo $nama ?> -->
 	
 	<!-- Content -->
 	<div>
