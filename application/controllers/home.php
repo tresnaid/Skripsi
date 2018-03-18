@@ -64,7 +64,45 @@ class Home extends CI_Controller {
       	}
 		$this->load->view('dashboard.php', $data);
 	}
-	
+	public function roadmap()
+	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+      	$data['menu'] = 'content/menu';
+      	$data['informasi'] = $this->User_model->getData('t_kriteria');
+      	$data['page'] = 'roadmap';
+      	$data['id_user'] = $id;
+      	
+      	$data['content'] = 'content/roadmap';
+		$this->load->view('dashboard.php', $data);
+
+	}
+	public function nilaikriteria()
+	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+      	$data['menu'] = 'content/menu';
+      	$data['informasi'] = $this->User_model->getData('t_kriteria');
+      	$data['page'] = 'roadmap';
+      	$data['id_user'] = $id;
+      	$data['content'] = 'content/roadmap';
+      	$data['lamanaktif'] = 'content/nilai_kriteria';
+		$this->load->view('dashboard.php', $data);
+    }
+
+	public function nilaialternatif($kriteria)
+	{
+		$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
+		$data['informasi'] = $this->User_model->getData('t_isneed');
+      	$data['page'] = 'roadmap';
+      	$data['content'] = 'content/nilai_alternatif';
+      	$data['id_kriteria'] = $kriteria;
+		$this->load->view('dashboard.php', $data);
+	}
 
 	public function analisis($perspective)
 	{

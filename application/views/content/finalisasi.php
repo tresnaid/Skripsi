@@ -1,5 +1,9 @@
-<<<<<<< HEAD
-      	
+ <style type="text/css">
+  .activesub{
+    background-color: grey;
+  }
+
+</style>     	
 <?php 
 $datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {

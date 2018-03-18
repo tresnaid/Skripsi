@@ -44,7 +44,14 @@ class User_model extends CI_Model {
                 $rowcount = $query->num_rows();
                 return $rowcount;
         }
-
+        public function checkhitungkriteria($id)
+        {
+            $this->db->select('hitungkriteria');
+            $this->db->from('t_user');
+            $this->db->where('id_user', $id);
+            $query = $this->db->get();
+            return $query;
+        }
         public function countmax($jumlah_measure, $jumlah_action, $jumlah_isneed)
         {
             if ($jumlah_measure ==0 && $jumlah_action ==0 && $jumlah_isneed ==0) {

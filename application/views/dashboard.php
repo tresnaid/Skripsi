@@ -61,7 +61,10 @@
                   <?php if($page == 'finalisasi'): ?>
                     active
                   <?php endif ?>"><a href="<?php echo base_url(); ?>home/finalisasi/1">Finalisasi</a></li>
-                <li><a href="<?php echo base_url(); ?>home/penilaianalternatif">Rekomendasi</a></li>
+                <li class="
+                  <?php if($page == 'roadmap'): ?>
+                    active
+                  <?php endif ?>"><a href="<?php echo base_url(); ?>home/roadmap">Roadmap</a></li>
                 <li><a href="<?php echo base_url(); ?>home/logout">keluar</a></li>
               </ul>
             </div>
