@@ -20,7 +20,7 @@ class Home extends CI_Controller {
 	 */
 	public function index()
 	{	
-		if (!empty($_SESSION)) {
+		if (!empty($login)) {
 			if ($_SESSION['login'] == TRUE) {
 				redirect('home/dashboard','refresh');
 			}
@@ -359,6 +359,32 @@ class Home extends CI_Controller {
 		$this->User_model->insertData('t_komentar_timeline', $data_input);
 
 		redirect('home/dashboard','refresh');
+	}
+
+	public function alasanfinalisasi()
+	{
+		$id = $this->input->post('id');
+		$id_objective = $this->input->post('id_objective');
+		$alasan = $this->input->post('komentar');
+		$kategori = $this->input->post('kategori');
+		$data_input= array(
+			'id_user' => $id,
+			'id_objective' => $id_objective,
+			'alasan' => $alasan
+		);
+		$this->User_model->insertData('t_finalisasi', $data_input);
+
+		if ($kategori == 'FNC') {
+			redirect('home/finalisasi/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/finalisasi/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/finalisasi/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/finalisasi/4','refresh');
+		}else{
+			echo $kategori;
+		}	
 	}
 
 	public function logout()

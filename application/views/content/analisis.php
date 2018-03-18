@@ -64,6 +64,7 @@
       jumlah_isneed_baru += 1;
       document.getElementById(link).value = jumlah_isneed_baru;
     }
+
       document.getElementById("isneed[]").addEventListener("keyup", function(event) {
           event.preventDefault();
       });
@@ -73,14 +74,26 @@
       document.getElementById("action[]").addEventListener("keyup", function(event) {
           event.preventDefault();
       });
+      document.getElementById("moremeasure").addEventListener("keyup", function(event) {
+          event.preventDefault();
+      });
+      document.getElementById("moreaction").addEventListener("keyup", function(event) {
+          event.preventDefault();
+      });
+      document.getElementById("moreisneed").addEventListener("keyup", function(event) {
+          event.preventDefault();
+      });
 
+      function hapus(id) {
+        document.getElementById(id).value = " ";
+      }
 
-    $(function tambahmeasurebaru(link, button){
-        $("#button").click(function(event){
-            $("#link").append("<input type='text' name='moremeasurearray[]' placeholder='' required></input>");
-            $("#link").append("\n<br />");
-        });
-    });   
+    // $(function tambahmeasurebaru(link, button){
+    //     $("#button").click(function(event){
+    //         $("#link").append("<input type='text' name='moremeasurearray[]' placeholder='' required></input>");
+    //         $("#link").append("\n<br />");
+    //     });
+    // });   
   </script>
         
 <div id="tambahanalisis" class="modal fade" role="dialog" >
@@ -254,29 +267,12 @@
                             <label>Measure</label><a href="" id="cekhapus[]"></a>
                           </div>
                           <div class="col-md-9">
-                          <?php $im = 0; ?>
                           <?php foreach ($data_measure as $key): ?>
-                            <script type="text/javascript">
-                              function hapusmeasure<?php echo $im ?>() {
-                                // var input = document.getElementById("measure[]");
-                                // input.addEventListener("keyup", function(event) {
-                                //     event.preventDefault();
-                                // });
-                                document.getElementById("measure[<?php echo $im ?>]").value = " ";
-                              }
-                            </script>
                             <input type="hidden" name="id_measure[]" value="<?php echo $key['id_measure'] ?>">
-                            <input type="text" id=measure[<?php echo $im ?>] name="measure[]" value="<?php echo $key['measure']?>" style="width: 80%"> 
-                            <button onclick="hapusmeasure<?php echo $im ?>();" class="btn btn-default">hapus</button> 
-                            <?php 
-                                $im++;
-                             ?>
+                            <input type="text" id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" value="<?php echo $key['measure']?>" style="width: 80%"> 
+                            <button onclick="hapus('measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?>');" class="btn btn-default" name="buttonhapus">hapus</button> 
+                            <?php echo $row['id_objective']?><?php echo $key['id_measure']?>
                           <?php endforeach ?>
-                          <!-- <div id="moremeasure"></div> -->
-                          
-                            <!-- <input type="button" id=moremeasurebutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahmeasure('tambahanmeasure[<?php echo($row['id_objective']) ?>]')">
-                            <input type="text" name="tambahanmeasure[<?php echo($row['id_objective']) ?>]" id="tambahanmeasure[<?php echo($row['id_objective']) ?>]" value="0">  -->
-
                             <input type="text" name="moremeasure" id="moremeasure" style="width: 80%;" placeholder="tambah measure disini">
                           </div>
 
@@ -284,51 +280,24 @@
                             <label>Action CSF</label>
                           </div>
                           <div class="col-md-9">
-                            <?php $ia=0; ?>
                           <?php foreach ($data_action as $key): ?>
-                            <script type="text/javascript">
-                              function hapusaction<?php echo $ia ?>() {
-                                // var input = document.getElementById("action[]");
-                                // input.addEventListener("keyup", function(event) {
-                                //     event.preventDefault();
-                                // });
-                                document.getElementById("action[<?php echo $ia ?>]").value = " ";
-                              }
-                            </script>
                             <input type="hidden" name="id_action[]" value="<?php echo $key['id_action'] ?>">
-                            <input type="text" id="action[<?php echo $ia ?>]" name="action[]" value="<?php echo $key['action']?>" style="width: 80%">
-                            <button onclick="hapusaction<?php echo $ia ?>();" class="btn btn-default">hapus</button>
-                            <?php $ia++; ?>
+                            <input type="text" id="action<?php echo $row['id_objective']?><?php echo $key['id_action']?>" name="action[]" value="<?php echo $key['action']?>" style="width: 80%">
+                            <button onclick="hapus('action<?php echo $row['id_objective']?><?php echo $key['id_action']?>');" class="btn btn-default">hapus</button>
                           <?php endforeach ?>
                             <input type="text" name="moreaction" id="moreaction" style="width: 80%;" placeholder="tambah action disini">
-                         <!--  <input type="button" id=moreactionbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahaction('tambahanaction[<?php echo($row['id_objective']) ?>]')">
-                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanaction[<?php echo($row['id_objective']) ?>]" value="0">  -->
                           </div>
 
                           <div class="col-md-3">
                             <label>IS Need</label>
                           </div>
                           <div class="col-md-9">
-                            <?php $ii=0; ?>
                           <?php foreach ($data_isneed as $key): ?>
-                            <script type="text/javascript">
-                              function hapusisneed<?php echo $ii ?>() {
-                                // var input = document.getElementById("isneed[]");
-                                // input.addEventListener("keyup", function(event) {
-                                //     event.preventDefault();
-                                // });
-
-                                document.getElementById("isneed[<?php echo $ii ?>]").value = " ";
-                              }
-                            </script>
                             <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
-                            <input type="text" id="isneed[<?php echo $ii ?>]" name="isneed[]" value="<?php echo $key['isneed']?>" style="width: 80%">
-                            <button onclick="hapusisneed<?php echo $ii ?>();" class="btn btn-default">hapus</button>
-                            <?php $ii++; ?>
+                            <input type="text" id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" value="<?php echo $key['isneed']?>" style="width: 80%">
+                            <button onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default">hapus</button>
                           <?php endforeach ?>
                             <input type="text" name="moreisneed" id="moreisneed" style="width: 80%;" placeholder="tambah isneed disini">
-                          <!-- <input type="button" id=moreisneedbutton[<?php echo($row['id_objective']) ?>] value="+ add measure" class="btn btn-default" onclick="kliktambahisneed('tambahanisneed[<?php echo($row['id_objective']) ?>]')">
-                          <input type="text" name="tambahanaction[<?php echo($row['id_objective']) ?>]" id="tambahanisneed[<?php echo($row['id_objective']) ?>]" value="0">  -->
                           </div>
 
                         </div>

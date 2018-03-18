@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+      	
+<?php 
+$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+?>
 <section class="section-gray">
 <div class="container clearfix">
 <div class="row services">
@@ -61,7 +69,7 @@
 
 		                  $count_isneed = $this->User_model->countwhere('t_isneed', 'id_objective', $row['id_objective']);
 		                  $data_isneed = $this->User_model->getDataWhere('t_isneed', 'id_objective', $row['id_objective']);
-		                  
+		                  $komentar = $this->User_model->getDataWhere('t_finalisasi', 'id_objective', $row['id_objective']);
 		                  $biggest = $this->User_model->countmax($count_measure, $count_action, $count_isneed);
 		                  $jumlah_max = $biggest['jumlah'];
 		                  $nama_max = $biggest['nama'];
@@ -93,8 +101,7 @@
 		                          	<?php echo $table->nama_user; ?>
 		                          </td>
 		                          <td rowspan="<?php echo $jumlah_max; ?>">
-		                            <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
-		                            <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a> 
+		                            <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a> 
 		                          </td>
 		                          <?php endif ?>
 		                        </tr>
@@ -128,8 +135,7 @@
 		                          	<?php echo $table->nama_user; ?>
 		                          </td>
 		                          <td rowspan="<?php echo $jumlah_max; ?>">
-		                          <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
-		                          <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a> 
+		                          <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a> 
 		                        </td>
 		                        <?php endif ?>
 		                      </tr>
@@ -162,8 +168,7 @@
 		                          	<?php echo $table->nama_user; ?>
 		                          </td>
 			                      <td rowspan="<?php echo $jumlah_max; ?>">
-			                        <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
-			                        <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a>
+			                        <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a>
 			                      </td>
 			                      <?php endif ?>
 			                    </tr>
@@ -181,38 +186,60 @@
 				                      <td>
 		                          	<?php echo $table->nama_user; ?>
 		                          </td>
-				                      <a href="" data-toggle="modal" data-target="#editanalisis<?php echo $row['id_objective']?>"><i class="fa fa-edit"></i></a> 
-				                        <a href="" data-toggle="modal" data-target="#hapusanalisis<?php echo $row['id_objective']?>"><i class="fa fa-trash"></i></a> 
+				                        <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a> 
 				                      </td>
 				                  </tr>
 		                    <?php endforeach ?>
 		                <?php endif ?>
+		                <div id="komentar<?php echo $row['id_objective']?>" class="modal fade" role="dialog" >
+		                      <div class="modal-dialog">
+		                        <div class="modal-content">
+		                          <div class="modal-header">
+		                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+		                            <h4 class="modal-title">Komentari analisis ini</h4>
+		                          </div>
+		                          <div class="modal-body">
+		                            <h5>Objective: <?php echo $row['objective']; ?></h5>
+		                            <h5>Measure:</h5>
+		                            <?php foreach ($data_measure as $key): ?>
+		                            	<?php echo $key['measure'] ?>
+		                            	<?php echo "<br/>" ?>
+		                            <?php endforeach ?>
+		                            <h5>Action(CSF):</h5>
+		                            <?php foreach ($data_action as $key): ?>
+		                            	<?php echo $key['action'] ?>
+		                            	<?php echo "<br/>" ?>
+		                            <?php endforeach ?>
+		                            <h5>Information System Need:</h5>
+		                            <?php foreach ($data_isneed as $key): ?>
+		                            	<?php echo $key['isneed'] ?>
+		                            	<?php echo "<br/>" ?>
+		                            <?php endforeach ?>
+		                          </div>
+		                          <form action="<?php echo base_url();?>home/alasanfinalisasi" method="POST">
+		                          <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
+		                          <input type="hidden" name="id" value="<?php echo $id ?>">
+		                          <input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
+		                        <div class="modal-footer">
+		                          <input type="text" name="komentar" style="width: 95%;">
+		                          <button type="submit" class="btn btn-default"><i class="fa fa-cross"></i>Komentar</button>
+		                          <hr>
+		                        </div>
+		                        <div class="modal-body" >
+		                        	<?php foreach ($komentar as $key): ?>
+		                        		<?php echo $key['alasan']; ?>
+		                        		<?php echo '<br/>' ?>
+		                        	<?php endforeach ?>
+		                        </div>
+		                        </form>
+		                      </div>
+		                   </div>
+		                </div>
 	                <?php endforeach ?>
               	<?php endforeach ?>
-<!--                 
-                <div id="hapusanalisis<?php echo $row['id_objective']?>" class="modal fade" role="dialog" >
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Hapus Analisis Ini ?</h4>
-                          </div>
-                          <div class="modal-body">
-                            <h5>Apakah Anda Yakin Ingin Menghapus Analisis Ini ?</h5>
-                          </div>
-                          <form action="<?php echo base_url();?>home/deleteAnalisis" method="POST">
-                          <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
-                          <input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
-                        <div class="modal-footer">
-                          <button type="submit" class="btn btn-default"><i class="fa fa-cross"></i> Hapus</button>
-                          <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-cross"></i> Close</button>
-                        </div>
-                        </form>
-                      </div>
-                   </div>
-                </div>
+
 				
- -->              </tbody>
+				</tbody>
             </table>
           </div>	
         </div>
