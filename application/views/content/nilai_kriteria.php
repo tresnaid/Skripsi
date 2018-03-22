@@ -1,11 +1,11 @@
-<!-- <?php 
+<?php 
 foreach ($informasi as $row) {
 	echo $row->nama_kriteria;
 	echo "<br/>";
 	echo $row->deskripsi;
 	echo "<br/>";
 }
-?> -->
+?>
 <script language="javascript">
 function ResetConfirm(){
 	if (confirm("Anda yakin akan mengatur ulang semua nilai perbandingan kriteria ini ?")){
@@ -48,7 +48,7 @@ function ResetConfirm(){
 	for($i=0;$i<count($kriteria);$i++){
 		for($ii=0;$ii<count($kriteria);$ii++){
 			if($i < $ii){
-				$q = $this->db->query("select nilai,nilai2 from t_nilai_kriteria where id_kriteria_1='".$kriteria[$i][0]."' and id_kriteria_2='".$kriteria[$ii][0]."'");
+				$q = $this->db->query("select nilai from t_nilai_kriteria where id_kriteria_1='".$kriteria[$i][0]."' and id_kriteria_2='".$kriteria[$ii][0]."'");
 				if($q->num_rows() >0){
 					$nilai=$q->row('nilai');
 				}else{

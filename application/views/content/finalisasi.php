@@ -14,7 +14,7 @@ $datauser = $_SESSION['list'];
 <div class="container clearfix">
 <div class="row services">
   <div class="col-md-12">
-    <h2 class="heading">Analisis Anda</h2>
+    <h2 class="heading">Daftar Kebutuhan Sistem Informasi</h2>
     <div id="navigation" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
         <li class="

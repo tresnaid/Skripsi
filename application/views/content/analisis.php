@@ -8,7 +8,7 @@
 <script type="text/javascript">
     $(function(){
         $("#measure_add_input").click(function(event){
-            var measureadd = "<input type='text' name='measureadd[]' placeholder='' required></input>";
+            var measureadd = "<input type='text' name='measureadd[]' placeholder='' required></input><br/>";
             $("#measure_quotes").append(measureadd);
             $("#measure_quotes").append("\n<br />");
         });
@@ -27,7 +27,9 @@
     $(function(){
         $("#isneed_add_input").click(function(event){
             var isneedadd = "<input type='text' name='isneedadd[]' placeholder='' required></input>";
+            var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
             $("#isneed_quotes").append(isneedadd);
+            $("#isneed_quotes").append(isneedadd_desc);
             $("#isneed_quotes").append("\n<br />");
         });
     });
@@ -138,7 +140,12 @@
 	          			<label>IS Need</label>
 	          		</div>
 	          		<div class="col-md-8">
-		          		<input type="text" name="isneed" required>
+                  <input type="text" name="isneed" required>
+		          		<select name="isneed_desc" required="">
+                    <option value="Buat Baru">Buat Baru</option>
+                    <option value="Perbaharui">Perbaharui</option>
+                    <option value="Beli">Beli</option>
+                  </select>
 							<div id="isneed_quotes"></div>
 							<input type="button" id=isneed_add_input value="+ add isneed"  class="btn btn-default" onClick="onClickisneed()">
 	          		</div>
@@ -271,7 +278,6 @@
                             <input type="hidden" name="id_measure[]" value="<?php echo $key['id_measure'] ?>">
                             <input type="text" id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" value="<?php echo $key['measure']?>" style="width: 80%"> 
                             <button onclick="hapus('measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?>');" class="btn btn-default" name="buttonhapus">hapus</button> 
-                            <?php echo $row['id_objective']?><?php echo $key['id_measure']?>
                           <?php endforeach ?>
                             <input type="text" name="moremeasure" id="moremeasure" style="width: 80%;" placeholder="tambah measure disini">
                           </div>
@@ -295,9 +301,28 @@
                           <?php foreach ($data_isneed as $key): ?>
                             <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
                             <input type="text" id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" value="<?php echo $key['isneed']?>" style="width: 80%">
+                            <select name="isneed_desc_edit[]" required="">
+                              <option value="Buat Baru" <?php if ($key['Tipe'] == 'Buat Baru'): ?>
+                                selected
+                              <?php  endif ?>
+                              >Buat Baru</option>
+                              <option value="Perbaharui" <?php if ($key['Tipe'] == 'Perbaharui'): ?>
+                                selected
+                              <?php  endif ?>
+                              >Perbaharui</option>
+                              <option value="Beli" <?php if ($key['Tipe'] == 'Beli'): ?>
+                                selected
+                              <?php  endif ?>
+                              >Beli</option>
+                            </select>
                             <button onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default">hapus</button>
                           <?php endforeach ?>
                             <input type="text" name="moreisneed" id="moreisneed" style="width: 80%;" placeholder="tambah isneed disini">
+                            <select name="moreisneed_desc" required="">
+                              <option value="Buat Baru">Buat Baru</option>
+                              <option value="Perbaharui">Perbaharui</option>
+                              <option value="Beli">Beli</option>
+                            </select>
                           </div>
 
                         </div>

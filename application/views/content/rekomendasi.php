@@ -4,26 +4,26 @@
 	}
 
 	foreach ($informasi_alternatif as $h) {
-		$alternatif[]=array($h['id_alternatif'],$h['nama_alternatif']);
+		$alternatif[]=array($h['id_isneed'],$h['isneed']);
 	}
 	
 	for($i=0;$i<count($kriteria);$i++){
 		$id_kriteria[]=$kriteria[$i][0];
 	}
-	$matrik_kriteria = $this->M_spk->ahp_get_matrik_kriteria($id_kriteria);
-	$jumlah_kolom = $this->M_spk->ahp_get_jumlah_kolom($matrik_kriteria);
-	$matrik_normalisasi = $this->M_spk->ahp_get_normalisasi($matrik_kriteria, $jumlah_kolom);
-	$eigen_kriteria = $this->M_spk->ahp_get_eigen($matrik_normalisasi);
+	$matrik_kriteria = $this->User_model->ahp_get_matrik_kriteria($id_kriteria);
+	$jumlah_kolom = $this->User_model->ahp_get_jumlah_kolom($matrik_kriteria);
+	$matrik_normalisasi = $this->User_model->ahp_get_normalisasi($matrik_kriteria, $jumlah_kolom);
+	$eigen_kriteria = $this->User_model->ahp_get_eigen($matrik_normalisasi);
 
 
 	for($i=0;$i<count($alternatif);$i++){
 		$id_alternatif[]=$alternatif[$i][0];
 	}
 	for($i=0;$i<count($kriteria);$i++){
-		$matrik_alternatif = $this->M_spk->ahp_get_matrik_alternatif($kriteria[$i][0], $id_alternatif);
-		$jumlah_kolom_alternatif = $this->M_spk->ahp_get_jumlah_kolom($matrik_alternatif);
-		$matrik_normalisasi_alternatif = $this->M_spk->ahp_get_normalisasi($matrik_alternatif, $jumlah_kolom_alternatif);
-		$eigen_alternatif[$i] = $this->M_spk->ahp_get_eigen($matrik_normalisasi_alternatif);
+		$matrik_alternatif = $this->User_model->ahp_get_matrik_alternatif($kriteria[$i][0], $id_alternatif);
+		$jumlah_kolom_alternatif = $this->User_model->ahp_get_jumlah_kolom($matrik_alternatif);
+		$matrik_normalisasi_alternatif = $this->User_model->ahp_get_normalisasi($matrik_alternatif, $jumlah_kolom_alternatif);
+		$eigen_alternatif[$i] = $this->User_model->ahp_get_eigen($matrik_normalisasi_alternatif);
 	}
 
 	$nilai_to_sort = array();
@@ -38,7 +38,7 @@
 	$nilai_global[$i] = $nilai;
 	$nilai_to_sort[] = array($nilai, $alternatif[$i][0]);
 	$this->db->query("INSERT INTO nilai_hasil(
-			      id_alternatif,nilai) 
+			      id_isneed,nilai) 
 	        VALUES(
 				'$idalternatif','$nilai')");
 }
@@ -95,7 +95,6 @@ for($i=0;$i<count($nilai_to_sort);$i++){
 										?>
 									</tbody>
 								</table>
-								<div id="piechart"></div>
 						</div>
 					</div>
 				</div>
@@ -103,27 +102,3 @@ for($i=0;$i<count($nilai_to_sort);$i++){
 		</div>
 	</div>
 </section>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-<script type="text/javascript">
-// Load google charts
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-// Draw the chart and set the chart values
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-  ['', ''],
-  <?php foreach ($informasi_chart as $key): ?>
-  ['<?php echo $key->nama_alternatif ?>', <?php echo $key->nilai ?>],
-  <?php endforeach ?>
-]);
-
-  // Optional; add a title and set the width and height of the chart
-  var options = {'title':'Hasil Rekomendasi', 'width':1140, 'height':800};
-
-  // Display the chart inside the <div> element with id="piechart"
-  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-  chart.draw(data, options);
-}
-</script>

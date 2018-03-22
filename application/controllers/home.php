@@ -96,11 +96,23 @@ class Home extends CI_Controller {
 
 	public function nilaialternatif($kriteria)
 	{
-		$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+      	$data['menu'] = 'content/menu';
+      	$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
 		$data['informasi'] = $this->User_model->getData('t_isneed');
       	$data['page'] = 'roadmap';
       	$data['content'] = 'content/nilai_alternatif';
       	$data['id_kriteria'] = $kriteria;
+		$this->load->view('dashboard.php', $data);
+	}
+	public function hasilroadmap()
+	{
+		$data['informasi_kriteria'] = $this->User_model->getDataarray('t_kriteria');
+		$data['informasi_alternatif'] = $this->User_model->getDataarray('t_isneed');
+		$data['content'] = "content/rekomendasi.php";$data['page'] = 'roadmap';
 		$this->load->view('dashboard.php', $data);
 	}
 
@@ -136,7 +148,7 @@ class Home extends CI_Controller {
 		$measure = $this->input->post('measure');
 		$action = $this->input->post('action');
 		$isneed = $this->input->post('isneed');
-
+		$isneed_desc = $this->input->post('isneed_desc');
 		$jumlah_measure =$this->input->post('jumlah_measure');
 		$jumlah_action =$this->input->post('jumlah_action');
 		$jumlah_isneed =$this->input->post('jumlah_isneed');
@@ -174,6 +186,7 @@ class Home extends CI_Controller {
 				'isneed' => $isneed,
 				'id_user' => $id,
 				'id_kategori_analisis' => $kategori, 
+				'tipe' => $isneed_desc,
 				'id_objective' => $id_objective
 		);
 
@@ -207,28 +220,30 @@ class Home extends CI_Controller {
 		}
 		if ($jumlah_isneed>0) {
 			$isneedadd = $this->input->post('isneedadd');
+			$isneedadd_desc = $this->input->post('isneedadd_desc');
 			for ($i=0; $i < $jumlah_isneed; $i++) { 
 				$data_input_isneed = array(
 					'isneed' => $isneedadd[$i],
 					'id_user' => $id,
 					'id_kategori_analisis' => $kategori, 
+					'tipe' => $isneedadd_desc[$i],
 					'id_objective' => $id_objective
 				);
 				$this->User_model->insertData('t_isneed', $data_input_isneed);			
 			}
 		
 		}
-		if ($kategori == 'FNC') {
-			redirect('home/analisis/1','refresh');
-		}else if ($kategori == 'CST') {
-			redirect('home/analisis/2','refresh');
-		}else if ($kategori == 'INT') {
-			redirect('home/analisis/3','refresh');
-		}else if ($kategori == 'LEA') {
-			redirect('home/analisis/4','refresh');
-		}else{
-			echo $kategori;
-		}
+		// if ($kategori == 'FNC') {
+		// 	redirect('home/analisis/1','refresh');
+		// }else if ($kategori == 'CST') {
+		// 	redirect('home/analisis/2','refresh');
+		// }else if ($kategori == 'INT') {
+		// 	redirect('home/analisis/3','refresh');
+		// }else if ($kategori == 'LEA') {
+		// 	redirect('home/analisis/4','refresh');
+		// }else{
+		// 	echo $kategori;
+		// }
 	}
 
 	public function deleteAnalisis()
@@ -268,6 +283,7 @@ class Home extends CI_Controller {
 		$action = $this->input->post('action');
 		$id_action = $this->input->post('id_action');
 		$isneed = $this->input->post('isneed');
+		$isneed_desc = $this->input->post('isneed_desc_edit');
 		$id_isneed = $this->input->post('id_isneed');
 		$kategori = $this->input->post('kategori');
 	
@@ -307,7 +323,8 @@ class Home extends CI_Controller {
 				$this->User_model->delete('t_isneed', 'id_isneed', $id_isneed[$key]);
 			}else{
 				$data_update = array(
-					'isneed' => $value
+					'isneed' => $value,
+					'Tipe' => $isneed_desc[$key]
 				);
 			$this->User_model->updateData('t_isneed', 'id_isneed', $id_isneed[$key], $data_update);
 			}
@@ -334,9 +351,11 @@ class Home extends CI_Controller {
 		}
 		if (!empty($this->input->post('moreisneed'))) {
 			$moreisneed = $this->input->post('moreisneed');
+			$moreisneed_desc = $this->input->post('moreisneed_desc');
 			$data_input = array('isneed' => $moreisneed,
 								'id_objective' => $id_objective,
-								'id_kategori_analisis' => $kategori, 
+								'id_kategori_analisis' => $kategori,
+								'Tipe' => $moreisneed_desc,
 								'id_user' => $id
 								 );
 			$this->User_model->insertData('t_isneed', $data_input);
