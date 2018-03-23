@@ -8,7 +8,7 @@
 <script type="text/javascript">
     $(function(){
         $("#measure_add_input").click(function(event){
-            var measureadd = "<input type='text' name='measureadd[]' placeholder='' required></input><br/>";
+            var measureadd = "<input type='text' name='measureadd[]' placeholder='' required></input>";
             $("#measure_quotes").append(measureadd);
             $("#measure_quotes").append("\n<br />");
         });

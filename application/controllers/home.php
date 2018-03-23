@@ -36,7 +36,11 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $status_kriteria = $row['kriteria']; 
+	        $status_alternatif = $row['alternatif'];
       	}
+		$data['status_alternatif'] = $status_alternatif;
+      	$data['status_kriteria'] = $status_kriteria;
       	$data['page'] = 'timeline';
       	$data['content'] = 'content/timeline';
       	$data['table'] = $this->User_model->timeline('t_objective', 't_user', 't_objective.id_user=t_user.id_user');
@@ -48,7 +52,11 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $status_kriteria = $row['kriteria']; 
+	        $status_alternatif = $row['alternatif'];
       	}
+		$data['status_alternatif'] = $status_alternatif;
+      	$data['status_kriteria'] = $status_kriteria;
       	$data['page'] = 'finalisasi';
       	$data['content'] = 'content/finalisasi';
       	$data['table'] = $this->User_model->getData('t_user');
@@ -64,34 +72,79 @@ class Home extends CI_Controller {
       	}
 		$this->load->view('dashboard.php', $data);
 	}
-	public function roadmap()
-	{
-		$datauser = $_SESSION['list'];
-      	foreach ($datauser as $row) {
-	        $id = $row['id_user'];
-      	}
-      	$data['menu'] = 'content/menu';
-      	$data['informasi'] = $this->User_model->getData('t_kriteria');
-      	$data['page'] = 'roadmap';
-      	$data['id_user'] = $id;
-      	
-      	$data['content'] = 'content/roadmap';
-		$this->load->view('dashboard.php', $data);
-
-	}
+	
 	public function nilaikriteria()
 	{
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $status_kriteria = $row['kriteria'];
+	        $status_alternatif = $row['alternatif'];
       	}
-      	$data['menu'] = 'content/menu';
+		$data['status_alternatif'] = $status_alternatif;
       	$data['informasi'] = $this->User_model->getData('t_kriteria');
       	$data['page'] = 'roadmap';
       	$data['id_user'] = $id;
-      	$data['content'] = 'content/roadmap';
-      	$data['lamanaktif'] = 'content/nilai_kriteria';
+      	$data['content'] = 'content/nilai_kriteria';
+      	$data['status_kriteria'] = $status_kriteria;
 		$this->load->view('dashboard.php', $data);
+    }
+    public function insertBobotKriteria()
+    {
+    	$informasi = $this->User_model->getData('t_kriteria');
+    	foreach($informasi as $row){
+			$kriteria[]=array($row->id_kriteria,$row->nama_kriteria);
+		}
+			if(isset($_POST['save'])){
+				$this->db->query("truncate table t_nilai_kriteria");
+				for($i=0;$i<count($kriteria);$i++){
+					for($ii=0;$ii<count($kriteria);$ii++){
+						if($i < $ii){
+							echo $this->input->post('nilai_'.$kriteria[$i][0].'_'.$kriteria[$ii][0]);
+							$data_input = array(
+							'id_kriteria_1' => $kriteria[$i][0],
+							'id_kriteria_2' => $kriteria[$ii][0],
+							'nilai' => $this->input->post('nilai_'.$kriteria[$i][0].'_'.$kriteria[$ii][0])
+						);
+						$this->User_model->insertData('t_nilai_kriteria', $data_input);
+
+						}
+					}
+				}
+    			redirect('home/nilaikriteria','refresh');
+    		}
+    		if(isset($_POST['reset'])){
+				$this->db->query("truncate table t_nilai_alternatif");
+    			redirect('home/nilaikriteria','refresh');
+			
+			}
+			if(isset($_POST['next'])){
+				$this->db->query("truncate table t_nilai_kriteria");
+				for($i=0;$i<count($kriteria);$i++){
+					for($ii=0;$ii<count($kriteria);$ii++){
+						if($i < $ii){
+							$data_input = array(
+							'id_kriteria_1' => $kriteria[$i][0],
+							'id_kriteria_2' => $kriteria[$ii][0],
+							'nilai' => $this->input->post('nilai_'.$kriteria[$i][0].'_'.$kriteria[$ii][0])
+						);
+						$this->User_model->insertData('t_nilai_kriteria', $data_input);
+
+						}
+					}
+				}
+				$datauser = $_SESSION['list'];
+		      	foreach ($datauser as $row) {
+	        		$status_kriteria = $row['kriteria'];
+	       			 $status_alternatif = $row['alternatif'];
+			        $id = $row['id_user'];
+		      	}
+		      	$data_update = array(
+		      		'kriteria' => 1
+		      	);
+		      	$this->User_model->updateData('t_user', 'id_user', $id, $data_update);
+	    		redirect('home/nilaialternatif/1','refresh');
+    		}
     }
 
 	public function nilaialternatif($kriteria)
@@ -99,7 +152,11 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $status_kriteria = $row['kriteria'];
+	        $status_alternatif = $row['alternatif'];
       	}
+      	$data['status_kriteria'] = $status_kriteria;
+      	$data['status_alternatif'] = $status_alternatif;
       	$data['menu'] = 'content/menu';
       	$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
 		$data['informasi'] = $this->User_model->getData('t_isneed');
@@ -108,8 +165,109 @@ class Home extends CI_Controller {
       	$data['id_kriteria'] = $kriteria;
 		$this->load->view('dashboard.php', $data);
 	}
+	public function insertBobotalternatif($id_kriteria)
+	{
+		$informasi = $this->User_model->getData('t_isneed');
+		
+		foreach($informasi as $row){
+			$alternatif[]=array($row->id_isneed,$row->isneed);
+		}
+
+		if(isset($_POST['save'])){
+			$this->User_model->delete('t_nilai_alternatif', 'id_kriteria', $id_kriteria);
+			for($i=0;$i<count($alternatif);$i++){
+				for($ii=0;$ii<count($alternatif);$ii++){
+					if($i < $ii){
+						$data_input = array(
+							'id_kriteria' => $id_kriteria,
+							'id_alternatif_1' => $alternatif[$i][0],
+							'id_alternatif_2' => $alternatif[$ii][0],
+							'nilai' => $this->input->post('nilai_'.$alternatif[$i][0].'_'.$alternatif[$ii][0])
+						);
+						$this->User_model->insertData('t_nilai_alternatif', $data_input);
+					}
+				}
+			}
+		redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
+		}
+		if(isset($_POST['reset'])){
+			$this->User_model->delete('t_nilai_alternatif', 'id_kriteria', $id_kriteria);
+			for($i=0;$i<count($alternatif);$i++){
+				for($ii=0;$ii<count($alternatif);$ii++){
+					if($i < $ii){
+						$data_input = array(
+						'id_kriteria' => $id_kriteria,
+						'id_alternatif_1' => $alternatif[$i][0],
+						'id_alternatif_2' => $alternatif[$ii][0],
+						'nilai' => 1
+					);
+					$this->User_model->insertData('t_nilai_alternatif', $data_input);
+					}
+				}
+			}
+		redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
+		}
+		if(isset($_POST['resetall'])){
+			$this->db->query("truncate table t_nilai_alternatif");
+			redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
+		}
+		if (isset($_POST['next'])) {
+			$this->User_model->delete('t_nilai_alternatif', 'id_kriteria', $id_kriteria);
+			for($i=0;$i<count($alternatif);$i++){
+				for($ii=0;$ii<count($alternatif);$ii++){
+					if($i < $ii){
+						$data_input = array(
+							'id_kriteria' => $id_kriteria,
+							'id_alternatif_1' => $alternatif[$i][0],
+							'id_alternatif_2' => $alternatif[$ii][0],
+							'nilai' => $this->input->post('nilai_'.$alternatif[$i][0].'_'.$alternatif[$ii][0])
+						);
+						$this->User_model->insertData('t_nilai_alternatif', $data_input);
+					}
+				}
+			}
+			$id_kriteria = $id_kriteria+1;
+			redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
+		}
+		if (isset($_POST['selesai'])) {
+			$this->User_model->delete('t_nilai_alternatif', 'id_kriteria', $id_kriteria);
+			for($i=0;$i<count($alternatif);$i++){
+				for($ii=0;$ii<count($alternatif);$ii++){
+					if($i < $ii){
+						$data_input = array(
+							'id_kriteria' => $id_kriteria,
+							'id_alternatif_1' => $alternatif[$i][0],
+							'id_alternatif_2' => $alternatif[$ii][0],
+							'nilai' => $this->input->post('nilai_'.$alternatif[$i][0].'_'.$alternatif[$ii][0])
+						);
+						$this->User_model->insertData('t_nilai_alternatif', $data_input);
+					}
+				}
+			}
+			$datauser = $_SESSION['list'];
+			foreach ($datauser as $row) {
+        		$status_kriteria = $row['kriteria'];
+		        $id = $row['id_user'];
+		    }
+			$data_update = array(
+	      		'alternatif' => 1
+	      	);
+	      	$this->User_model->updateData('t_user', 'id_user', $id, $data_update);
+    		redirect('home/hasilroadmap','refresh');
+
+		}
+
+	}
 	public function hasilroadmap()
 	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+	        $status_alternatif = $row['alternatif'];
+	        $status_kriteria = $row['kriteria'];
+      	}
+      	$data['status_kriteria'] = $status_kriteria;
+      	$data['status_alternatif'] = $status_alternatif;
 		$data['informasi_kriteria'] = $this->User_model->getDataarray('t_kriteria');
 		$data['informasi_alternatif'] = $this->User_model->getDataarray('t_isneed');
 		$data['content'] = "content/rekomendasi.php";$data['page'] = 'roadmap';
@@ -121,7 +279,11 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $status_alternatif = $row['alternatif'];
+	        $status_kriteria = $row['kriteria'];
       	}
+      	$data['status_kriteria'] = $status_kriteria;
+      	$data['status_alternatif'] = $status_alternatif;
       	$data['page'] = 'analisis';
 		$data['content'] = 'content/analisis';
       	if ($perspective == '1') {
@@ -159,6 +321,7 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $status_kriteria = $row['kriteria'];
       	}
 
 		$data_input =  array(
@@ -233,17 +396,17 @@ class Home extends CI_Controller {
 			}
 		
 		}
-		// if ($kategori == 'FNC') {
-		// 	redirect('home/analisis/1','refresh');
-		// }else if ($kategori == 'CST') {
-		// 	redirect('home/analisis/2','refresh');
-		// }else if ($kategori == 'INT') {
-		// 	redirect('home/analisis/3','refresh');
-		// }else if ($kategori == 'LEA') {
-		// 	redirect('home/analisis/4','refresh');
-		// }else{
-		// 	echo $kategori;
-		// }
+		if ($kategori == 'FNC') {
+			redirect('home/analisis/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/analisis/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/analisis/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/analisis/4','refresh');
+		}else{
+			echo $kategori;
+		}
 	}
 
 	public function deleteAnalisis()
@@ -275,6 +438,7 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $status_kriteria = $row['kriteria'];
       	}
 		$id_objective = $this->input->post('id_objective');
 		$objective = $this->input->post('objective');

@@ -51,20 +51,31 @@
                 <?php if($page == 'timeline'): ?>
                   active
                 <?php endif ?>"
-                ><a href="<?php echo base_url(); ?>home/dashboard">Beranda</a></li>
+                ><a href="<?php echo base_url(); ?>home/dashboard">Beranda</a>
+              </li>
                 <li class="
                   <?php if($page == 'analisis'): ?>
                     active
                   <?php endif ?>"
-                ><a href="<?php echo base_url(); ?>home/analisis/1">Analisis</a></li>
+                ><a href="<?php echo base_url(); ?>home/analisis/1">Analisis</a>
+              </li>
                 <li class="
                   <?php if($page == 'finalisasi'): ?>
                     active
-                  <?php endif ?>"><a href="<?php echo base_url(); ?>home/finalisasi/1">Finalisasi</a></li>
+                  <?php endif ?>"><a href="<?php echo base_url(); ?>home/finalisasi/1">Finalisasi</a>
+                </li>
                 <li class="
                   <?php if($page == 'roadmap'): ?>
                     active
-                  <?php endif ?>"><a href="<?php echo base_url(); ?>home/roadmap">Roadmap</a></li>
+                  <?php endif ?>">
+                  <?php if ($status_kriteria == 0): ?>
+                    <a href="<?php echo base_url(); ?>home/nilaikriteria">Roadmap</a>
+                  <?php elseif ($status_kriteria == 1 && $status_alternatif==0): ?>
+                    <a href="<?php echo base_url(); ?>home/nilaialternatif/1">Roadmap</a>
+                  <?php elseif($status_kriteria == 1 && $status_alternatif==1): ?>
+                    <a href="<?php echo base_url(); ?>home/hasilroadmap">Roadmap</a>
+                  <?php endif ?>
+                </li>
                 <li><a href="<?php echo base_url(); ?>home/logout">keluar</a></li>
               </ul>
             </div>

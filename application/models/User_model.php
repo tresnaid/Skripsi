@@ -175,12 +175,7 @@ class User_model extends CI_Model {
                 $this->db->update($table, $data);
                 
         }
-        public function updateDataAnalisis($table, $where, $tableId, $data)
-        {
-                $this->db->where($where, $tableId);
-                $this->db->update($table, $data);
-                
-        }
+       
 
         public function CheckUser($email){
                 $sql = "SELECT * FROM t_user WHERE email = '".$email."'";
@@ -237,30 +232,30 @@ class User_model extends CI_Model {
            $this->db->where($where, $clause);
            $this->db->delete($table); 
         }
-function ahp_get_matrik_kriteria($id_kriteria){
-            global $con;
-            for($i=0;$i<count($id_kriteria);$i++){
-                for($ii=0;$ii<count($id_kriteria);$ii++){
-                    if($i==$ii){
-                        $matrik[$i][$ii]=1;
-                    }else{
-                        if($i < $ii){
-                            $q=$this->db->query("select nilai from t_nilai_kriteria where id_kriteria_1='".$id_kriteria[$i]."' and id_kriteria_2='".$id_kriteria[$ii]."'");
-                            if($q->num_rows()>0){
-                                $h=$q->result_array();;
-                                $nilai=$q->row('nilai');
-                                $matrik[$i][$ii]=$nilai;
-                                $matrik[$ii][$i]=round((1/$nilai),4);
-                            }else{
+        function ahp_get_matrik_kriteria($id_kriteria){
+                    global $con;
+                    for($i=0;$i<count($id_kriteria);$i++){
+                        for($ii=0;$ii<count($id_kriteria);$ii++){
+                            if($i==$ii){
                                 $matrik[$i][$ii]=1;
-                                $matrik[$ii][$i]=1;
+                            }else{
+                                if($i < $ii){
+                                    $q=$this->db->query("select nilai from t_nilai_kriteria where id_kriteria_1='".$id_kriteria[$i]."' and id_kriteria_2='".$id_kriteria[$ii]."'");
+                                    if($q->num_rows()>0){
+                                        $h=$q->result_array();;
+                                        $nilai=$q->row('nilai');
+                                        $matrik[$i][$ii]=$nilai;
+                                        $matrik[$ii][$i]=round((1/$nilai),4);
+                                    }else{
+                                        $matrik[$i][$ii]=1;
+                                        $matrik[$ii][$i]=1;
+                                    }
+                                }
                             }
                         }
                     }
+                    return $matrik;
                 }
-            }
-            return $matrik;
-        }
         function ahp_get_matrik_alternatif($id_kriteria, $id_alternatif){
             global $con;
             for($i=0;$i<count($id_alternatif);$i++){
