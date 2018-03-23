@@ -36,10 +36,17 @@
         $username = $row['username'];
         $picture = $row['profile_picture'];
         $departemen = $row['departemen'];
+        $status_alternatif = $row['alternatif'];
+        $status_kriteria = $row['kriteria'];
+        $status_finalisasi = $row['finalisasi'];
       }
     }
   }
 ?>
+<?php echo $status_alternatif ?>
+<?php echo $status_kriteria ?>
+<?php echo $status_finalisasi ?>
+
 <?php if ($_SESSION['login'] == TRUE): ?>
 	<header class="header">
       <div class="sticky-wrapper">
@@ -64,18 +71,20 @@
                     active
                   <?php endif ?>"><a href="<?php echo base_url(); ?>home/finalisasi/1">Finalisasi</a>
                 </li>
-                <li class="
-                  <?php if($page == 'roadmap'): ?>
-                    active
-                  <?php endif ?>">
-                  <?php if ($status_kriteria == 0): ?>
-                    <a href="<?php echo base_url(); ?>home/nilaikriteria">Roadmap</a>
-                  <?php elseif ($status_kriteria == 1 && $status_alternatif==0): ?>
-                    <a href="<?php echo base_url(); ?>home/nilaialternatif/1">Roadmap</a>
-                  <?php elseif($status_kriteria == 1 && $status_alternatif==1): ?>
-                    <a href="<?php echo base_url(); ?>home/hasilroadmap">Roadmap</a>
-                  <?php endif ?>
-                </li>
+                <?php if ($status_finalisasi ==1): ?>
+                  <li class="
+                    <?php if($page == 'roadmap'): ?>
+                      active
+                    <?php endif ?>">
+                    <?php if ($status_alternatif == 1 && $status_kriteria==1): ?>
+                      <a href="<?php echo base_url(); ?>roadmap/hasilroadmap">Roadmap</a>
+                    <?php elseif ($status_kriteria == 1 && $status_alternatif==0): ?>
+                      <a href="<?php echo base_url(); ?>home/nilaialternatif/1">Roadmap</a>
+                    <?php elseif ($status_kriteria == 0): ?>
+                      <a href="<?php echo base_url(); ?>home/nilaikriteria">Roadmap</a>
+                    <?php endif ?>
+                  </li>
+                <?php endif ?>
                 <li><a href="<?php echo base_url(); ?>home/logout">keluar</a></li>
               </ul>
             </div>

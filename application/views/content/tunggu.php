@@ -1,0 +1,1 @@
+<center><?php echo "mohon tunggu, yang telah mengisi pembobotan sekitar ".$total." orang dari ".$total_user." orang"; ?></center>
