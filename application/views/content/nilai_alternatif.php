@@ -19,7 +19,7 @@
 
 <?php
 foreach($informasi as $h){
-	$alternatif[]=array($h->id_isneed,$h->isneed);
+	$alternatif[]=array($h->id_isneed,$h->isneed, $h->Tipe);
 }
 
 for($i=1;$i<=9;$i++){
@@ -56,9 +56,11 @@ if (confirm("Anda yakin dengan bobot perbandingan ini ? pastikan anda telah meng
                 <table class="table table-striped table-bordered" style="margin:0px">
                   <thead>
                     <tr>
-                      	<th>Nama alternatif</th>
+                      	<th>Nama Kebutuhan</th>
+                      	<th>Tipe</th>
 						<th>Nilai Perbandingan</th>
-						<th>Nama alternatif</th>
+						<th>Tipe</th>
+						<th>Nama Kebutuhan</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -66,7 +68,7 @@ if (confirm("Anda yakin dengan bobot perbandingan ini ? pastikan anda telah meng
 					for($i=0;$i<count($alternatif);$i++){
 						for($ii=0;$ii<count($alternatif);$ii++){
 							if($i < $ii){
-								$q = $this->db->query("select nilai from t_nilai_alternatif where id_alternatif_1='".$alternatif[$i][0]."' and id_alternatif_2='".$alternatif[$ii][0]."' and  id_kriteria='".$id_kriteria."'");
+								$q = $this->db->query("select nilai from t_nilai_alternatif_".$id_user." where id_alternatif_1='".$alternatif[$i][0]."' and id_alternatif_2='".$alternatif[$ii][0]."' and  id_kriteria='".$id_kriteria."'");
 								if($q->num_rows() >0){
 									$nilai=$q->row('nilai');
 								}else{
@@ -74,15 +76,17 @@ if (confirm("Anda yakin dengan bobot perbandingan ini ? pastikan anda telah meng
 										'id_kriteria' => $id_kriteria,
 										'id_alternatif_1' => $alternatif[$i][0],
 										'id_alternatif_2' => $alternatif[$ii][0],
+										'kode' => $id_kriteria.$alternatif[$i][0].$alternatif[$ii][0],
 										'nilai' => 1
 									);
-									$this->User_model->insertData('t_nilai_alternatif', $data_input);
+									$this->User_model->insertData('t_nilai_alternatif_'.$id_user, $data_input);
 									$nilai = 1;
 								}
 								$selected[$nilai]=' selected';
                   				 ?>
 								  <tr >
 									<td align="right"><?php echo $alternatif[$i][1] ?></td>
+									<td><?php echo $alternatif[$i][2] ?></td>
 									<td align="center"><select name="nilai_<?php echo $alternatif[$i][0]?>_<?php echo $alternatif[$ii][0]?>">
 									<option value="1" <?php echo $selected[1]?> >1. Sama penting dengan</option>
 									<option value="2" <?php echo $selected[2]?> >2. Mendekati sedikit lebih penting dari</option>
@@ -94,6 +98,7 @@ if (confirm("Anda yakin dengan bobot perbandingan ini ? pastikan anda telah meng
 									<option value="8" <?php echo $selected[8]?> >8. Mendekati kepentingan ekstrim dari</option>
 									<option value="9" <?php echo $selected[9]?> >9. Kepentingan ekstrim dari</option>
 									</select></td>
+									<td><?php echo $alternatif[$ii][2] ?></td>
 									<td><?php echo $alternatif[$ii][1] ?></td>
 								  </tr>
 								<?php 
@@ -109,6 +114,7 @@ if (confirm("Anda yakin dengan bobot perbandingan ini ? pastikan anda telah meng
           </div>
         </div>
       </div>
+      <input type="hidden" name="id" value="<?php echo $id_user ?>">
        <button type="submit" name="save" class="btn blue"><i class="icon-ok"></i> Simpan</button>	
 		<button type="submit" name="reset" class="btn" onclick="return(ResetConfirm());">Reset Nilai</button>
 		<button type="submit" name="resetall" class="btn" onclick="return(ResetConfirm());">Reset Semua</button>

@@ -26,7 +26,17 @@ $datauser = $_SESSION['list'];
 								<div class="message-head clearfix">
 									<div class="avatar pull-left"><a href="./index.php?qa=user&qa_1=Oleg+Kolesnichenko"><img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"></a></div>
 									<div class="user-detail">
-										<h5 class="handle">Bidang: <?php echo $row->id_kategori_analisis;  ?></h5>
+										<h5 class="handle">
+											Bidang: 
+											<?php if ($row->id_kategori_analisis == 'FNC'): ?>
+												Finance
+											<?php elseif ($row->id_kategori_analisis == 'LEA'): ?>
+												Learning and Growth
+											<?php elseif ($row->id_kategori_analisis == 'INT'): ?>
+												Internal Business
+											<?php elseif ($row->id_kategori_analisis == 'CST'): ?>					Customer
+											<?php endif ?>
+										</h5>
 										<h5 class="handle">Tujuan: <?php echo $row->objective; ?></h5>
 										<div class="post-meta">
 											<div class="asker-meta">

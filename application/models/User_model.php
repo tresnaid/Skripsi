@@ -8,6 +8,14 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
+        public function getDatakumulatif($table)
+        {
+                $this->db->select("*");
+                $this->db->from($table);
+                $this->db->order_by('kode', 'desc');
+                $query = $this->db->get();
+                return $query->result();
+        }
         public function getOneData($table, $where, $data)
         {
             $query = $this->db->select('*')->from($table)->where($where, $data)->get()->result_array(); 
@@ -17,13 +25,7 @@ class User_model extends CI_Model {
                     return 0;
             } 
         }
-        public function getDataarray($table)
-        {
-                $this->db->select("*");
-                $this->db->from($table);
-                $query = $this->db->get();
-                return $query->result_array();
-        }
+        
          public function getDataWhere($table, $where, $same)
         {
                 $query = $this->db->get_where($table, array($where => $same));
@@ -44,14 +46,7 @@ class User_model extends CI_Model {
                 $rowcount = $query->num_rows();
                 return $rowcount;
         }
-        public function checkhitungkriteria($id)
-        {
-            $this->db->select('hitungkriteria');
-            $this->db->from('t_user');
-            $this->db->where('id_user', $id);
-            $query = $this->db->get();
-            return $query;
-        }
+        
         public function countmax($jumlah_measure, $jumlah_action, $jumlah_isneed)
         {
             if ($jumlah_measure ==0 && $jumlah_action ==0 && $jumlah_isneed ==0) {
@@ -77,11 +72,13 @@ class User_model extends CI_Model {
             return $maksimal;
         }
 
-        public function join($table1, $table2, $where)
+       
+        public function hasil($table1, $table2, $where)
         {
                 $this->db->select('*');
                 $this->db->from($table1);
                 $this->db->join($table2, $where);
+                $this->db->order_by('nilai', 'desc');
                 $query = $this->db->get();
                 return $query->result();
         }
@@ -103,66 +100,7 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
-         public function getOneRecordor($table1, $coloumn, $where, $where2)
-        {
-                $this->db->select('*');
-                $this->db->from($table1);
-                $this->db->where($coloumn, $where);
-                $this->db->or_where($coloumn, $where2);
-                $query = $this->db->get();
-                return $query->result();
-        }
-
-         public function getOneRecordor3($table1, $coloumn, $where, $where2, $where3)
-        {
-                $this->db->select('*');
-                $this->db->from($table1);
-                $this->db->where($coloumn, $where);
-                $this->db->or_where($coloumn, $where2);
-                $this->db->or_where($coloumn, $where3);
-                $query = $this->db->get();
-                return $query->result();
-        }
-
-
-        public function join3table($table1, $table2,$table3, $where,$where2, $choose, $id)
-        {
-                $this->db->select('*');
-                $this->db->from($table1);
-                $this->db->join($table2, $where);
-                $this->db->join($table3, $where2);
-                $this->db->where($choose, $id);
-                $query = $this->db->get();
-                return $query->result();
-        }
-        public function join3table1($table1, $table2,$table3, $where,$where2)
-        {
-                $this->db->select('*');
-                $this->db->from($table1);
-                $this->db->join($table2, $where);
-                $this->db->join($table3, $where2);
-                $query = $this->db->get();
-                return $query->result();
-        }
-      
-        public function count($table){
-                $this->db->select("*");
-                $this->db->from($table);
-                $query = $this->db->get();
-                $rowcount = $query->num_rows();
-                return $rowcount;
-        }
         
-        public function getOneDatadesc($table, $where, $data,$sort)
-        {
-                $this->db->select('*');
-                $this->db->from($table);
-                $this->db->where($where, $data);
-                $this->db->order_by($sort); 
-                $query = $this->db->get();
-                return $query->result();
-
-        }
 
         public function insertData($table, $data)
         {
@@ -216,6 +154,24 @@ class User_model extends CI_Model {
             
             $query = $this->db->get();
             return $query->row()->role;
+
+        }
+        public function checknilaialternatif($kode, $id){
+            $this->db->select('nilai');
+            $this->db->from('t_nilai_alternatif_'.$id);
+            $this->db->where('kode', $kode);
+            
+            $query = $this->db->get();
+            return $query->row()->nilai;
+
+        }
+        public function checknilaikriteria($kode, $id){
+            $this->db->select('nilai');
+            $this->db->from('t_nilai_kriteria_'.$id);
+            $this->db->where('kode', $kode);
+            
+            $query = $this->db->get();
+            return $query->row()->nilai;
 
         }
         public function checkidobjective($user){
@@ -280,32 +236,33 @@ class User_model extends CI_Model {
             }
             return $matrik;
         }
-function ahp_get_jumlah_kolom($matrik){
-    for($i=0;$i<count($matrik);$i++){
-        $jumlah_kolom[$i] = 0;
-        for($ii=0;$ii<count($matrik);$ii++){
-            $jumlah_kolom[$i] = $jumlah_kolom[$i] + $matrik[$ii][$i];
+
+        function ahp_get_jumlah_kolom($matrik){
+            for($i=0;$i<count($matrik);$i++){
+                $jumlah_kolom[$i] = 0;
+                for($ii=0;$ii<count($matrik);$ii++){
+                    $jumlah_kolom[$i] = $jumlah_kolom[$i] + $matrik[$ii][$i];
+                }
+            }
+            return $jumlah_kolom;
         }
-    }
-    return $jumlah_kolom;
-}
-function ahp_get_normalisasi($matrik, $jumlah_kolom){
-    for($i=0;$i<count($matrik);$i++){
-        for($ii=0;$ii<count($matrik);$ii++){
-            $matrik_normalisasi[$i][$ii] = round( $matrik[$i][$ii] / $jumlah_kolom[$ii] , 4 );
+        function ahp_get_normalisasi($matrik, $jumlah_kolom){
+            for($i=0;$i<count($matrik);$i++){
+                for($ii=0;$ii<count($matrik);$ii++){
+                    $matrik_normalisasi[$i][$ii] = round( $matrik[$i][$ii] / $jumlah_kolom[$ii] , 4 );
+                }
+            }
+            return $matrik_normalisasi;
         }
-    }
-    return $matrik_normalisasi;
-}
-function ahp_get_eigen($matrik_normalisasi){
-    for($i=0;$i<count($matrik_normalisasi);$i++){
-        $eigen[$i] = 0;
-        for($ii=0;$ii<count($matrik_normalisasi);$ii++){
-            $eigen[$i] = $eigen[$i] + $matrik_normalisasi[$i][$ii];
+        function ahp_get_eigen($matrik_normalisasi){
+            for($i=0;$i<count($matrik_normalisasi);$i++){
+                $eigen[$i] = 0;
+                for($ii=0;$ii<count($matrik_normalisasi);$ii++){
+                    $eigen[$i] = $eigen[$i] + $matrik_normalisasi[$i][$ii];
+                }
+                $eigen[$i] = round( $eigen[$i] / count($matrik_normalisasi) , 4 );
+            }
+            return $eigen;
         }
-        $eigen[$i] = round( $eigen[$i] / count($matrik_normalisasi) , 4 );
-    }
-    return $eigen;
-}
 
 }

@@ -54,16 +54,17 @@ if (confirm("Anda yakin dengan bobot perbandingan kriteria ini ? anda tidak dapa
 					for($i=0;$i<count($kriteria);$i++){
 						for($ii=0;$ii<count($kriteria);$ii++){
 							if($i < $ii){
-								$q = $this->db->query("select nilai from t_nilai_kriteria where id_kriteria_1='".$kriteria[$i][0]."' and id_kriteria_2='".$kriteria[$ii][0]."'");
+								$q = $this->db->query("select nilai from t_nilai_kriteria_".$id_user." where id_kriteria_1='".$kriteria[$i][0]."' and id_kriteria_2='".$kriteria[$ii][0]."'");
 								if($q->num_rows() >0){
 									$nilai=$q->row('nilai');
 								}else{
 									$data_input = array(
 										'id_kriteria_1' => $kriteria[$i][0],
 										'id_kriteria_2' => $kriteria[$ii][0],
+										'kode' => $kriteria[$i][0].$kriteria[$ii][0],
 										'nilai' => 1
 									);
-									$this->User_model->insertData('t_nilai_kriteria', $data_input);
+									$this->User_model->insertData('t_nilai_kriteria_'.$id_user, $data_input);
 									$nilai = 1;
 								}
 								
@@ -97,6 +98,7 @@ if (confirm("Anda yakin dengan bobot perbandingan kriteria ini ? anda tidak dapa
           </div>
         </div>
       </div>
+      <input type="hidden" name="id" value="<?php echo $id_user ?>">
     <button type="submit" name="save" class="btn blue"><i class="icon-ok"></i> Simpan</button>
 	<button type="submit" name="reset" class="btn" onclick="return(ResetConfirm());">Reset Nilai</button>
     <button type="submit" name="next" class="btn pull-right" onclick="return(NextConfirm());">NEXT</button>
