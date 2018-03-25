@@ -34,6 +34,7 @@
         });
     });
 </script>
+
 <script type="text/javascript">
   var jumlah_measure = 0;
   var jumlah_action = 0;
@@ -67,18 +68,62 @@
     document.getElementById(link).value = jumlah_isneed_baru;
   }
 
-    function hapus(id) {
-      document.getElementById(id).value = " ";
+    function hapus(id,button,button2) {
+      if(confirm("Yakin akan menghapus ini ? pastikan anda menyimpan perubahan setelah menghapus")){
+        document.getElementById(id).value = " ";     
+        document.getElementById(id).style.display = "none";     
+        document.getElementById(button).style.display = "none";
+        document.getElementById(button2).style.display = "none";
+      }else{
+        return false;
+      }
     }
-
-  // $(function tambahmeasurebaru(link, button){
-  //     $("#button").click(function(event){
-  //         $("#link").append("<input type='text' name='moremeasurearray[]' placeholder='' required></input>");
-  //         $("#link").append("\n<br />");
-  //     });
-  // });   
-</script>
+    
+    
+  function tambahmeasurebaru(link){
+    $(document.getElementById(link)).append(
+       $('<input>', {
+        type: 'text',
+        name: 'moremeasurearray[]',
+        id: 'moremeasurearrayid'
+    })
+    );
+  }
+  function tambahactionbaru(link){
+    $(document.getElementById(link)).append(
+       $('<input>', {
+        type: 'text',
+        name: 'moreactionarray[]'
         
+    })
+    );
+  }
+  function tambahisneedbaru(link){
+    $(document.getElementById(link)).append(
+       $('<input>', {
+        type: 'text',
+        name: 'moreisneedarray[]'
+        
+    })
+    );
+  } 
+  function hehe(link) {
+     var a = document.getElementById(link).value;
+     alert(a);
+   } 
+</script>
+<!-- <form action="" method="post">
+  <div id="measurebaru1"></div> 
+  <input type="button" id=measure_add_input_button value="+ add measure" class="btn btn-default" onClick="tambahmeasurebaru('measurebaru1', 'measure_add_input_button')">
+  <button type="submit" name="hehe">sasd</button>
+</form> -->
+<!-- <?php 
+  if (isset($_POST['hehe'])) {
+        $asdid = $this->input->post('moremeasurearray');
+        print_r($asdid);
+  }
+
+ ?> -->
 <div id="tambahanalisis" class="modal fade" role="dialog" >
   <div class="modal-dialog">
     <div class="modal-content">
@@ -87,50 +132,50 @@
         <h4 class="modal-title">tambah analisis</h4>
       </div>
       <div class="modal-body">
-      	<form action="<?php echo base_url();?>analisis/inputAnalisis" method="POST">
-      		<div class="row">
-        		<div class="col-md-4">
-        			<label>Objective</label>
-        		</div>
-        		<div class="col-md-8">
-          		<input type="text" name="objective" required>
-        		</div>
-      		</div>
-      		<div class="row">
-        		<div class="col-md-4">
-        			<label>Measure</label>
-        		</div>
-        		<div class="col-md-8">
-          		<input type="text" name="measure" required>
-					<div id="measure_quotes"></div>
-					<input type="button" id=measure_add_input value="+ add measure" class="btn btn-default" onClick="onClickmeasure()">
-        		</div>
-      		</div>
-      		<div class="row">
-        		<div class="col-md-4">
-        			<label>Action</label>
-        		</div>
-        		<div class="col-md-8">
-          		<input type="text" name="action" required>
-					<div id="action_quotes"></div>
-					<input type="button" id=action_add_input value="+ add action" class="btn btn-default" onClick="onClickaction()" >
-        		</div>
-      		</div>
-      		<div class="row">
-        		<div class="col-md-4">
-        			<label>IS Need</label>
-        		</div>
-        		<div class="col-md-8">
+        <form action="<?php echo base_url();?>analisis/inputAnalisis" method="POST">
+          <div class="row">
+            <div class="col-md-4">
+              <label>Objective</label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" name="objective" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Measure</label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" name="measure" required>
+          <div id="measure_quotes"></div>
+          <input type="button" id=measure_add_input value="+ add measure" class="btn btn-default" onClick="onClickmeasure()">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Action</label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" name="action" required>
+          <div id="action_quotes"></div>
+          <input type="button" id=action_add_input value="+ add action" class="btn btn-default" onClick="onClickaction()" >
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>IS Need</label>
+            </div>
+            <div class="col-md-8">
               <input type="text" name="isneed" required>
-          		<select name="isneed_desc" required="">
+              <select name="isneed_desc" required="">
                 <option value="Buat Baru">Buat Baru</option>
                 <option value="Perbaharui">Perbaharui</option>
                 <option value="Beli">Beli</option>
               </select>
-  					<div id="isneed_quotes"></div>
+            <div id="isneed_quotes"></div>
               <input type="button" id=isneed_add_input value="+ add isneed"  class="btn btn-default" onClick="onClickisneed()">
-        		</div>
-      		</div>
+            </div>
+          </div>
       </div>
 
       <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
@@ -141,7 +186,7 @@
         <button type="submit" class="btn btn-default" name="submitted"><i class="fa fa-cross"></i> Tambah</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-cross"></i> Close</button>
       </div>
-  	</form>
+    </form>
     </div>
   </div>
 </div>
@@ -196,7 +241,7 @@
                 <table class="table table-striped table-bordered" style="margin:0px;">
                   <thead>
                     <tr>
-          						<th>Objective</th>
+                      <th>Objective</th>
                       <th>Measure</th>
                       <th>Action (CSF)</th>
                       <th>IS Need</th>
@@ -248,9 +293,9 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Hapus Analisis Ini ?</h4>
+                            <h4 class="modal-title">Edit Analisis</h4>
                           </div>
-                          <form action="<?php echo base_url();?>analisis/editAnalisis" method="POST">
+                          <form action="<?php echo base_url();?>analisis/editAnalisis" method="POST" id="edit">
                           <div class="modal-body">
                             <div class="row">
                               <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
@@ -269,9 +314,15 @@
                               <?php foreach ($data_measure as $key): ?>
                                 <input type="hidden" name="id_measure[]" value="<?php echo $key['id_measure'] ?>">
                                 <input type="text" id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" value="<?php echo $key['measure']?>" style="width: 80%"> 
-                                <button onclick="hapus('measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?>');" class="btn btn-default" name="buttonhapus">hapus</button> 
+                                <button type="button" onclick="hapus('measure<?php echo $row['id_objective'].$key['id_measure']?>','measurebutton<?php echo $row['id_objective'].$key['id_measure']?>');" class="btn btn-default" name="buttonhapus" id="measurebutton<?php echo $row['id_objective'].$key['id_measure']?>">hapus</button> 
                               <?php endforeach ?>
+                              <div id="measurebaru<?php echo $row['id_objective']?>">
                                 <input type="text" name="moremeasure" id="moremeasure" style="width: 80%;" placeholder="tambah measure disini">
+                              <!-- <button type="button" onclick="hehe('moremeasurearrayid');">check</button> -->
+                                
+                              </div> 
+                              <!-- <button type="button" id=measure_add_input_button class="btn btn-default" onclick="tambahmeasurebaru('measurebaru<?php echo $row['id_objective']?>')">tambah measure</button> -->
+                                
                               </div>
 
                               <div class="col-md-3">
@@ -281,7 +332,7 @@
                               <?php foreach ($data_action as $key): ?>
                                 <input type="hidden" name="id_action[]" value="<?php echo $key['id_action'] ?>">
                                 <input type="text" id="action<?php echo $row['id_objective']?><?php echo $key['id_action']?>" name="action[]" value="<?php echo $key['action']?>" style="width: 80%">
-                                <button onclick="hapus('action<?php echo $row['id_objective']?><?php echo $key['id_action']?>');" class="btn btn-default">hapus</button>
+                                <button type="button" onclick="hapus('action<?php echo $row['id_objective']?><?php echo $key['id_action']?>','actionbutton<?php echo $row['id_objective']?><?php echo $key['id_action']?>');" id="actionbutton<?php echo $row['id_objective']?><?php echo $key['id_action']?>" class="btn btn-default">hapus</button>
                               <?php endforeach ?>
                                 <input type="text" name="moreaction" id="moreaction" style="width: 80%;" placeholder="tambah action disini">
                               </div>
@@ -293,7 +344,7 @@
                               <?php foreach ($data_isneed as $key): ?>
                                 <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
                                 <input type="text" id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" value="<?php echo $key['isneed']?>" style="width: 80%">
-                                <select name="isneed_desc_edit[]" required="">
+                                <select name="isneed_desc_edit[]" id="isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" required="">
                                   <option value="Buat Baru" <?php if ($key['Tipe'] == 'Buat Baru'): ?>
                                     selected
                                   <?php  endif ?>
@@ -307,7 +358,7 @@
                                   <?php  endif ?>
                                   >Beli</option>
                                 </select>
-                                <button onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default">hapus</button>
+                                <button type="button" onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default" id="isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>">hapus</button>
                               <?php endforeach ?>
                                 <input type="text" name="moreisneed" id="moreisneed" style="width: 80%;" placeholder="tambah isneed disini">
                                 <select name="moreisneed_desc" required="">

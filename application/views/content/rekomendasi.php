@@ -1,8 +1,40 @@
+<section class="section-gray">
+	<div class="container clearfix">
+		<div class="row services">
+		  	<div class="col-md-12">
+		    	<h2 class="heading">ROADMAP IMPLEMENTASI</h2>
+				<div class="container">
+					<div class="qa-message-list" id="wallmessages">
+						<?php foreach ($hasil as $row): ?>
+						<div class="message-item" id="m16">
+							<div class="message-inner">
+								<div class="message-head clearfix">
+									<div class="user-detail">
+										<h5 class="handle"><?php echo $row->isneed; ?></h5>
+										<div class="post-meta">
+											<div class="asker-meta">
+												<span class="qa-message-what"></span>
+												<span class="qa-message-when">
+													<span class="qa-message-when-data"><?php echo $row->Tipe ?></span>
+												</span>	
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php endforeach ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
 <section id="rekomendasi" class="section-gray">
   	<div class="container clearfix">
     	<div class="row services">
       		<div class="col-md-12">
-        		<h2 class="heading">Rekomendasi</h2>
         		<div class="row">
           			<div class="container" style="margin-top:50px">
               			<div class="panel-body" style="padding:0px">

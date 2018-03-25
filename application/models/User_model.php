@@ -37,6 +37,14 @@ class User_model extends CI_Model {
                 $query = $this->db->get_where($table, array($where => $same, $where2 => $same2));
                 return $query->result_array();        }
 
+        public function count($table)
+        {
+                $this->db->select("*");
+                $this->db->from($table);
+                $query = $this->db->get();
+                $rowcount = $query->num_rows();
+                return $rowcount;
+        }
         public function countwhere($table, $where, $where2)
         {
                 $this->db->select("*");
@@ -82,12 +90,13 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
-        public function timeline($table1, $table2, $where)
+        public function timeline($table1, $table2, $where, $choose, $id)
         {
                 $this->db->select('*');
                 $this->db->from($table1);
                 $this->db->join($table2, $where);
-                $this->db->order_by('tanggal', 'desc');
+               
+                $this->db->order_by('waktu', 'desc');
                 $query = $this->db->get();
                 return $query->result();
         }
@@ -116,7 +125,7 @@ class User_model extends CI_Model {
        
 
         public function CheckUser($email){
-                $sql = "SELECT * FROM t_user WHERE email = '".$email."'";
+                $sql = "SELECT * FROM t_user WHERE username = '".$email."'";
 
                 $query = $this->db->query($sql);
                 if($query->num_rows()>0){
@@ -136,6 +145,16 @@ class User_model extends CI_Model {
                         return FALSE;
                 }
         }
+        public function CheckId($id, $id_objective){
+                $sql = "SELECT * FROM t_approval WHERE id_user = '".$id."' and id_objective = '".$id_objective."'";
+
+                $query = $this->db->query($sql);
+                if($query->num_rows()>0){
+                        return FALSE;
+                }else{
+                        return TRUE;
+                }
+        }
 
         public function CheckLogin($username, $password){
                 $sql = "SELECT * FROM t_user WHERE username = '".$username."' and password = '".$password."'";
@@ -147,6 +166,31 @@ class User_model extends CI_Model {
                         return FALSE;
                 }
         }
+        
+        public function checkidbaru($username){
+            $this->db->select('id_user');
+            $this->db->from('t_user');
+            $this->db->where('username', $username);
+            $this->db->order_by('id_user', 'desc');
+            $this->db->limit(1);
+            $query = $this->db->get();
+            return $query->row()->id_user;
+        }
+        public function checknama($id){
+            $this->db->select('nama_user');
+            $this->db->from('t_user');
+            $this->db->where('id_user', $id);
+            $query = $this->db->get();
+            return $query->row()->nama_user;
+        }
+        public function checkdepartemen($id){
+            $this->db->select('departemen');
+            $this->db->from('t_user');
+            $this->db->where('id_user', $id);
+            $query = $this->db->get();
+            return $query->row()->departemen;
+        }
+
         public function checkrole($email){
             $this->db->select('role');
             $this->db->from('t_user');
@@ -189,31 +233,29 @@ class User_model extends CI_Model {
            $this->db->delete($table); 
         }
         function ahp_get_matrik_kriteria($id_kriteria){
-                    global $con;
-                    for($i=0;$i<count($id_kriteria);$i++){
-                        for($ii=0;$ii<count($id_kriteria);$ii++){
-                            if($i==$ii){
-                                $matrik[$i][$ii]=1;
+            for($i=0;$i<count($id_kriteria);$i++){
+                for($ii=0;$ii<count($id_kriteria);$ii++){
+                    if($i==$ii){
+                        $matrik[$i][$ii]=1;
+                    }else{
+                        if($i < $ii){
+                            $q=$this->db->query("select nilai from t_nilai_kriteria where id_kriteria_1='".$id_kriteria[$i]."' and id_kriteria_2='".$id_kriteria[$ii]."'");
+                            if($q->num_rows()>0){
+                                $h=$q->result_array();;
+                                $nilai=$q->row('nilai');
+                                $matrik[$i][$ii]=$nilai;
+                                $matrik[$ii][$i]=round((1/$nilai),4);
                             }else{
-                                if($i < $ii){
-                                    $q=$this->db->query("select nilai from t_nilai_kriteria where id_kriteria_1='".$id_kriteria[$i]."' and id_kriteria_2='".$id_kriteria[$ii]."'");
-                                    if($q->num_rows()>0){
-                                        $h=$q->result_array();;
-                                        $nilai=$q->row('nilai');
-                                        $matrik[$i][$ii]=$nilai;
-                                        $matrik[$ii][$i]=round((1/$nilai),4);
-                                    }else{
-                                        $matrik[$i][$ii]=1;
-                                        $matrik[$ii][$i]=1;
-                                    }
-                                }
+                                $matrik[$i][$ii]=1;
+                                $matrik[$ii][$i]=1;
                             }
                         }
                     }
-                    return $matrik;
                 }
+            }
+            return $matrik;
+        }
         function ahp_get_matrik_alternatif($id_kriteria, $id_alternatif){
-            global $con;
             for($i=0;$i<count($id_alternatif);$i++){
                 for($ii=0;$ii<count($id_alternatif);$ii++){
                     if($i==$ii){

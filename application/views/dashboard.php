@@ -38,14 +38,22 @@
         $departemen = $row['departemen'];
         $status_alternatif = $row['alternatif'];
         $status_kriteria = $row['kriteria'];
-        $status_finalisasi = $row['finalisasi'];
       }
     }
+
+    $jumlah_user = $this->User_model->count('t_user');
+    $jumlah_approval = $this->User_model->count('t_approval');
+    $jumlah_objective = $this->User_model->count('t_objective');
+    if ($jumlah_approval == $jumlah_user*$jumlah_objective) {
+      $status = 1;
+    }else{
+      $status = 0;
+    }
   }
+
 ?>
-<?php echo $status_alternatif ?>
-<?php echo $status_kriteria ?>
-<?php echo $status_finalisasi ?>
+<?php echo $nama ?>
+
 
 <?php if ($_SESSION['login'] == TRUE): ?>
 	<header class="header">
@@ -54,12 +62,12 @@
           <div class="container">
             <div id="navigation" class="collapse navbar-collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li class="
+                <!-- <li class="
                 <?php if($page == 'timeline'): ?>
                   active
                 <?php endif ?>"
                 ><a href="<?php echo base_url(); ?>home/dashboard">Beranda</a>
-              </li>
+              </li> -->
                 <li class="
                   <?php if($page == 'analisis'): ?>
                     active
@@ -71,7 +79,7 @@
                     active
                   <?php endif ?>"><a href="<?php echo base_url(); ?>home/finalisasi/1">Finalisasi</a>
                 </li>
-                <?php if ($status_finalisasi ==1): ?>
+                <?php if ($status == 1): ?>
                   <li class="
                     <?php if($page == 'roadmap'): ?>
                       active

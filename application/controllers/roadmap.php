@@ -73,31 +73,37 @@ class Roadmap extends CI_Controller {
       	foreach ($datauser as $row) {
 	        $id_user = $row['id_user']; 
       	}
-
+      	$total_sudah_isi_bobot_alternatif = 0;
     	foreach ($user as $row) {
     		$id = $row->id_user;
     		$alternatif[$id] = $this->User_model->getDatakumulatif('t_nilai_kriteria_'.$id);
-    	}
-
-    	foreach ($alternatif[$id_user] as $key => $value) {
-    		$nilai = 0;
-	    	foreach ($user as $row) {
-    			$id = $row->id_user;
-    			$nilaisaatini = $this->User_model->checknilaikriteria($value->kode, $id);
-    			$nilai = $nilai + $nilaisaatini;
+    		if ($row->alternatif == 1) {
+    			$total_sudah_isi_bobot_alternatif++;
     		}
-    		$nilai = $nilai/$jumlah_user;
+    	}
+    	if ($total_sudah_isi_bobot_alternatif == $jumlah_user) {
+	    	foreach ($alternatif[$id_user] as $key => $value) {
+	    		$nilai = 0;
+		    	foreach ($user as $row) {
+	    			$id = $row->id_user;
+	    			$nilaisaatini = $this->User_model->checknilaikriteria($value->kode, $id);
+	    			$nilai = $nilai + $nilaisaatini;
+	    		}
+	    		$nilai = $nilai/$jumlah_user;
 
-    		$data_input = array(
-    			'id_kriteria_1' => $value->id_kriteria_1,
-    			'id_kriteria_2' => $value->id_kriteria_2,
-    			'kode' => $value->kode,
-    			'nilai' => $nilai
-    		);
-    		$this->User_model->insertData('t_nilai_kriteria', $data_input);
+	    		$data_input = array(
+	    			'id_kriteria_1' => $value->id_kriteria_1,
+	    			'id_kriteria_2' => $value->id_kriteria_2,
+	    			'kode' => $value->kode,
+	    			'nilai' => $nilai
+	    		);
+	    		$this->User_model->insertData('t_nilai_kriteria', $data_input);
+	    	}
+    		redirect('roadmap/isi_nilai_alternatif','refresh');
+    	}else{
+    		redirect('home/tunggu','refresh');
     	}
 
-    	redirect('roadmap/isi_nilai_alternatif','refresh');
     }
 
 
@@ -256,15 +262,7 @@ class Roadmap extends CI_Controller {
 			}
     	}
     	if ($total == count($user)) {    		
-			$datauser = $_SESSION['list'];
-	      	foreach ($datauser as $row) {
-		        $id = $row['id_user'];
-		        $status_alternatif = $row['alternatif'];
-		        $status_kriteria = $row['kriteria'];
-	      	}
-
-	      	$data['status_kriteria'] = $status_kriteria;
-	      	$data['status_alternatif'] = $status_alternatif;
+			
 			$informasi_kriteria = $this->User_model->getData('t_kriteria');
 			$informasi_alternatif = $this->User_model->getData('t_isneed');
 			
@@ -316,13 +314,8 @@ class Roadmap extends CI_Controller {
       		$datauser = $_SESSION['list'];
 	      	foreach ($datauser as $row) {
 		        $id = $row['id_user'];
-		        $status_finalisasi = $row['finalisasi'];
-		        $status_alternatif = $row['alternatif'];
-		        $status_kriteria = $row['kriteria'];
+		       
 	      	}
-	      	$data['status_finalisasi'] = $status_finalisasi;
-	      	$data['status_kriteria'] = $status_kriteria;
-	      	$data['status_alternatif'] = $status_alternatif;
 			$data['page'] = 'roadmap';
 			$data['hasil'] = $this->User_model->hasil('t_isneed','nilai_hasil', 't_isneed.id_isneed=nilai_hasil.id_isneed');
 			$data['kriteria'] = $informasi_kriteria;

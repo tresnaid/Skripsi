@@ -34,13 +34,25 @@
       <div class="wrap-login100">
         <div class="login100-form-title" style="background-image: url(<?php echo base_url(); ?>assets/login/images/bg-01.jpg);">
           <span class="login100-form-title-1">
-            Sign In
+            Register
           </span>
         </div>
                  
           <?php echo $this->session->flashdata('message'); ?>
         
-        <form class="login100-form validate-form" action="<?php echo base_url(); ?>home/check_login" method="POST">
+        <form class="login100-form validate-form" action="<?php echo base_url(); ?>home/new_account" method="POST">
+          <div class="wrap-input100 validate-input m-b-26" data-validate="Nama is required">
+            <span class="label-input100">Nama</span>
+            <input class="input100" type="text" name="name" placeholder="Enter Name">
+            <span class="focus-input100"></span>
+          </div>
+
+          <div class="wrap-input100 validate-input m-b-26" data-validate="Departemen is required">
+            <span class="label-input100">Departemen</span>
+            <input class="input100" type="text" name="department" placeholder="Enter Department">
+            <span class="focus-input100"></span>
+          </div>
+
           <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
             <span class="label-input100">Username</span>
             <input class="input100" type="text" name="username" placeholder="Enter username">
@@ -54,9 +66,8 @@
           </div>
 
             <button class="login100-form-btn" type="submit" style="border-radius: 0;">
-              Login
+              Register
             </button>
-            <a type="button" class="login100-form-btn" href="<?php echo base_url() ?>home/register">register</a>
         </form>
       </div>
     </div>

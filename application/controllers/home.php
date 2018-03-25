@@ -22,7 +22,8 @@ class Home extends CI_Controller {
 	{	
 		if (!empty($login)) {
 			if ($_SESSION['login'] == TRUE) {
-				redirect('home/dashboard','refresh');
+				// redirect('home/dashboard','refresh');
+				redirect('home/analisis/1','refresh');
 			}
 			else{	
 			$this->load->view('index.php');
@@ -33,30 +34,14 @@ class Home extends CI_Controller {
 	}
 	public function dashboard()
 	{
-		$datauser = $_SESSION['list'];
-      	foreach ($datauser as $row) {
-	        $id = $row['id_user'];
-	       
-      	}
-      	
       	$data['page'] = 'timeline';
       	$data['content'] = 'content/timeline';
-      	$data['table'] = $this->User_model->timeline('t_objective', 't_user', 't_objective.id_user=t_user.id_user');
+      	// $data['table'] = $this->User_model->timeline('t_objective', 't_user', 't_objective.id_user=t_user.id_user');
 
 		$this->load->view('dashboard.php', $data);
 	}
 	public function finalisasi($perspective)
 	{
-		$datauser = $_SESSION['list'];
-      	foreach ($datauser as $row) {
-	        $id = $row['id_user'];
-	        $status_kriteria = $row['kriteria']; 
-	        $status_finalisasi = $row['finalisasi'];
-	        $status_alternatif = $row['alternatif'];
-      	}
-      	$data['status_finalisasi'] = $status_finalisasi;
-		$data['status_alternatif'] = $status_alternatif;
-      	$data['status_kriteria'] = $status_kriteria;
       	$data['page'] = 'finalisasi';
       	$data['content'] = 'content/finalisasi';
       	$data['table'] = $this->User_model->getData('t_user');
@@ -78,17 +63,13 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
-	        $status_finalisasi = $row['finalisasi'];
-	        $status_kriteria = $row['kriteria'];
-	        $status_alternatif = $row['alternatif'];
+	       
       	}
-      	$data['status_finalisasi'] = $status_finalisasi;
-		$data['status_alternatif'] = $status_alternatif;
+      	
       	$data['informasi'] = $this->User_model->getData('t_kriteria');
       	$data['page'] = 'roadmap';
       	$data['id_user'] = $id;
       	$data['content'] = 'content/nilai_kriteria';
-      	$data['status_kriteria'] = $status_kriteria;
 		$this->load->view('dashboard.php', $data);
     }
 
@@ -97,13 +78,9 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
-	        $status_finalisasi = $row['finalisasi'];
-	        $status_kriteria = $row['kriteria'];
-	        $status_alternatif = $row['alternatif'];
+	       
       	}
-      	$data['status_finalisasi'] = $status_finalisasi;
-      	$data['status_kriteria'] = $status_kriteria;
-      	$data['status_alternatif'] = $status_alternatif;
+      	
       	$data['menu'] = 'content/menu';
       	$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
 		$data['informasi'] = $this->User_model->getData('t_isneed');
@@ -116,16 +93,7 @@ class Home extends CI_Controller {
 
 	public function tunggu()
 	{
-		$datauser = $_SESSION['list'];
-      	foreach ($datauser as $row) {
-	        $id = $row['id_user'];
-	        $status_finalisasi = $row['finalisasi'];
-	        $status_alternatif = $row['alternatif'];
-	        $status_kriteria = $row['kriteria'];
-      	}
-      	$data['status_finalisasi'] = $status_finalisasi;
-      	$data['status_kriteria'] = $status_kriteria;
-      	$data['status_alternatif'] = $status_alternatif;
+		
 		$data['content'] = "content/tunggu.php";
 		$data['page'] = 'roadmap';
 		$user = $this->User_model->getData('t_user');
@@ -149,13 +117,9 @@ class Home extends CI_Controller {
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
-	        $status_finalisasi = $row['finalisasi'];
-	        $status_alternatif = $row['alternatif'];
-	        $status_kriteria = $row['kriteria'];
+	        
       	}
-      	$data['status_finalisasi'] = $status_finalisasi;
-      	$data['status_kriteria'] = $status_kriteria;
-      	$data['status_alternatif'] = $status_alternatif;
+      	
       	$data['page'] = 'analisis';
 		$data['content'] = 'content/analisis';
       	if ($perspective == '1') {
@@ -194,12 +158,64 @@ class Home extends CI_Controller {
 					'list' => $this->User_model->getOneData('t_user','username',$username)
 				);
 				$this->session->set_userdata($data);
-				redirect('home/dashboard');
+				// redirect('home/dashboard');
+				redirect('home/analisis/1','refresh');
 			}else{
 				$this->session->set_flashdata('message', 'username atau password yang anda masukkan salah');
 				redirect('home','refresh');
 			}
 		
 	}
-	
+	public function register()
+	{
+		$this->load->view('register.php');
+		
+	}
+	public function new_account()
+	{
+		$nama = $this->input->post('name');
+		$department = $this->input->post('department');
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+
+		if ($this->User_model->CheckUser($username) == FALSE) {
+			$data_input=array(
+				'nama_user' => $nama,
+				'departemen' => $department,
+				'username' => $username,
+				'password' => $password
+			);
+			$this->User_model->insertData('t_user', $data_input);
+			$id = $this->User_model->checkidbaru($username);
+
+			$this->db->query("CREATE TABLE `t_nilai_kriteria_".$id."` (
+							  `id_nilai_kriteria` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+							  `id_kriteria_1` int(11) NOT NULL,
+							  `id_kriteria_2` int(11) NOT NULL,
+							  `kode` int(11) NOT NULL,
+							  `nilai` double(11,4) NOT NULL
+							)");
+			$this->db->query("CREATE TABLE `t_nilai_alternatif_".$id."` (
+							  `id_nilai_alternatif` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+							  `id_kriteria` int(11) NOT NULL,
+							  `id_alternatif_1` int(11) NOT NULL,
+							  `id_alternatif_2` int(11) NOT NULL,
+							  `kode` int(11) NOT NULL,
+							  `nilai` double(11,4) NOT NULL
+							)");
+
+			$user = $this->User_model->getData('t_user');
+			foreach ($user as $key) {
+				$data_update = array(
+					'alternatif' => 0
+				);
+				$this->User_model->updateData('t_user', 'id_user', $key->id_user, $data_update);
+			}
+			$this->session->set_flashdata('message', 'anda telah terdaftar, silakan login menggunakan username dan password yang telah anda daftarkan');
+			redirect('home','refresh');
+		}else{
+			$this->session->set_flashdata('message', 'username telah tersedia');
+			redirect('home/register','refresh');
+		}
+	}
 }

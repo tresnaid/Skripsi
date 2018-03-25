@@ -6,7 +6,7 @@
 <?php 
 $datauser = $_SESSION['list'];
   	foreach ($datauser as $row) {
-        $id = $row['id_user'];
+        $id_user = $row['id_user'];
   	}
 ?>
 <section class="section-gray">
@@ -61,9 +61,11 @@ $datauser = $_SESSION['list'];
 				                <th>IS Need</th>
 				                <th>diusulkan Oleh</th>
 				                <th>Option</th>
+				                <th>Vote</th>
 			                </tr>
 			              </thead>
 			              <tbody>
+			              	<?php $jumlah_user = count($table); ?>
 			              	<?php foreach ($table as $table): ?>
 			              		<?php $id = $table->id_user; ?>
 			              		<?php $data_objective = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', $kategori); ?>
@@ -83,6 +85,11 @@ $datauser = $_SESSION['list'];
 					                  $jumlah_max = $biggest['jumlah'];
 					                  $nama_max = $biggest['nama'];
 			  		                 ?>
+			                          <?php 
+			                          $status = $this->User_model->CheckId($id_user, $row['id_objective']); 
+			                          $data_approval = $this->User_model->getDataWhere('t_approval', 'id_objective', $row['id_objective']);
+			                          $jumlah = count($data_approval);
+			                          ?>
 
 			  		                  <?php if ($nama_max == 'measure'): ?>
 			                      		<?php foreach ($data_measure as $key => $value): ?>
@@ -112,6 +119,20 @@ $datauser = $_SESSION['list'];
 					                          <td rowspan="<?php echo $jumlah_max; ?>">
 					                            <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a> 
 					                          </td>
+						                  		<td rowspan="<?php echo $jumlah_max; ?>">
+						                  			<form action="<?php echo base_url() ?>analisis/approve" method="post">		
+						                          	<input type="hidden" name="kategori" value="<?php echo $kategori ?>">
+						                  				<input type="hidden" name="id" value="<?php echo $id_user ?>">
+						                  				<input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
+						                  				<?php if ($status==TRUE): ?>
+								                    	    <button type="submit" class="btn">approve</button>
+						                  				<?php else: ?>	
+								                    	    <button  class="btn" disabled="">approve</button>
+						                  				<?php endif ?>
+						                  				<br>
+						                  				<?php echo $jumlah."/".$jumlah_user ?>
+						                  			</form>
+						                  		</td>
 					                          <?php endif ?>
 					                        </tr>
 
@@ -146,6 +167,20 @@ $datauser = $_SESSION['list'];
 					                          <td rowspan="<?php echo $jumlah_max; ?>">
 					                          <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a> 
 					                        </td>
+						                  		<td rowspan="<?php echo $jumlah_max; ?>">
+						                  			<form action="<?php echo base_url() ?>analisis/approve" method="post">		
+						                          	<input type="hidden" name="kategori" value="<?php echo $kategori ?>">
+						                  				<input type="hidden" name="id" value="<?php echo $id_user ?>">
+						                  				<input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
+							                    	    <?php if ($status==TRUE): ?>
+								                    	    <button type="submit" class="btn">approve</button>
+						                  				<?php else: ?>	
+								                    	    <button  class="btn" disabled="">approve</button>
+						                  				<?php endif ?>
+						                  				<br>
+						                  				<?php echo $jumlah."/".$jumlah_user ?>
+						                  			</form>
+						                  		</td>
 					                        <?php endif ?>
 					                      </tr>
 
@@ -179,6 +214,20 @@ $datauser = $_SESSION['list'];
 						                      <td rowspan="<?php echo $jumlah_max; ?>">
 						                        <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a>
 						                      </td>
+						                      <td rowspan="<?php echo $jumlah_max; ?>">
+						                  			<form action="<?php echo base_url() ?>analisis/approve" method="post">		
+						                          	<input type="hidden" name="kategori" value="<?php echo $kategori ?>">
+						                  				<input type="hidden" name="id" value="<?php echo $id_user ?>">
+						                  				<input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
+							                    	    <?php if ($status==TRUE): ?>
+								                    	    <button type="submit" class="btn">approve</button>
+						                  				<?php else: ?>	
+								                    	    <button  class="btn" disabled="">approve</button>
+						                  				<?php endif ?>
+						                  				<br>
+						                  				<?php echo $jumlah."/".$jumlah_user ?>
+						                  			</form>
+						                  		</td>
 						                      <?php endif ?>
 						                    </tr>
 
@@ -192,12 +241,26 @@ $datauser = $_SESSION['list'];
 							                    <td> </td>
 							                    <td> </td>
 							                    <td>
-							                      <td>
-					                          	<?php echo $table->nama_user; ?>
-					                          </td>
+				                          			<?php echo $table->nama_user; ?>
+				                          		</td>
+							                    <td>
 							                        <a href="" data-toggle="modal" data-target="#komentar<?php echo $row['id_objective']?>"><i class="fa fa-comment-o"></i></a> 
-							                      </td>
-							                  </tr>
+						                      	</td>
+						                  		<td>
+						                  			<form action="<?php echo base_url() ?>analisis/approve" method="post">		
+						                          	<input type="hidden" name="kategori" value="<?php echo $kategori ?>">
+						                  				<input type="hidden" name="id" value="<?php echo $id ?>">
+						                  				<input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
+							                    	    <?php if ($status==TRUE): ?>
+								                    	    <button type="submit" class="btn">approve</button>
+						                  				<?php else: ?>	
+								                    	    <button  class="btn" disabled="">approve</button>
+						                  				<?php endif ?>
+						                  				<br>
+						                  				<?php echo $jumlah."/".$jumlah_user ?>
+						                  			</form>
+						                  		</td>
+					                     	</tr>
 					                    <?php endforeach ?>
 					                <?php endif ?>
 					                <div id="komentar<?php echo $row['id_objective']?>" class="modal fade" role="dialog" >
@@ -227,19 +290,29 @@ $datauser = $_SESSION['list'];
 					                          	</div>
 					                          	<form action="<?php echo base_url();?>analisis/alasanfinalisasi" method="POST">
 						                          	<input type="hidden" name="kategori" value="<?php echo $kategori ?>">
-						                          	<input type="hidden" name="id" value="<?php echo $id ?>">
+						                          	<input type="hidden" name="id" value="<?php echo $id_user ?>">
 						                          	<input type="hidden" name="id_objective" value="<?php echo $row['id_objective'] ?>">
-					                        		<div class="modal-footer">
-					                          			<input type="text" name="komentar" style="width: 95%;">
-					                          			<button type="submit" class="btn btn-default"><i class="fa fa-cross"></i>Komentar</button>
-					                          			<hr>
-					                        		</div>
+						                          	<hr>
 					                        		<div class="modal-body" >
-							                        	<?php foreach ($komentar as $key): ?>
-							                        		<?php echo $key['alasan']; ?>
-							                        		<?php echo '<br/>' ?>
-							                        	<?php endforeach ?>
+					                        			<h5>KOMENTAR</h5>
+					                        			<?php if (!empty($komentar)): ?>
+								                        	<?php foreach ($komentar as $key): ?>
+								                        		<?php echo $this->User_model->checknama($key['id_user']); ?>
+								                        		[<?php echo $this->User_model->checkdepartemen($key['id_user']); ?> department]
+								                        		<?php echo $key['waktu']; ?>
+								                        		<?php echo '<br/>' ?>
+								                        		<?php echo $key['alasan']; ?>
+								                        		<?php echo '<br/>' ?>
+								                        		<?php echo '<br/>' ?>
+								                        	<?php endforeach ?>
+								                        <?php else: ?>
+								                        	belum ada komentar
+					                        			<?php endif ?>
 							                        </div>
+					                        		<div class="modal-footer">
+					                          			<input type="text" name="komentar" style="width: 95%;" required="">
+					                          			<button type="submit" class="btn btn-default"><i class="fa fa-cross"></i>Komentar</button>
+					                        		</div>
 					                        	</form>
 					                      	</div>
 					                   	</div>

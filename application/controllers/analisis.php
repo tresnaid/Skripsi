@@ -112,6 +112,7 @@ class Analisis extends CI_Controller {
 		$id = $this->input->post('id_objective');
 
 		$this->User_model->delete('t_objective', 'id_objective', $id);
+		$this->User_model->delete('t_approval', 'id_objective', $id);
 		$this->User_model->delete('t_measure', 'id_objective', $id);
 		$this->User_model->delete('t_action', 'id_objective', $id);
 		$this->User_model->delete('t_isneed', 'id_objective', $id);
@@ -221,6 +222,10 @@ class Analisis extends CI_Controller {
 								 );
 			$this->User_model->insertData('t_isneed', $data_input);
 		}
+
+		
+		// $moremeasurearray = $this->input->post('moremeasurearrayid');
+		// print_r($moremeasurearray);
 		// if (!empty($moremeasurearray)) {
 		// 	$moremeasurearray = $this->input->post('moremeasurearray');
 		// 	foreach ($moremeasurearray as $key) {
@@ -304,5 +309,30 @@ class Analisis extends CI_Controller {
 			echo $kategori;
 		}	
 	}
+	public function approve()
+	{
+		$id = $this->input->post('id');
+		$kategori = $this->input->post('kategori');
+		$id_objective = $this->input->post('id_objective');
 
+		if ($this->User_model->CheckId($id, $id_objective) == TRUE) {
+			$data_input=array(
+				'id_user' => $id,
+				'id_objective' => $id_objective
+			);
+			$this->User_model->insertData('t_approval', $data_input);
+		}
+		if ($kategori == 'FNC') {
+			redirect('home/finalisasi/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/finalisasi/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/finalisasi/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/finalisasi/4','refresh');
+		}else{
+			echo $kategori;
+		}	
+
+	}
 }
