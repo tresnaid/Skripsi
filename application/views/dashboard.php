@@ -85,7 +85,7 @@
                       active
                     <?php endif ?>">
                     <?php if ($status_alternatif == 1 && $status_kriteria==1): ?>
-                      <a href="<?php echo base_url(); ?>roadmap/hasilroadmap">Roadmap</a>
+                      <a href="<?php echo base_url(); ?>home/rekomendasi">Roadmap</a>
                     <?php elseif ($status_kriteria == 1 && $status_alternatif==0): ?>
                       <a href="<?php echo base_url(); ?>home/nilaialternatif/1">Roadmap</a>
                     <?php elseif ($status_kriteria == 0): ?>

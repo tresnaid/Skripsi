@@ -164,91 +164,7 @@ class Roadmap extends CI_Controller {
     		}
     }
 
-    public function isi_nilai_kriteria()
-    {
-
-		$this->db->query("truncate table t_nilai_kriteria");
-    	$user = $this->User_model->getData('t_user');
-    	$jumlah_user = count($user);
-    	$datauser = $_SESSION['list'];
-      	
-      	foreach ($datauser as $row) {
-	        $id_user = $row['id_user']; 
-      	}
-      	$total_sudah_isi_bobot_alternatif = 0;
-    	foreach ($user as $row) {
-    		$id = $row->id_user;
-    		$alternatif[$id] = $this->User_model->getDatakumulatif('t_nilai_kriteria_'.$id);
-    		if ($row->alternatif == 1) {
-    			$total_sudah_isi_bobot_alternatif++;
-    		}
-    	}
-    	if ($total_sudah_isi_bobot_alternatif == $jumlah_user) {
-	    	foreach ($alternatif[$id_user] as $key => $value) {
-	    		$nilai = 0;
-		    	foreach ($user as $row) {
-	    			$id = $row->id_user;
-	    			$nilaisaatini = $this->User_model->checknilaikriteria($value->kode, $id);
-	    			$nilai = $nilai + $nilaisaatini;
-	    		}
-	    		$nilai = $nilai/$jumlah_user;
-
-	    		$data_input = array(
-	    			'id_kriteria_1' => $value->id_kriteria_1,
-	    			'id_kriteria_2' => $value->id_kriteria_2,
-	    			'kode' => $value->kode,
-	    			'nilai' => $nilai
-	    		);
-	    		$this->User_model->insertData('t_nilai_kriteria', $data_input);
-	    	}
-    		redirect('roadmap/isi_nilai_alternatif','refresh');
-    	}else{
-    		redirect('home/tunggu','refresh');
-    	}
-
-    }
-
-
-    public function isi_nilai_alternatif()
-    {
-
-		$this->db->query("truncate table t_nilai_alternatif");
-    	$user = $this->User_model->getData('t_user');
-    	$jumlah_user = count($user);
-    	$datauser = $_SESSION['list'];
-      	
-      	foreach ($datauser as $row) {
-	        $id_user = $row['id_user']; 
-      	}
-
-    	foreach ($user as $row) {
-    		$id = $row->id_user;
-    		$alternatif[$id] = $this->User_model->getDatakumulatif('t_nilai_alternatif_'.$id);
-    	}
-
-    	foreach ($alternatif[$id_user] as $key => $value) {
-    		$nilai = 0;
-	    	foreach ($user as $row) {
-    			$id = $row->id_user;
-    			$nilaisaatini = $this->User_model->checknilaialternatif($value->kode, $id);
-    			$nilai = $nilai + $nilaisaatini;
-    		}
-    		$nilai = $nilai/$jumlah_user;
-
-    		$data_input = array(
-    			'id_kriteria' => $value->id_kriteria,
-    			'id_alternatif_1' => $value->id_alternatif_1,
-    			'id_alternatif_2' => $value->id_alternatif_2,
-    			'kode' => $value->kode,
-    			'nilai' => $nilai
-    		);
-    		$this->User_model->insertData('t_nilai_alternatif', $data_input);
-    	}
-    	redirect('roadmap/hasilroadmap','refresh');
-
-
-    }
-	
+    
 	public function insertBobotalternatif($id_kriteria)
 	{
 		if ($id_kriteria == 1) {
@@ -721,9 +637,128 @@ class Roadmap extends CI_Controller {
     	}elseif ($tipe == 'INT') {
 	    	redirect('home/nilaialternatif/4','refresh');
     	}elseif ($tipe == 'LEA') {
-	    	redirect('home/tunggu','refresh');
+	    	redirect('roadmap/hasilkeseluruhanfuzzy/'.$id,'refresh');
     	}
     }
+
+    public function hasilkeseluruhanfuzzy($id)
+    {
+		$this->db->query("truncate table t_fuzzy_perbandingan_semua_".$id);
+    	$hasil_fuzzy = $this->User_model->getData('t_fuzzy_nilai_hasil_'.$id);
+    	foreach ($hasil_fuzzy as $key => $value){
+			if ($value->tipe == 'KRITERIA'){
+			$data[$value->id_kriteria] = array(
+				'id_kriteria' => $value->id_kriteria,
+				'nilai_hasil' => $value->nilai_hasil
+			);
+			}
+		}
+	
+		foreach ($hasil_fuzzy as $key => $value){
+			if ($value->tipe != 'KRITERIA') {
+				if ($value->tipe == 'FNC'){
+					$nilai_akhir = $value->nilai_hasil * $data[1]['nilai_hasil'];
+				}elseif ($value->tipe == 'CST') {
+					$nilai_akhir = $value->nilai_hasil * $data[2]['nilai_hasil'];
+				}elseif ($value->tipe == 'INT') {
+					$nilai_akhir = $value->nilai_hasil * $data[3]['nilai_hasil'];
+				}elseif ($value->tipe == 'LEA') {
+					$nilai_akhir = $value->nilai_hasil * $data[4]['nilai_hasil'];
+				}
+
+				$data_input = array(
+					'id_isneed' => $value->id_kriteria,
+					'tipe' => $value->tipe,
+					'nilai_hasil' => $nilai_akhir 
+				);
+				$this->User_model->insertData('t_fuzzy_perbandingan_semua_'.$id, $data_input);
+			}
+		}
+		redirect('home/tunggu','refresh');
+    }
+
+
+    public function isi_nilai_kriteria()
+    {
+		$this->db->query("truncate table t_nilai_kriteria");
+    	$user = $this->User_model->getData('t_user');
+    	$jumlah_user = count($user);
+    	$datauser = $_SESSION['list'];
+      	
+      	foreach ($datauser as $row) {
+	        $id_user = $row['id_user']; 
+      	}
+      	$total_sudah_isi_bobot_alternatif = 0;
+    	foreach ($user as $row) {
+    		$id = $row->id_user;
+    		$alternatif[$id] = $this->User_model->getDatakumulatif('t_nilai_kriteria_'.$id);
+    		if ($row->alternatif == 1) {
+    			$total_sudah_isi_bobot_alternatif++;
+    		}
+    	}
+    	if ($total_sudah_isi_bobot_alternatif == $jumlah_user) {
+	    	foreach ($alternatif[$id_user] as $key => $value) {
+	    		$nilai = 0;
+		    	foreach ($user as $row) {
+	    			$id = $row->id_user;
+	    			$nilaisaatini = $this->User_model->checknilaikriteria($value->kode, $id);
+	    			$nilai = $nilai + $nilaisaatini;
+	    		}
+	    		$nilai = $nilai/$jumlah_user;
+
+	    		$data_input = array(
+	    			'id_kriteria_1' => $value->id_kriteria_1,
+	    			'id_kriteria_2' => $value->id_kriteria_2,
+	    			'kode' => $value->kode,
+	    			'nilai' => $nilai
+	    		);
+	    		$this->User_model->insertData('t_nilai_kriteria', $data_input);
+	    	}
+    		redirect('roadmap/isi_nilai_alternatif','refresh');
+    	}else{
+    		redirect('home/tunggu','refresh');
+    	}
+
+    }
+
+
+    public function isi_nilai_alternatif()
+    {
+		$this->db->query("truncate table t_nilai_alternatif");
+    	$user = $this->User_model->getData('t_user');
+    	$jumlah_user = count($user);
+    	$datauser = $_SESSION['list'];
+      	
+      	foreach ($datauser as $row) {
+	        $id_user = $row['id_user']; 
+      	}
+
+    	foreach ($user as $row) {
+    		$id = $row->id_user;
+    		$alternatif[$id] = $this->User_model->getDatakumulatif('t_nilai_alternatif_'.$id);
+    	}
+
+    	foreach ($alternatif[$id_user] as $key => $value) {
+    		$nilai = 0;
+	    	foreach ($user as $row) {
+    			$id = $row->id_user;
+    			$nilaisaatini = $this->User_model->checknilaialternatif($value->kode, $id);
+    			$nilai = $nilai + $nilaisaatini;
+    		}
+    		$nilai = $nilai/$jumlah_user;
+
+    		$data_input = array(
+    			'id_kriteria' => $value->id_kriteria,
+    			'id_alternatif_1' => $value->id_alternatif_1,
+    			'id_alternatif_2' => $value->id_alternatif_2,
+    			'kode' => $value->kode,
+    			'nilai' => $nilai
+    		);
+    		$this->User_model->insertData('t_nilai_alternatif', $data_input);
+    	}
+    	redirect('roadmap/hasilroadmap','refresh');
+    }
+	
 	public function hasilroadmap()
 	{
 		$user = $this->User_model->getData('t_user');
@@ -785,12 +820,11 @@ class Roadmap extends CI_Controller {
 				$this->User_model->insertData('nilai_hasil', $data_input);
 			}
 
-			$data['content'] = "content/rekomendasi.php";
       		$datauser = $_SESSION['list'];
 	      	foreach ($datauser as $row) {
 		        $id = $row['id_user'];
-		       
 	      	}
+			$data['content'] = "content/rekomendasi.php";
 			$data['page'] = 'roadmap';
 			$data['hasil'] = $this->User_model->hasil('t_isneed','nilai_hasil', 't_isneed.id_isneed=nilai_hasil.id_isneed');
 			$data['kriteria'] = $informasi_kriteria;
@@ -799,7 +833,6 @@ class Roadmap extends CI_Controller {
     	}else{
     		echo $total;
     	}
-
 	}
 
 	

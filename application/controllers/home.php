@@ -132,9 +132,54 @@ class Home extends CI_Controller {
     	}
     	$data['total'] = $total;
     	$data['total_user'] = count($user);
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+      	$data['perbandingan_kriteria'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_kriteria', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_kriteria.id_kriteria', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'KRITERIA');
+      	$data['perbandingan_finance'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_isneed', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_isneed.id_isneed', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'FNC');
+      	$data['perbandingan_customer'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_isneed', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_isneed.id_isneed', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'CST');
+      	$data['perbandingan_internal'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_isneed', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_isneed.id_isneed', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'INT');
+      	$data['perbandingan_learning'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_isneed', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_isneed.id_isneed', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'LEA');
+      	$data['perbandingan_semua'] = $this->User_model->hasil_fuzzy('t_fuzzy_perbandingan_semua_'.$id, 't_isneed', 't_fuzzy_perbandingan_semua_'.$id.'.id_isneed = t_isneed.id_isneed');
+
 		$this->load->view('dashboard.php', $data);
 	}
+	public function rekomendasi()
+	{
+		$this->db->query("truncate table t_roadmap");
+		$user = $this->User_model->getData('t_user');
+		$jumlah_user = count($user);
+		$datauser = $_SESSION['list'];
+      	
+      	foreach ($datauser as $row) {
+	        $id_user = $row['id_user']; 
+      	}
+		foreach ($user as $key) {
+			$id = $key->id_user;
+			$data_hasil[$id] = $this->User_model->getDatakumulatif('t_fuzzy_perbandingan_semua_'.$id);
+		}
+    	foreach ($data_hasil[$id_user] as $key => $value) {
+    		$nilai = 0;
+	    	foreach ($user as $row) {
+    			$id = $row->id_user;
+    			$nilaisaatini = $this->User_model->checknilaihasilfuzzy($value->id_isneed, $id);
+    			$nilai = $nilai + $nilaisaatini;
+    		}
+    		$nilai = $nilai/$jumlah_user;
 
+    		$data_input = array(
+    			'id_isneed' => $value->id_isneed,
+    			'tipe' => $value->tipe,
+    			'nilai_hasil' => $nilai
+    		);
+    		$this->User_model->insertData('t_roadmap', $data_input);
+    	}
+			$data['content'] = "content/rekomendasi.php";
+			$data['page'] = 'roadmap';
+			$data['hasil'] = $this->User_model->hasil_fuzzy('t_isneed','t_roadmap', 't_isneed.id_isneed=t_roadmap.id_isneed');
+			$this->load->view('dashboard.php', $data);
+	}
 
 
 	public function analisis($perspective)
@@ -165,12 +210,6 @@ class Home extends CI_Controller {
 	}
 
 
-	public function logout()
-	{
-		$data = array('login' => FALSE);
-		$this->session->set_userdata($data);
-		redirect('Home','refresh');
-	}
 	
 	public function check_login()
 	{
@@ -218,8 +257,8 @@ class Home extends CI_Controller {
 							  `id_kriteria_1` int(11) NOT NULL,
 							  `id_kriteria_2` int(11) NOT NULL,
 							  `kode` int(11) NOT NULL,
-							  `nilai` double(11,4) NOT NULL,
 							  `nilaimin` double(11,4) NOT NULL,
+							  `nilai` double(11,4) NOT NULL,
 							  `nilaimax` double(11,4) NOT NULL
 							)");
 			$this->db->query("CREATE TABLE `t_nilai_alternatif_".$id."` (
@@ -228,8 +267,8 @@ class Home extends CI_Controller {
 							  `id_alternatif_1` int(11) NOT NULL,
 							  `id_alternatif_2` int(11) NOT NULL,
 							  `kode` int(11) NOT NULL,
-							  `nilai` double(11,4) NOT NULL,
 							  `nilaimin` double(11,4) NOT NULL,
+							  `nilai` double(11,4) NOT NULL,
 							  `nilaimax` double(11,4) NOT NULL
 							)");
 
@@ -247,4 +286,12 @@ class Home extends CI_Controller {
 			redirect('home/register','refresh');
 		}
 	}
+
+	public function logout()
+	{
+		$data = array('login' => FALSE);
+		$this->session->set_userdata($data);
+		redirect('Home','refresh');
+	}
+	
 }

@@ -44,9 +44,9 @@
 										<th style="text-align:center;" width="20">NO</th>
 										<th>Alternatif</th>
 										<th>Tipe</th>
-										<?php foreach ($kriteria as $row): ?>
+										<!-- <?php foreach ($kriteria as $row): ?>
 											<th style="text-align:center;"><?php echo $row->nama_kriteria ?></th>
-										<?php endforeach ?>
+										<?php endforeach ?> -->
 										<th style="text-align:center;">Nilai</th>
 									</tr>
 									</thead>
@@ -54,7 +54,16 @@
 										<?php
 										$counter = 1;
 										?>
-										<?php foreach ($hasil as $key): ?>
+										<?php foreach ($hasil as $key): ?>	
+											<tr>
+												<td style="text-align:center;"><?php echo $counter ?></td>
+												<td><?php echo $key->isneed ?></td>
+												<td><?php echo $key->Tipe ?></td>
+												<td><?php echo $key->nilai_hasil ?></td>
+											</tr>
+											<?php $counter++; ?>
+										<?php endforeach ?>
+											<!-- <?php foreach ($hasil as $key): ?>
 												<tr>
 													<td style="text-align:center;"><?php echo $counter ?></td>
 													<td><?php echo $key->isneed ?></td>
@@ -66,7 +75,7 @@
 													<td><?php echo $key->nilai ?></td>
 												</tr>
 											<?php $counter++; ?>
-										<?php endforeach ?>
+										<?php endforeach ?> -->
 									</tbody>
 								</table>
 						</div>

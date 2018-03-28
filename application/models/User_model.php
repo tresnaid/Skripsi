@@ -12,7 +12,6 @@ class User_model extends CI_Model {
         {
                 $this->db->select("*");
                 $this->db->from($table);
-                $this->db->order_by('kode', 'desc');
                 $query = $this->db->get();
                 return $query->result();
         }
@@ -93,6 +92,25 @@ class User_model extends CI_Model {
                 $this->db->from($table1);
                 $this->db->join($table2, $where);
                 $this->db->order_by('nilai', 'desc');
+                $query = $this->db->get();
+                return $query->result();
+        }
+        public function hasil_fuzzy($table1, $table2, $where)
+        {
+                $this->db->select('*');
+                $this->db->from($table1);
+                $this->db->join($table2, $where);
+                $this->db->order_by('nilai_hasil', 'desc');
+                $query = $this->db->get();
+                return $query->result();
+        }
+        public function hasil_fuzzy_perkriteria($table1, $table2, $where, $choose, $same)
+        {
+                $this->db->select('*');
+                $this->db->from($table1);
+                $this->db->join($table2, $where);
+                $this->db->where($choose, $same);
+                $this->db->order_by('nilai_hasil', 'desc');
                 $query = $this->db->get();
                 return $query->result();
         }
@@ -222,6 +240,15 @@ class User_model extends CI_Model {
             
             $query = $this->db->get();
             return $query->row()->nilai;
+
+        }
+        public function checknilaihasilfuzzy($id_isneed, $id){
+            $this->db->select('nilai_hasil');
+            $this->db->from('t_fuzzy_perbandingan_semua_'.$id);
+            $this->db->where('id_isneed', $id_isneed);
+            
+            $query = $this->db->get();
+            return $query->row()->nilai_hasil;
 
         }
         public function checkidobjective($user){
