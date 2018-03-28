@@ -1,0 +1,117 @@
+    public function isi_fuzzy_kriteria($id)
+    {
+    	$this->db->query("truncate table t_fuzzy_kriteria");
+    	$this->User_model->delete('t_fuzzy_hasil_kriteria', 'tipe', 'KRI');
+		$data = $this->User_model->getData('t_nilai_kriteria_'.$id);
+		$kriteria = $this->User_model->getData('t_kriteria');
+		$jumlah_total = 0;
+		$jumlah_total_max = 0;
+		$jumlah_total_min = 0;
+		foreach ($kriteria as $row) {
+			$jumlah_baris =0;
+			$jumlah_baris_min =0;
+			$jumlah_baris_max =0;
+			foreach ($data as $key) {
+				if ($row->id_kriteria == $key->id_kriteria_1) {
+					$jumlah_baris = $jumlah_baris + $key->nilai;
+					$jumlah_baris_min = $jumlah_baris_min + $key->nilaimin;
+					$jumlah_baris_max = $jumlah_baris_max + $key->nilaimax;
+				}
+				
+			}
+			$data_input=array(
+				'id_kriteria' => $row->id_kriteria,
+				'jumlah_baris' => $jumlah_baris,
+				'jumlah_baris_min' => $jumlah_baris_min,
+				'jumlah_baris_max' => $jumlah_baris_max,
+				
+			);
+			$this->User_model->insertData('t_fuzzy_kriteria', $data_input);
+			$jumlah_total = $jumlah_total + $jumlah_baris;
+			$jumlah_total_min = $jumlah_total_min + $jumlah_baris_min;
+			$jumlah_total_max = $jumlah_total_max + $jumlah_baris_max;
+		}
+		$data_input=array(
+			'tipe' => "KRI",
+			'jumlah_total' => $jumlah_total, 
+			'jumlah_total_min' => $jumlah_total_min, 
+			'jumlah_total_max' => $jumlah_total_max
+		);
+		$this->User_model->insertData('t_fuzzy_hasil_kriteria', $data_input);
+		redirect('roadmap/fuzzy_sintetic','refresh');
+    }
+    public function fuzzy_sintetic()
+    {
+    	$this->db->query("truncate table t_fuzzy_sintetic");
+    	$data = $this->User_model->getData('t_fuzzy_kriteria');
+    	$jumlah_kali = $this->User_model->getData('t_fuzzy_hasil_kriteria');
+    	foreach ($jumlah_kali as $key) {
+    		$jumlahkalimin = round((1/$key->jumlah_total_min),4);
+    		$jumlahkali = round((1/$key->jumlah_total),4);
+    		$jumlahkalimax = round((1/$key->jumlah_total_max),4);
+    	}
+    	foreach ($data as $key) {
+    		$fsmin = $key->jumlah_baris_min * $jumlahkalimax;
+    		$fs = $key->jumlah_baris * $jumlahkali;
+    		$fsmax = $key->jumlah_baris_max * $jumlahkalimin;
+    		$id = $key->id_kriteria;
+    		$data_input=array(
+    			'id_kriteria' => $id, 
+    			'fuzzy_sintetic_min' => $fsmin, 
+    			'fuzzy_sintetic' => $fs, 
+    			'fuzzy_sintetic_max' => $fsmax, 
+    		);
+    		$this->User_model->insertData('t_fuzzy_sintetic', $data_input);
+    	}
+    }
+    public function fuzzy_vektor()
+    {
+    	$data = $this->User_model->getData('t_fuzzy_sintetic');
+    	$jumlahdata = count($data);
+    	$nilaitotal = 0;
+    	for ($i=0; $i < $jumlahdata; $i++) {
+    		$nilaimin[$i] = 9999; 
+    		for ($j=0; $j < $jumlahdata; $j++) { 
+    			if ($i != $j) {
+    				if($data[$i]->fuzzy_sintetic >= $data[$j]->fuzzy_sintetic) {
+    					$nilai[$i][$j] = 1;
+    				}elseif($data[$i]->fuzzy_sintetic < $data[$j]->fuzzy_sintetic){
+    					if ($data[$j]->fuzzy_sintetic_min >= $data[$i]->fuzzy_sintetic_max ) {
+    						$nilai[$i][$j] = 0;
+   						}else{
+   							$nilai[$i][$j] = (($data[$j]->fuzzy_sintetic_min - $data[$i]->fuzzy_sintetic_max)/(($data[$i]->fuzzy_sintetic - $data[$i]->fuzzy_sintetic_max)-($data[$j]->fuzzy_sintetic - $data[$j]->fuzzy_sintetic_min)));
+    					}
+    				}
+    				if ($nilai[$i][$j] < $nilaimin[$i]) {
+    					$nilaimin[$i] = $nilai[$i][$j];
+    				}
+    			echo $nilai[$i][$j]." ";
+    			}
+    		}
+		echo "nilai min :".$nilaimin[$i];
+    	$data_input = array(
+    		'id_kriteria' => $data[$i]->id_kriteria,
+    		'nilai_minimal' => $nilaimin[$i]
+    	);
+    	$this->User_model->insertData('t_fuzzy_vektor_minimal', $data_input);
+		$nilaitotal = $nilaitotal + $nilaimin[$i];
+    	echo "<br/>";
+    	}
+    	echo $nilaitotal;
+    }
+    public function fuzzy_normalisasi()
+    {
+    	$data_normalisasi = $this->User_model->getData('t_fuzzy_vektor_minimal');
+    	$total = 0;
+    	foreach ($data_normalisasi as $row) {
+    		$total = $total + $row->nilai_minimal;
+    	}
+    	foreach ($data_normalisasi as $row) {
+    		$normalisasi = $row->nilai_minimal / $total;
+    		$data_input= array(
+    			'id_kriteria' => $row->id_kriteria,
+    			'nilai_hasil' => $normalisasi
+    		);
+    		$this->User_model->insertData('t_fuzzy_nilai_hasil', $data_input);
+    	}
+    }

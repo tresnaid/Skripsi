@@ -16,6 +16,7 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
+
         public function getOneData($table, $where, $data)
         {
             $query = $this->db->select('*')->from($table)->where($where, $data)->get()->result_array(); 
@@ -31,12 +32,17 @@ class User_model extends CI_Model {
                 $query = $this->db->get_where($table, array($where => $same));
                 return $query->result_array();
         }
+        public function getDataSubkriteria($table, $where, $same)
+        {
+                $query = $this->db->get_where($table, array($where => $same));
+                return $query->result();
+        }
         public function getDataWhere2($table, $where, $same, $where2, $same2)
         {
 
                 $query = $this->db->get_where($table, array($where => $same, $where2 => $same2));
-                return $query->result_array();        }
-
+                return $query->result_array();        
+        }
         public function count($table)
         {
                 $this->db->select("*");
@@ -231,6 +237,40 @@ class User_model extends CI_Model {
         {
            $this->db->where($where, $clause);
            $this->db->delete($table); 
+        }
+        public function fuzzyahpkriteria($id_user)
+        {
+            for($i=0;$i<count($id_kriteria);$i++){
+                for($ii=0;$ii<count($id_kriteria);$ii++){
+                    if($i==$ii){
+                        $matrik[$i][$ii]=1;
+                    }else{
+                        if($i < $ii){
+                            $q=$this->db->query("select nilai, nilaimin, nilaimax from t_nilai_kriteria where id_kriteria_1='".$id_kriteria[$i]."' and id_kriteria_2='".$id_kriteria[$ii]."'");
+                            if($q->num_rows()>0){
+                                $h=$q->result_array();;
+                                $nilai=$q->row('nilai');
+                                $nilaimin=$q->row('nilaimin');
+                                $nilaimax=$q->row('nilaimax');
+                                $matrik[$i][$ii]=$nilai;
+                                $matrik[$ii][$i]=round((1/$nilai),4);
+                                $data_input=array(
+                                    'nilai' => round((1/$nilai),4),
+                                    'nilaimin' => round((1/$nilaimax),4),
+                                    'nilaimax' => round((1/$nilaimin),4),
+                                    'id_kriteria_1' => $id_kriteria[$ii],
+                                    'id_kriteria_2' => $id_kriteria[$i]
+                                );
+                                $this->User_model->insertData('t_nilai_kriteria', $data_input);
+                            }else{
+                                $matrik[$i][$ii]=1;
+                                $matrik[$ii][$i]=1;
+                            }
+                        }
+                    }
+                }
+            }
+            return $matrik;
         }
         function ahp_get_matrik_kriteria($id_kriteria){
             for($i=0;$i<count($id_kriteria);$i++){

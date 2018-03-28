@@ -73,7 +73,7 @@ class Home extends CI_Controller {
 		$this->load->view('dashboard.php', $data);
     }
 
-	public function nilaialternatif($kriteria)
+	/*public function nilaialternatif($kriteria)
 	{
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
@@ -84,6 +84,31 @@ class Home extends CI_Controller {
       	$data['menu'] = 'content/menu';
       	$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
 		$data['informasi'] = $this->User_model->getData('t_isneed');
+      	$data['page'] = 'roadmap';
+      	$data['content'] = 'content/nilai_alternatif';
+      	$data['id_kriteria'] = $kriteria;
+      	$data['id_user'] = $id;
+		$this->load->view('dashboard.php', $data);
+	}*/
+
+		public function nilaialternatif($kriteria)
+	{
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];     
+      	}
+      	
+      	$data['menu'] = 'content/menu';
+      	$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
+      	if ($kriteria == 1) {
+			$data['informasi'] = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'FNC');
+      	}elseif ($kriteria == 2) {
+			$data['informasi'] = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'CST');
+      	}elseif ($kriteria == 3) {
+			$data['informasi'] = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'INT');
+      	}elseif ($kriteria == 4) {
+			$data['informasi'] = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'LEA');
+      	}
       	$data['page'] = 'roadmap';
       	$data['content'] = 'content/nilai_alternatif';
       	$data['id_kriteria'] = $kriteria;
@@ -193,7 +218,9 @@ class Home extends CI_Controller {
 							  `id_kriteria_1` int(11) NOT NULL,
 							  `id_kriteria_2` int(11) NOT NULL,
 							  `kode` int(11) NOT NULL,
-							  `nilai` double(11,4) NOT NULL
+							  `nilai` double(11,4) NOT NULL,
+							  `nilaimin` double(11,4) NOT NULL,
+							  `nilaimax` double(11,4) NOT NULL
 							)");
 			$this->db->query("CREATE TABLE `t_nilai_alternatif_".$id."` (
 							  `id_nilai_alternatif` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -201,7 +228,9 @@ class Home extends CI_Controller {
 							  `id_alternatif_1` int(11) NOT NULL,
 							  `id_alternatif_2` int(11) NOT NULL,
 							  `kode` int(11) NOT NULL,
-							  `nilai` double(11,4) NOT NULL
+							  `nilai` double(11,4) NOT NULL,
+							  `nilaimin` double(11,4) NOT NULL,
+							  `nilaimax` double(11,4) NOT NULL
 							)");
 
 			$user = $this->User_model->getData('t_user');
