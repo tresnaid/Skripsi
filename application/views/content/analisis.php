@@ -8,7 +8,7 @@
 <script type="text/javascript">
     $(function(){
         $("#measure_add_input").click(function(event){
-            var measureadd = "<input type='text' name='measureadd[]' placeholder='' required></input>";
+            var measureadd = "<textarea placeholder='masukkan measure disini' name='measureadd[]' placeholder='' required style='width: 90%;'></textarea>";
             $("#measure_quotes").append(measureadd);
             $("#measure_quotes").append("\n<br />");
         });
@@ -17,7 +17,7 @@
 <script type="text/javascript">
     $(function(){
         $("#action_add_input").click(function(event){
-            var actionadd = "<input type='text' name='actionadd[]' placeholder='' required></input>";
+            var actionadd = "<textarea placeholder='masukkan action disini' name='actionadd[]' placeholder='' required style='width: 90%;'></textarea>";
             $("#action_quotes").append(actionadd);
             $("#action_quotes").append("\n<br />");
         });
@@ -26,7 +26,7 @@
 <script type="text/javascript">
     $(function(){
         $("#isneed_add_input").click(function(event){
-            var isneedadd = "<input type='text' name='isneedadd[]' placeholder='' required></input>";
+            var isneedadd = "<textarea placeholder='masukkan kebutuhan aplikasi disini' name='isneedadd[]' placeholder='' required style='width: 70%;'></textarea>";
             var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
             $("#isneed_quotes").append(isneedadd);
             $("#isneed_quotes").append(isneedadd_desc);
@@ -138,7 +138,7 @@
               <label>Objective</label>
             </div>
             <div class="col-md-8">
-              <input type="text" name="objective" required>
+              <textarea placeholder="masukkan objektif disini" name="objective" required style="width: 90%;"></textarea>
             </div>
           </div>
           <div class="row">
@@ -146,17 +146,17 @@
               <label>Measure</label>
             </div>
             <div class="col-md-8">
-              <input type="text" name="measure" required>
+              <textarea placeholder="masukkan measure disini" name="measure" required style="width: 90%;"></textarea>
           <div id="measure_quotes"></div>
           <input type="button" id=measure_add_input value="+ add measure" class="btn btn-default" onClick="onClickmeasure()">
             </div>
           </div>
           <div class="row">
             <div class="col-md-4">
-              <label>Action</label>
+              <label>Action (CSF)</label>
             </div>
             <div class="col-md-8">
-              <input type="text" name="action" required>
+              <textarea placeholder="masukkan action disini" name="action" required style="width: 90%;"></textarea>
           <div id="action_quotes"></div>
           <input type="button" id=action_add_input value="+ add action" class="btn btn-default" onClick="onClickaction()" >
             </div>
@@ -166,7 +166,7 @@
               <label>IS Need</label>
             </div>
             <div class="col-md-8">
-              <input type="text" name="isneed" required>
+              <textarea placeholder="masukkan kebutuhan aplikasi disini" name="isneed" required style="width: 70%;"></textarea>
               <select name="isneed_desc" required="">
                 <option value="Buat Baru">Buat Baru</option>
                 <option value="Perbaharui">Perbaharui</option>
@@ -196,6 +196,7 @@
     <div class="row services">
       <div class="col-md-12">
         <h2 class="heading">Analisis Anda</h2>
+        <h6 class="heading">dalam laman ini, anda diminta untuk mengisi strategi objektif pada perspektif <?php echo $nama_kategori ?></h6>
         <div id="navigation" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="
@@ -304,7 +305,7 @@
                                 <label>Objective</label>
                               </div>
                               <div class="col-md-9">
-                                <input type="text" name="objective" value="<?php echo $row['objective']?>" style="width: 95%"  required>
+                                <textarea name="objective" style="width: 100%"  required><?php echo $row['objective']?></textarea>
                               </div>
 
                               <div class="col-md-3">
@@ -313,13 +314,12 @@
                               <div class="col-md-9">
                               <?php foreach ($data_measure as $key): ?>
                                 <input type="hidden" name="id_measure[]" value="<?php echo $key['id_measure'] ?>">
-                                <input type="text" id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" value="<?php echo $key['measure']?>" style="width: 80%"> 
-                                <button type="button" onclick="hapus('measure<?php echo $row['id_objective'].$key['id_measure']?>','measurebutton<?php echo $row['id_objective'].$key['id_measure']?>');" class="btn btn-default" name="buttonhapus" id="measurebutton<?php echo $row['id_objective'].$key['id_measure']?>">hapus</button> 
+                                <textarea id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" style="width: 80%"><?php echo $key['measure']?></textarea>
+                                <button type="button" onclick="hapus('measure<?php echo $row['id_objective'].$key['id_measure']?>','measurebutton<?php echo $row['id_objective'].$key['id_measure']?>');" class="btn btn-default" name="buttonhapus" id="measurebutton<?php echo $row['id_objective'].$key['id_measure']?>" style="margin-bottom: 5px; margin-top: 0;">hapus</button> 
                               <?php endforeach ?>
                               <div id="measurebaru<?php echo $row['id_objective']?>">
-                                <input type="text" name="moremeasure" id="moremeasure" style="width: 80%;" placeholder="tambah measure disini">
+                                <textarea name="moremeasure" id="moremeasure" style="width: 100%;" placeholder="tambah measure disini"></textarea>
                               <!-- <button type="button" onclick="hehe('moremeasurearrayid');">check</button> -->
-                                
                               </div> 
                               <!-- <button type="button" id=measure_add_input_button class="btn btn-default" onclick="tambahmeasurebaru('measurebaru<?php echo $row['id_objective']?>')">tambah measure</button> -->
                                 
@@ -331,10 +331,10 @@
                               <div class="col-md-9">
                               <?php foreach ($data_action as $key): ?>
                                 <input type="hidden" name="id_action[]" value="<?php echo $key['id_action'] ?>">
-                                <input type="text" id="action<?php echo $row['id_objective']?><?php echo $key['id_action']?>" name="action[]" value="<?php echo $key['action']?>" style="width: 80%">
+                                <textarea id="action<?php echo $row['id_objective']?><?php echo $key['id_action']?>" name="action[]" style="width: 80%"><?php echo $key['action']?></textarea>
                                 <button type="button" onclick="hapus('action<?php echo $row['id_objective']?><?php echo $key['id_action']?>','actionbutton<?php echo $row['id_objective']?><?php echo $key['id_action']?>');" id="actionbutton<?php echo $row['id_objective']?><?php echo $key['id_action']?>" class="btn btn-default">hapus</button>
                               <?php endforeach ?>
-                                <input type="text" name="moreaction" id="moreaction" style="width: 80%;" placeholder="tambah action disini">
+                                <textarea name="moreaction" id="moreaction" style="width: 100%;" placeholder="tambah action disini"></textarea>
                               </div>
 
                               <div class="col-md-3">
@@ -343,7 +343,7 @@
                               <div class="col-md-9">
                               <?php foreach ($data_isneed as $key): ?>
                                 <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
-                                <input type="text" id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" value="<?php echo $key['isneed']?>" style="width: 80%">
+                                <textarea id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" style="width: 80%"><?php echo $key['isneed']?></textarea>
                                 <select name="isneed_desc_edit[]" id="isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" required="">
                                   <option value="Buat Baru" <?php if ($key['Tipe'] == 'Buat Baru'): ?>
                                     selected
@@ -360,7 +360,7 @@
                                 </select>
                                 <button type="button" onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default" id="isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>">hapus</button>
                               <?php endforeach ?>
-                                <input type="text" name="moreisneed" id="moreisneed" style="width: 80%;" placeholder="tambah isneed disini">
+                                <textarea name="moreisneed" id="moreisneed" style="width: 100%;" placeholder="tambah isneed disini"></textarea>
                                 <select name="moreisneed_desc" required="">
                                   <option value="Buat Baru">Buat Baru</option>
                                   <option value="Perbaharui">Perbaharui</option>

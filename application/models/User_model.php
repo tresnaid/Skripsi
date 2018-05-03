@@ -124,6 +124,7 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
+        
          public function joingetwhere($table1, $table2, $where, $choose, $id)
         {
                 $this->db->select('*');

@@ -195,16 +195,20 @@ class Home extends CI_Controller {
       	if ($perspective == '1') {
       		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'FNC');
       		$data['kategori'] ='FNC';
+      		$data['nama_kategori'] = 'Finansial';
       	}else if ($perspective == '2') {
       		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'CST');
       		$data['kategori'] ='CST';
+      		$data['nama_kategori'] = 'Kustomer';
       	}
       	else if ($perspective == '3') {
       		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'INT');
       		$data['kategori'] ='INT';
+      		$data['nama_kategori'] = 'Bisnis Internal';
       	}else if ($perspective == '4') {
       		$data['data_objective'] = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', 'LEA');
       		$data['kategori'] ='LEA';
+      		$data['nama_kategori'] = 'Pembelajaran dan Pertumbuhan';
       	}
 		$this->load->view('dashboard.php', $data);
 	}

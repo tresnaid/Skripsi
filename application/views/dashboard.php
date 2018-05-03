@@ -40,14 +40,32 @@
         $status_kriteria = $row['kriteria'];
       }
     }
-
+    $user = $this->User_model->getData('t_user');
     $jumlah_user = $this->User_model->count('t_user');
     $jumlah_approval = $this->User_model->count('t_approval');
     $jumlah_objective = $this->User_model->count('t_objective');
-    if ($jumlah_approval == $jumlah_user*$jumlah_objective) {
-      $status = 1;
+    $total = 0;
+    foreach ($user as $row) {
+      $statusalternatif = $row->alternatif;
+      if ($statusalternatif == 0) {
+      }else{
+        $total++;
+      }
+    }
+    if ($jumlah_objective != 0) {
+      if ($jumlah_approval == $jumlah_user*$jumlah_objective) {
+        $status = 1;
+      }else{
+        $status = 0;
+      }
     }else{
-      $status = 0;
+      $status =0;
+    }
+
+    if ($total == $jumlah_user) {
+      $status_tunggu =1;
+    }else{
+      $status_tunggu =0;
     }
   }
 
@@ -85,7 +103,11 @@
                       active
                     <?php endif ?>">
                     <?php if ($status_alternatif == 1 && $status_kriteria==1): ?>
+                      <?php if ($status_tunggu == 1): ?>
                       <a href="<?php echo base_url(); ?>home/rekomendasi">Roadmap</a>
+                      <?php else: ?>
+                      <a href="<?php echo base_url(); ?>home/tunggu">Roadmap</a>
+                      <?php endif ?>
                     <?php elseif ($status_kriteria == 1 && $status_alternatif==0): ?>
                       <a href="<?php echo base_url(); ?>home/nilaialternatif/1">Roadmap</a>
                     <?php elseif ($status_kriteria == 0): ?>

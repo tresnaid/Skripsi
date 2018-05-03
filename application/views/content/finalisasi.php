@@ -14,6 +14,7 @@ $datauser = $_SESSION['list'];
 		<div class="row services">
 		  <div class="col-md-12">
 		    <h2 class="heading">Daftar Kebutuhan Sistem Informasi</h2>
+        	<h6 class="heading">dalam laman ini, anda diminta untuk voting untuk analisis yang telah anda setujui <br>apabila analisis strategi objektif tidak anda setujui silakan diskusikan dalam menu komentar</h6>
 		    <div id="navigation" class="collapse navbar-collapse">
 		      	<ul class="nav navbar-nav navbar-right">
 			        <li class="
@@ -297,7 +298,7 @@ $datauser = $_SESSION['list'];
 					                        			<h5>KOMENTAR</h5>
 					                        			<?php if (!empty($komentar)): ?>
 								                        	<?php foreach ($komentar as $key): ?>
-								                        		<?php echo $this->User_model->checknama($key['id_user']); ?>
+								                        		<b>	<?php echo $this->User_model->checknama($key['id_user']); ?></b>
 								                        		[<?php echo $this->User_model->checkdepartemen($key['id_user']); ?> department]
 								                        		<?php echo $key['waktu']; ?>
 								                        		<?php echo '<br/>' ?>
@@ -310,7 +311,7 @@ $datauser = $_SESSION['list'];
 					                        			<?php endif ?>
 							                        </div>
 					                        		<div class="modal-footer">
-					                          			<input type="text" name="komentar" style="width: 95%;" required="">
+					                        			<textarea name="komentar" style="width: 100%;" required=""></textarea>
 					                          			<button type="submit" class="btn btn-default"><i class="fa fa-cross"></i>Komentar</button>
 					                        		</div>
 					                        	</form>

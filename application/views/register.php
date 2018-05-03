@@ -64,10 +64,11 @@
             <input class="input100" type="password" name="password" placeholder="Enter password">
             <span class="focus-input100"></span>
           </div>
-
+            
             <button class="login100-form-btn" type="submit" style="border-radius: 0;">
               Register
             </button>
+            <a href="<?php echo base_url() ?>home/index" type="button" class="login100-form-btn">Back</a>
         </form>
       </div>
     </div>
