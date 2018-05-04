@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-	<title>Virtual Meeting | Beranda</title>
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/themify-icons.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <!-- Google fonts - Roboto Condensed for headings, Open Sans for copy-->
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:300,700%7COpen+Sans:300,400,700">
-    <!-- theme stylesheet-->
- 
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/timeline.css">
+  <title>Virtual Meeting | Beranda</title>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/themify-icons.css">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!-- Google fonts - Roboto Condensed for headings, Open Sans for copy-->
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:300,700%7COpen+Sans:300,400,700">
+    <!-- theme stylesheet--> 
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/timeline.css">
  	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.default.css" id="theme-stylesheet">
     <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom.css">
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom.css">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/favicon.png">
+  <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/favicon.png">
 </head>
 <body data-spy="scroll" data-target="#navigation" data-offset="120">
 	<?php 

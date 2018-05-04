@@ -26,9 +26,12 @@
 <script type="text/javascript">
     $(function(){
         $("#isneed_add_input").click(function(event){
-            var isneedadd = "<textarea placeholder='masukkan kebutuhan aplikasi disini' name='isneedadd[]' placeholder='' required style='width: 70%;'></textarea>";
+            var isneedadd = "<select name='a'><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
             var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
+            var isneedadd_colom = "<textarea placeholder='masukkan kebutuhan aplikasi disini' id='isneed_lainnya' name='isneed_lainnya' required style='width: 70%; '></textarea>";
+            $("#isneed_quotes").append("<br />");
             $("#isneed_quotes").append(isneedadd);
+            $("#isneed_quotes").append(isneedadd_colom);
             $("#isneed_quotes").append(isneedadd_desc);
             $("#isneed_quotes").append("\n<br />");
         });
@@ -43,6 +46,9 @@
       jumlah_measure += 1;
       document.getElementById("jmeasure").value = jumlah_measure;
   };
+  function clickas(){
+    alert("asd");
+  }
   function onClickaction() {
       jumlah_action += 1;
       document.getElementById("jaction").value = jumlah_action;
@@ -68,33 +74,44 @@
     document.getElementById(link).value = jumlah_isneed_baru;
   }
 
-    function hapus(id,button,button2) {
-      if(confirm("Yakin akan menghapus ini ? pastikan anda menyimpan perubahan setelah menghapus")){
-        document.getElementById(id).value = " ";     
-        document.getElementById(id).style.display = "none";     
-        document.getElementById(button).style.display = "none";
-        document.getElementById(button2).style.display = "none";
-      }else{
-        return false;
-      }
+  jQuery(function($){
+     $("select[name='isneed']").change(function(){
+        var select = $(this);              
+        if(select.val() === "lainnya"){     
+            document.getElementById('isneed_lainnya').style.display = "block";
+        }else{
+          document.getElementById('isneed_lainnya').style.display = "none";
+        }
+     });        
+  });
+
+  jQuery(function($){
+     $("select[name='a']").change(function(){       
+     alert("sadads"); 
+     });        
+  });
+ 
+  function hapus(id,button,button2) {
+    if(confirm("Yakin akan menghapus ini ? pastikan anda menyimpan perubahan setelah menghapus")){
+      document.getElementById(id).value = " ";     
+      document.getElementById(id).style.display = "none";     
+      document.getElementById(button).style.display = "none";
+      document.getElementById(button2).style.display = "none";
+    }else{
+      return false;
     }
-    
+  }
+  
     
   function tambahmeasurebaru(link){
-    $(document.getElementById(link)).append(
-       $('<input>', {
-        type: 'text',
-        name: 'moremeasurearray[]',
-        id: 'moremeasurearrayid'
-    })
-    );
+    var measurebaru1 = "<textarea placeholder='masukkan measure disini' name='measureadd[]' id='moremeasurearrayid' placeholder='' required style='width: 90%;'></textarea>";
+    $(document.getElementById(link)).append(measurebaru1);
   }
   function tambahactionbaru(link){
     $(document.getElementById(link)).append(
        $('<input>', {
         type: 'text',
         name: 'moreactionarray[]'
-        
     })
     );
   }
@@ -103,7 +120,6 @@
        $('<input>', {
         type: 'text',
         name: 'moreisneedarray[]'
-        
     })
     );
   } 
@@ -166,7 +182,32 @@
               <label>IS Need</label>
             </div>
             <div class="col-md-8">
-              <textarea placeholder="masukkan kebutuhan aplikasi disini" name="isneed" required style="width: 70%;"></textarea>
+              <select name="isneed">
+                <optgroup label="Key Operational">
+                  <?php foreach ($key_operational as $key): ?>
+                    <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                  <?php endforeach ?>
+                </optgroup>
+                <optgroup label="Strategic">
+                  <?php foreach ($strategic as $key): ?>
+                    <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                  <?php endforeach ?>
+                </optgroup>
+                <optgroup label="High Potential">
+                  <?php foreach ($high_potential as $key): ?>
+                    <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                  <?php endforeach ?>
+                </optgroup>
+                <optgroup label="Support">
+                  <?php foreach ($support as $key): ?>
+                    <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                  <?php endforeach ?>
+                </optgroup>
+                <optgroup label="Lainnya">
+                  <option value="lainnya">Lainnya</option>
+                </optgroup>
+              </select>
+              <textarea placeholder="masukkan kebutuhan aplikasi disini" id="isneed_lainnya" name="isneed_lainnya" required style="width: 70%; display: none"></textarea>
               <select name="isneed_desc" required="">
                 <option value="Buat Baru">Buat Baru</option>
                 <option value="Perbaharui">Perbaharui</option>
@@ -319,10 +360,11 @@
                               <?php endforeach ?>
                               <div id="measurebaru<?php echo $row['id_objective']?>">
                                 <textarea name="moremeasure" id="moremeasure" style="width: 100%;" placeholder="tambah measure disini"></textarea>
-                              <!-- <button type="button" onclick="hehe('moremeasurearrayid');">check</button> -->
+
                               </div> 
-                              <!-- <button type="button" id=measure_add_input_button class="btn btn-default" onclick="tambahmeasurebaru('measurebaru<?php echo $row['id_objective']?>')">tambah measure</button> -->
+                              <button type="button" id=measure_add_input_button class="btn btn-default" onclick="tambahmeasurebaru('measurebaru<?php echo $row['id_objective']?>')">tambah measure</button>
                                 
+                              <button type="button" onclick="hehe('moremeasurearrayid');">check</button>
                               </div>
 
                               <div class="col-md-3">

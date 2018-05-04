@@ -9,6 +9,9 @@ class Analisis extends CI_Controller {
 		$measure = $this->input->post('measure');
 		$action = $this->input->post('action');
 		$isneed = $this->input->post('isneed');
+		if ($isneed == "lainnya") {
+			$isneed = $this->input->post('isneed_lainnya');
+		}
 		$isneed_desc = $this->input->post('isneed_desc');
 		$jumlah_measure =$this->input->post('jumlah_measure');
 		$jumlah_action =$this->input->post('jumlah_action');
@@ -224,8 +227,8 @@ class Analisis extends CI_Controller {
 		}
 
 		
-		// $moremeasurearray = $this->input->post('moremeasurearrayid');
-		// print_r($moremeasurearray);
+		$moremeasurearray = $this->input->post('measureadd');
+		print_r($moremeasurearray);
 		// if (!empty($moremeasurearray)) {
 		// 	$moremeasurearray = $this->input->post('moremeasurearray');
 		// 	foreach ($moremeasurearray as $key) {
@@ -256,17 +259,17 @@ class Analisis extends CI_Controller {
 		// 		$this->User_model->insertData('t_isneed', $data_insert);
 		// 	}
 		// }
-	  if ($kategori == 'FNC') {
-			redirect('home/analisis/1','refresh');
-		}else if ($kategori == 'CST') {
-			redirect('home/analisis/2','refresh');
-		}else if ($kategori == 'INT') {
-			redirect('home/analisis/3','refresh');
-		}else if ($kategori == 'LEA') {
-			redirect('home/analisis/4','refresh');
-		}else{
-			echo $kategori;
-		}
+	 //  if ($kategori == 'FNC') {
+		// 	redirect('home/analisis/1','refresh');
+		// }else if ($kategori == 'CST') {
+		// 	redirect('home/analisis/2','refresh');
+		// }else if ($kategori == 'INT') {
+		// 	redirect('home/analisis/3','refresh');
+		// }else if ($kategori == 'LEA') {
+		// 	redirect('home/analisis/4','refresh');
+		// }else{
+		// 	echo $kategori;
+		// }
 	}
 	public function inputkomentar()
 	{

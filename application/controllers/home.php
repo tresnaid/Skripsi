@@ -189,7 +189,10 @@ class Home extends CI_Controller {
 	        $id = $row['id_user'];
 	        
       	}
-      	
+      	$data['key_operational'] = $this->User_model->getDataWhere('t_portofolio', 'kolom2', 1);
+      	$data['strategic'] = $this->User_model->getDataWhere('t_portofolio', 'kolom2', 2);
+      	$data['high_potential'] = $this->User_model->getDataWhere('t_portofolio', 'kolom2', 3);
+      	$data['support'] = $this->User_model->getDataWhere('t_portofolio', 'kolom2', 4);
       	$data['page'] = 'analisis';
 		$data['content'] = 'content/analisis';
       	if ($perspective == '1') {
