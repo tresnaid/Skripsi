@@ -63,7 +63,7 @@
 	    	<div class="row services">
 	      		<div class="col-md-12">
 	        		<h2 class="heading">Perhitungan alternatif</h2>
-        			<h6 class="heading">dalam laman ini anda diminta untuk mengisi perbandingan antara satu subkriteria dengan subkriteria lainnya dalam range 1-9 <br> dimana 1 berarti sama penting dan 9 berarti kepentingan mutlak dari pada kriteria lain</h6>
+        			<label style="font-size: 12px">dalam laman ini anda diminta untuk mengisi perbandingan antara satu subkriteria dengan subkriteria lainnya dalam range 1-9 <br> dimana 1 berarti sama penting dan 9 berarti kepentingan mutlak dari pada kriteria lain</label>
 	        		<div class="row">
 	          			<div class="container" style="margin-top:50px">
 	              			<div class="panel-body" style="padding:0px">

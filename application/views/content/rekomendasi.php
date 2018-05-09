@@ -1,4 +1,5 @@
-<section class="section-gray">
+
+ <section class="section-gray">
 	<div class="container clearfix">
 		<div class="row services">
 		  	<div class="col-md-12">

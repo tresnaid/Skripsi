@@ -14,7 +14,7 @@ $datauser = $_SESSION['list'];
 		<div class="row services">
 		  <div class="col-md-12">
 		    <h2 class="heading">Daftar Kebutuhan Sistem Informasi</h2>
-        	<h6 class="heading">dalam laman ini, anda diminta untuk voting untuk analisis yang telah anda setujui <br>apabila analisis strategi objektif tidak anda setujui silakan diskusikan dalam menu komentar</h6>
+        	
 		    <div id="navigation" class="collapse navbar-collapse">
 		      	<ul class="nav navbar-nav navbar-right">
 			        <li class="
@@ -53,6 +53,7 @@ $datauser = $_SESSION['list'];
         		
        			<div class="panel panel-default">
          			<div class="panel-body">
+         				<label style="font-size: 12px;">*dalam laman ini, anda diminta untuk voting untuk analisis yang telah anda setujui, apabila analisis strategi objektif tidak anda setujui silakan diskusikan dalam menu komentar</label>
            				<table class="table table-striped table-bordered" style="margin:0px;">
 			              <thead>
 			                <tr>

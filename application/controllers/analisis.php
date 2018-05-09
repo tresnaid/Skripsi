@@ -10,7 +10,7 @@ class Analisis extends CI_Controller {
 		$action = $this->input->post('action');
 		$isneed = $this->input->post('isneed');
 		if ($isneed == "lainnya") {
-			$isneed = $this->input->post('isneed_lainnya');
+			$isneed = $this->input->post('isneed_detal');
 		}
 		$isneed_desc = $this->input->post('isneed_desc');
 		$jumlah_measure =$this->input->post('jumlah_measure');

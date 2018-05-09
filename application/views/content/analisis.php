@@ -2,7 +2,9 @@
   .activesub{
     background-color: yellow;
   }
-
+.modal-dialog{
+  width: 80%;
+}
 </style>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
@@ -28,11 +30,11 @@
         $("#isneed_add_input").click(function(event){
             var isneedadd = "<select name='a'><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
             var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
-            var isneedadd_colom = "<textarea placeholder='masukkan kebutuhan aplikasi disini' id='isneed_lainnya' name='isneed_lainnya' required style='width: 70%; '></textarea>";
+            var isneedadd_colom = "<textarea placeholder='detail' id='isneed_lainnya' name='isneedadd_detail[]' required style='width: 70%; '></textarea>";
             $("#isneed_quotes").append("<br />");
             $("#isneed_quotes").append(isneedadd);
-            $("#isneed_quotes").append(isneedadd_colom);
             $("#isneed_quotes").append(isneedadd_desc);
+            $("#isneed_quotes").append(isneedadd_colom);
             $("#isneed_quotes").append("\n<br />");
         });
     });
@@ -46,9 +48,7 @@
       jumlah_measure += 1;
       document.getElementById("jmeasure").value = jumlah_measure;
   };
-  function clickas(){
-    alert("asd");
-  }
+  
   function onClickaction() {
       jumlah_action += 1;
       document.getElementById("jaction").value = jumlah_action;
@@ -150,38 +150,44 @@
       <div class="modal-body">
         <form action="<?php echo base_url();?>analisis/inputAnalisis" method="POST">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <label>Objective</label>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
+              <label style="font-size: 10px;">pada kolom ini anda diminta untuk memasukkan objektif yang ingin dicapai</label>
               <textarea placeholder="masukkan objektif disini" name="objective" required style="width: 90%;"></textarea>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <label>Measure</label>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
+              <label style="font-size: 10px;">pada kolom ini anda diminta untuk memasukkan ukuran dalam objektif yang ingin dicapai</label>
               <textarea placeholder="masukkan measure disini" name="measure" required style="width: 90%;"></textarea>
           <div id="measure_quotes"></div>
-          <input type="button" id=measure_add_input value="+ add measure" class="btn btn-default" onClick="onClickmeasure()">
+          <input type="button" id=measure_add_input value="+ tambah measure" class="btn btn-default" onClick="onClickmeasure()">
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <label>Action (CSF)</label>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
+              <label style="font-size: 10px;">pada kolom ini anda diminta untuk memasukkan critical success factors yang ingin dicapai</label>
               <textarea placeholder="masukkan action disini" name="action" required style="width: 90%;"></textarea>
           <div id="action_quotes"></div>
-          <input type="button" id=action_add_input value="+ add action" class="btn btn-default" onClick="onClickaction()" >
+          <input type="button" id=action_add_input value="+ tambah action" class="btn btn-default" onClick="onClickaction()" >
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <label>IS Need</label>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
+              <label style="font-size: 10px;">pada kolom ini anda diminta untuk memasukkan memilih kebutuhan sistem informasi yang akan dibuat</label>
+              <label style="font-size: 10px;">*apabila pilihan anda tidak terdapat pada menu pilihan silakan pilih pilihan lainnya, dan tulis di kolom detail</label>
+              <label style="font-size: 10px;">*apabila anda bermaksud memperbaharui kebutuhan sistem informasi yang telah tersedia dan hanya akan menambahkan fitur, silakan pilih kebutuhan sistem informasi yang hendak diperbaharui, pilih perbaharui pada tipe pembuatan, dan tuliskan fitur tambahan di kolom detail</label>
               <select name="isneed">
                 <optgroup label="Key Operational">
                   <?php foreach ($key_operational as $key): ?>
@@ -207,14 +213,14 @@
                   <option value="lainnya">Lainnya</option>
                 </optgroup>
               </select>
-              <textarea placeholder="masukkan kebutuhan aplikasi disini" id="isneed_lainnya" name="isneed_lainnya" required style="width: 70%; display: none"></textarea>
               <select name="isneed_desc" required="">
                 <option value="Buat Baru">Buat Baru</option>
                 <option value="Perbaharui">Perbaharui</option>
                 <option value="Beli">Beli</option>
               </select>
+              <textarea placeholder="detail" id="isneed_detail" name="isneed_lainnya" required style="width: 70%; "></textarea>
             <div id="isneed_quotes"></div>
-              <input type="button" id=isneed_add_input value="+ add isneed"  class="btn btn-default" onClick="onClickisneed()">
+              <input type="button" id=isneed_add_input value="+ tambah kebutuhan sistem informasi"  class="btn btn-default" onClick="onClickisneed()">
             </div>
           </div>
       </div>
@@ -237,7 +243,6 @@
     <div class="row services">
       <div class="col-md-12">
         <h2 class="heading">Analisis Anda</h2>
-        <h6 class="heading">dalam laman ini, anda diminta untuk mengisi strategi objektif pada perspektif <?php echo $nama_kategori ?></h6>
         <div id="navigation" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="
@@ -273,13 +278,15 @@
         </div>
         <div class="row">
           <div class="container">
-            <div class="btn-group">
-              <a class="btn btn-default" data-toggle="modal" data-target="#tambahanalisis">
-                <span>Tambah Analisis</span>
-              </a>
-            </div>
             <div class="panel panel-default">
               <div class="panel-body">
+                <label style="font-size: 12px;">*dalam laman ini, anda diminta untuk mengisi strategi objektif pada perspektif <?php echo $nama_kategori ?></label>
+                <br>
+                <div class="btn-group">
+                  <a class="btn btn-default" data-toggle="modal" data-target="#tambahanalisis">
+                    <span>Tambah Analisis</span>
+                  </a>
+                </div>
                 <table class="table table-striped table-bordered" style="margin:0px;">
                   <thead>
                     <tr>
@@ -342,17 +349,17 @@
                             <div class="row">
                               <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
                              
-                              <div class="col-md-3">
+                              <div class="col-md-2">
                                 <label>Objective</label>
                               </div>
-                              <div class="col-md-9">
+                              <div class="col-md-10">
                                 <textarea name="objective" style="width: 100%"  required><?php echo $row['objective']?></textarea>
                               </div>
 
-                              <div class="col-md-3">
+                              <div class="col-md-2">
                                 <label>Measure</label><a href="" id="cekhapus[]"></a>
                               </div>
-                              <div class="col-md-9">
+                              <div class="col-md-10">
                               <?php foreach ($data_measure as $key): ?>
                                 <input type="hidden" name="id_measure[]" value="<?php echo $key['id_measure'] ?>">
                                 <textarea id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" style="width: 80%"><?php echo $key['measure']?></textarea>
@@ -367,10 +374,10 @@
                               <button type="button" onclick="hehe('moremeasurearrayid');">check</button>
                               </div>
 
-                              <div class="col-md-3">
+                              <div class="col-md-2">
                                 <label>Action CSF</label>
                               </div>
-                              <div class="col-md-9">
+                              <div class="col-md-10">
                               <?php foreach ($data_action as $key): ?>
                                 <input type="hidden" name="id_action[]" value="<?php echo $key['id_action'] ?>">
                                 <textarea id="action<?php echo $row['id_objective']?><?php echo $key['id_action']?>" name="action[]" style="width: 80%"><?php echo $key['action']?></textarea>
@@ -379,10 +386,10 @@
                                 <textarea name="moreaction" id="moreaction" style="width: 100%;" placeholder="tambah action disini"></textarea>
                               </div>
 
-                              <div class="col-md-3">
+                              <div class="col-md-2">
                                 <label>IS Need</label>
                               </div>
-                              <div class="col-md-9">
+                              <div class="col-md-10">
                               <?php foreach ($data_isneed as $key): ?>
                                 <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
                                 <textarea id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" style="width: 80%"><?php echo $key['isneed']?></textarea>
