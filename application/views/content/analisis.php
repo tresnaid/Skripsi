@@ -28,13 +28,13 @@
 <script type="text/javascript">
     $(function(){
         $("#isneed_add_input").click(function(event){
-            var isneedadd = "<select name='a'><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
+            var isneedadd = "<select name='isneedadd[]'><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
             var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
-            var isneedadd_colom = "<textarea placeholder='detail' id='isneed_lainnya' name='isneedadd_detail[]' required style='width: 70%; '></textarea>";
+            var isneedadd_detail = "<textarea placeholder='detail' id='isneed_detail' name='isneedadd_detail[]' style='width: 70%; '></textarea>";
             $("#isneed_quotes").append("<br />");
             $("#isneed_quotes").append(isneedadd);
             $("#isneed_quotes").append(isneedadd_desc);
-            $("#isneed_quotes").append(isneedadd_colom);
+            $("#isneed_quotes").append(isneedadd_detail);
             $("#isneed_quotes").append("\n<br />");
         });
     });
@@ -57,43 +57,50 @@
       jumlah_isneed += 1;
       document.getElementById("jisneed").value = jumlah_isneed;
   };
- 
-  function kliktambahmeasure(link) {
-    var jumlah_measure_baru = parseInt(document.getElementById(link).value);
-    jumlah_measure_baru += 1;
-    document.getElementById(link).value = jumlah_measure_baru;
+
+
+  // jQuery(function($){
+  //    $("select[name='isneed']").change(function(){
+  //       var select = $(this);              
+  //       if(select.val() === "lainnya"){     
+  //           document.getElementById('isneed_lainnya').style.display = "block";
+  //       }else{
+  //         document.getElementById('isneed_lainnya').style.display = "none";
+  //       }
+  //    });        
+  // });
+  var numberMeasure = 1;
+  var numberAction = 1;
+  var numberIsneed = 1;
+  
+  function tambahMeasure(link){
+    document.getElementById(numberMeasure+link).style.display = "block";
+    if (numberMeasure<6){
+      numberMeasure+= 1;
+    }else{
+      numberMeasure = 1;
+    }
   }
-  function kliktambahaction(link) {
-    var jumlah_action_baru = parseInt(document.getElementById(link).value);
-    jumlah_action_baru += 1;
-    document.getElementById(link).value = jumlah_action_baru;
+  function tambahAction(link){
+    document.getElementById(numberAction+link).style.display = "block";
+    if (numberAction<6){
+      numberAction+= 1;
+    }else{
+      numberAction = 1;
+    }
   }
-  function kliktambahisneed(link) {
-    var jumlah_isneed_baru = parseInt(document.getElementById(link).value);
-    jumlah_isneed_baru += 1;
-    document.getElementById(link).value = jumlah_isneed_baru;
+  function tambahIsneed(link){
+    document.getElementById(numberIsneed+link).style.display = "block";
+    if (numberIsneed<6){
+      numberIsneed+= 1;
+    }else{
+      numberIsneed = 1;
+    }
   }
 
-  jQuery(function($){
-     $("select[name='isneed']").change(function(){
-        var select = $(this);              
-        if(select.val() === "lainnya"){     
-            document.getElementById('isneed_lainnya').style.display = "block";
-        }else{
-          document.getElementById('isneed_lainnya').style.display = "none";
-        }
-     });        
-  });
-
-  jQuery(function($){
-     $("select[name='a']").change(function(){       
-     alert("sadads"); 
-     });        
-  });
- 
   function hapus(id,button,button2) {
     if(confirm("Yakin akan menghapus ini ? pastikan anda menyimpan perubahan setelah menghapus")){
-      document.getElementById(id).value = " ";     
+      document.getElementById(id).value = "   ";     
       document.getElementById(id).style.display = "none";     
       document.getElementById(button).style.display = "none";
       document.getElementById(button2).style.display = "none";
@@ -103,30 +110,30 @@
   }
   
     
-  function tambahmeasurebaru(link){
-    var measurebaru1 = "<textarea placeholder='masukkan measure disini' name='measureadd[]' id='moremeasurearrayid' placeholder='' required style='width: 90%;'></textarea>";
-    $(document.getElementById(link)).append(measurebaru1);
-  }
-  function tambahactionbaru(link){
-    $(document.getElementById(link)).append(
-       $('<input>', {
-        type: 'text',
-        name: 'moreactionarray[]'
-    })
-    );
-  }
-  function tambahisneedbaru(link){
-    $(document.getElementById(link)).append(
-       $('<input>', {
-        type: 'text',
-        name: 'moreisneedarray[]'
-    })
-    );
-  } 
-  function hehe(link) {
-     var a = document.getElementById(link).value;
-     alert(a);
-   } 
+  // function tambahmeasurebaru(link){
+  //   var measurebaru1 = "<textarea placeholder='masukkan measure disini' name='measureadd[]' id='moremeasurearrayid' placeholder='' required style='width: 90%;'></textarea>";
+  //   $(document.getElementById(link)).append(measurebaru1);
+  // }
+  // function tambahactionbaru(link){
+  //   $(document.getElementById(link)).append(
+  //      $('<input>', {
+  //       type: 'text',
+  //       name: 'moreactionarray[]'
+  //   })
+  //   );
+  // }
+  // function tambahisneedbaru(link){
+  //   $(document.getElementById(link)).append(
+  //      $('<input>', {
+  //       type: 'text',
+  //       name: 'moreisneedarray[]'
+  //   })
+  //   );
+  // } 
+  // function hehe(link) {
+  //    var a = document.getElementById(link).value;
+  //    alert(a);
+  //  } 
 </script>
 <!-- <form action="" method="post">
   <div id="measurebaru1"></div> 
@@ -185,7 +192,7 @@
               <label>IS Need</label>
             </div>
             <div class="col-md-10">
-              <label style="font-size: 10px;">pada kolom ini anda diminta untuk memasukkan memilih kebutuhan sistem informasi yang akan dibuat</label>
+              <label style="font-size: 10px;">pada bagian ini anda diminta untuk memilih kebutuhan sistem informasi yang akan dibuat</label>
               <label style="font-size: 10px;">*apabila pilihan anda tidak terdapat pada menu pilihan silakan pilih pilihan lainnya, dan tulis di kolom detail</label>
               <label style="font-size: 10px;">*apabila anda bermaksud memperbaharui kebutuhan sistem informasi yang telah tersedia dan hanya akan menambahkan fitur, silakan pilih kebutuhan sistem informasi yang hendak diperbaharui, pilih perbaharui pada tipe pembuatan, dan tuliskan fitur tambahan di kolom detail</label>
               <select name="isneed">
@@ -218,7 +225,7 @@
                 <option value="Perbaharui">Perbaharui</option>
                 <option value="Beli">Beli</option>
               </select>
-              <textarea placeholder="detail" id="isneed_detail" name="isneed_lainnya" required style="width: 70%; "></textarea>
+              <textarea placeholder="detail" id="isneed_detail" name="isneed_detail" style="width: 70%; "></textarea>
             <div id="isneed_quotes"></div>
               <input type="button" id=isneed_add_input value="+ tambah kebutuhan sistem informasi"  class="btn btn-default" onClick="onClickisneed()">
             </div>
@@ -320,10 +327,10 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Hapus Analisis Ini ?</h4>
+                            <label class="modal-title">Hapus Analisis Ini ?</label>
                           </div>
                           <div class="modal-body">
-                            <h5>Apakah Anda Yakin Ingin Menghapus Analisis Ini ?</h5>
+                            <label>Apakah Anda Yakin Ingin Menghapus Analisis Ini ?</label>
                           </div>
                           <form action="<?php echo base_url();?>analisis/deleteAnalisis" method="POST">
                             <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
@@ -353,7 +360,8 @@
                                 <label>Objective</label>
                               </div>
                               <div class="col-md-10">
-                                <textarea name="objective" style="width: 100%"  required><?php echo $row['objective']?></textarea>
+                                <textarea name="objective" style="width: 88%"  required><?php echo $row['objective']?></textarea>
+                              <hr>
                               </div>
 
                               <div class="col-md-2">
@@ -362,16 +370,21 @@
                               <div class="col-md-10">
                               <?php foreach ($data_measure as $key): ?>
                                 <input type="hidden" name="id_measure[]" value="<?php echo $key['id_measure'] ?>">
-                                <textarea id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" style="width: 80%"><?php echo $key['measure']?></textarea>
+                                <textarea id=measure<?php echo $row['id_objective']?><?php echo $key['id_measure']?> name="measure[]" style="width: 88%"><?php echo $key['measure']?></textarea>
                                 <button type="button" onclick="hapus('measure<?php echo $row['id_objective'].$key['id_measure']?>','measurebutton<?php echo $row['id_objective'].$key['id_measure']?>');" class="btn btn-default" name="buttonhapus" id="measurebutton<?php echo $row['id_objective'].$key['id_measure']?>" style="margin-bottom: 5px; margin-top: 0;">hapus</button> 
                               <?php endforeach ?>
-                              <div id="measurebaru<?php echo $row['id_objective']?>">
-                                <textarea name="moremeasure" id="moremeasure" style="width: 100%;" placeholder="tambah measure disini"></textarea>
 
-                              </div> 
-                              <button type="button" id=measure_add_input_button class="btn btn-default" onclick="tambahmeasurebaru('measurebaru<?php echo $row['id_objective']?>')">tambah measure</button>
-                                
-                              <button type="button" onclick="hehe('moremeasurearrayid');">check</button>
+                              <?php for ($i=1; $i < 6; $i++) : ?>
+                              <div id="<?php echo $i ?>measurebaru<?php echo $row['id_objective']?>" style="display: none">
+                                <textarea name="moremeasure[]" style="width: 88%;" placeholder="tambah measure baru disini" ></textarea>
+                              </div>
+                              <?php endfor ?>  
+
+                              <button type="button" class="btn btn-default" onclick="tambahMeasure('measurebaru<?php echo $row['id_objective']?>')">
+                                Tambah Measure
+                              </button>
+                              <!-- <button type="button" id=measure_add_input_button class="btn btn-default" onclick="tambahmeasurebaru('measurebaru<?php echo $row['id_objective']?>')">tambah measure</button> -->
+                                <hr>
                               </div>
 
                               <div class="col-md-2">
@@ -380,19 +393,31 @@
                               <div class="col-md-10">
                               <?php foreach ($data_action as $key): ?>
                                 <input type="hidden" name="id_action[]" value="<?php echo $key['id_action'] ?>">
-                                <textarea id="action<?php echo $row['id_objective']?><?php echo $key['id_action']?>" name="action[]" style="width: 80%"><?php echo $key['action']?></textarea>
+                                <textarea id="action<?php echo $row['id_objective']?><?php echo $key['id_action']?>" name="action[]" style="width: 88%"><?php echo $key['action']?></textarea>
                                 <button type="button" onclick="hapus('action<?php echo $row['id_objective']?><?php echo $key['id_action']?>','actionbutton<?php echo $row['id_objective']?><?php echo $key['id_action']?>');" id="actionbutton<?php echo $row['id_objective']?><?php echo $key['id_action']?>" class="btn btn-default">hapus</button>
                               <?php endforeach ?>
-                                <textarea name="moreaction" id="moreaction" style="width: 100%;" placeholder="tambah action disini"></textarea>
+
+                              <?php for ($i=1; $i < 6; $i++) : ?>
+                              <div id="<?php echo $i ?>actionbaru<?php echo $row['id_objective']?>" style="display: none">
+                                <textarea name="moreaction[]" style="width: 88%;" placeholder="tambah action baru disini" ></textarea>
+                              </div>
+                              <?php endfor ?>  
+                              
+                              <button type="button" class="btn btn-default" onclick="tambahAction('actionbaru<?php echo $row['id_objective']?>')">
+                                Tambah Action
+                              </button>
+                                <hr>
                               </div>
 
                               <div class="col-md-2">
-                                <label>IS Need</label>
+                                <label>IS Need</label><br><label style="font-size: 10px">*apabila anda hendak memperbaharui sistem informasi yang telah tersedia, maka isi kolom detail dengan fitur yang ingin ditambahkan pada sistem informasi tersebut</label>
                               </div>
                               <div class="col-md-10">
                               <?php foreach ($data_isneed as $key): ?>
                                 <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
-                                <textarea id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" style="width: 80%"><?php echo $key['isneed']?></textarea>
+                                <label><?php echo $key['isneed']?></label><br>
+
+                                <textarea id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" style="width: 75%" placeholder="detail"><?php echo $key['detail']?></textarea>
                                 <select name="isneed_desc_edit[]" id="isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" required="">
                                   <option value="Buat Baru" <?php if ($key['Tipe'] == 'Buat Baru'): ?>
                                     selected
@@ -409,12 +434,51 @@
                                 </select>
                                 <button type="button" onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default" id="isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>">hapus</button>
                               <?php endforeach ?>
-                                <textarea name="moreisneed" id="moreisneed" style="width: 100%;" placeholder="tambah isneed disini"></textarea>
-                                <select name="moreisneed_desc" required="">
+                              <?php for ($i=1; $i < 6; $i++) : ?>
+                              <div id="<?php echo $i ?>isneedbaru<?php echo $row['id_objective']?>" style="display: none">
+                                <select name="moreisneed[]">
+                                  <option value="">Pilih Kebutuhan Sistem Informasi</option>
+                                  <optgroup label="Key Operational">
+                                    <?php foreach ($key_operational as $key): ?>
+                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                                    <?php endforeach ?>
+                                  </optgroup>
+                                  <optgroup label="Strategic">
+                                    <?php foreach ($strategic as $key): ?>
+                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                                    <?php endforeach ?>
+                                  </optgroup>
+                                  <optgroup label="High Potential">
+                                    <?php foreach ($high_potential as $key): ?>
+                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                                    <?php endforeach ?>
+                                  </optgroup>
+                                  <optgroup label="Support">
+                                    <?php foreach ($support as $key): ?>
+                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
+                                    <?php endforeach ?>
+                                  </optgroup>
+                                  <optgroup label="Lainnya">
+                                    <option value="lainnya">Lainnya</option>
+                                  </optgroup>
+                                </select>
+                                <select name="moreisneed_desc[]">
                                   <option value="Buat Baru">Buat Baru</option>
                                   <option value="Perbaharui">Perbaharui</option>
                                   <option value="Beli">Beli</option>
                                 </select>
+                                <textarea placeholder="detail" name="moreisneed_detail[]" style="width: 70%; "></textarea>
+                              </div>
+                              <?php endfor ?>  
+                              <button type="button" class="btn btn-default" onclick="tambahIsneed('isneedbaru<?php echo $row['id_objective']?>')">
+                                  Tambah Isneed
+                              </button>
+                                <!-- <textarea name="moreisneed" id="moreisneed" style="width: 75%;" placeholder="tambah isneed disini"></textarea>
+                                <select name="moreisneed_desc" required="">
+                                  <option value="Buat Baru">Buat Baru</option>
+                                  <option value="Perbaharui">Perbaharui</option>
+                                  <option value="Beli">Beli</option>
+                                </select> -->
                               </div>
 
                             </div>

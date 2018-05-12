@@ -9,10 +9,17 @@ class Analisis extends CI_Controller {
 		$measure = $this->input->post('measure');
 		$action = $this->input->post('action');
 		$isneed = $this->input->post('isneed');
-		if ($isneed == "lainnya") {
-			$isneed = $this->input->post('isneed_detal');
-		}
 		$isneed_desc = $this->input->post('isneed_desc');
+		if ($isneed == "lainnya") {
+			$isneed = $this->input->post('isneed_detail');
+			$isneed_detail = NULL;
+		}else{
+			if($isneed_desc == "Perbaharui"){
+				$isneed_detail = $this->input->post('isneed_detail');
+			}else{
+				$isneed_detail = NULL;
+			}
+		}
 		$jumlah_measure =$this->input->post('jumlah_measure');
 		$jumlah_action =$this->input->post('jumlah_action');
 		$jumlah_isneed =$this->input->post('jumlah_isneed');
@@ -51,7 +58,8 @@ class Analisis extends CI_Controller {
 				'id_user' => $id,
 				'id_kategori_analisis' => $kategori, 
 				'tipe' => $isneed_desc,
-				'id_objective' => $id_objective
+				'id_objective' => $id_objective,
+				'detail' => $isneed_detail
 		);
 
 		$this->User_model->insertData('t_measure', $data_input_measure);
@@ -85,13 +93,23 @@ class Analisis extends CI_Controller {
 		if ($jumlah_isneed>0) {
 			$isneedadd = $this->input->post('isneedadd');
 			$isneedadd_desc = $this->input->post('isneedadd_desc');
+			$isneedadd_detail = $this->input->post('isneedadd_detail'); 
 			for ($i=0; $i < $jumlah_isneed; $i++) { 
+				if ($isneedadd[$i] == "lainnya") {
+					$isneedadd[$i] = $isneedadd_detail[$i];
+					$isneedadd_detail[$i] = NULL;
+				}else{
+					if ($isneedadd_desc[$i] != "Perbaharui") {
+						$isneedadd_detail[$i] = NULL;
+					}
+				}
 				$data_input_isneed = array(
 					'isneed' => $isneedadd[$i],
 					'id_user' => $id,
 					'id_kategori_analisis' => $kategori, 
 					'tipe' => $isneedadd_desc[$i],
-					'id_objective' => $id_objective
+					'id_objective' => $id_objective,
+					'detail' => $isneedadd_detail[$i]
 				);
 				$this->User_model->insertData('t_isneed', $data_input_isneed);			
 			}
@@ -160,7 +178,7 @@ class Analisis extends CI_Controller {
 		
 		if (!empty($measure)) {
 			foreach ($measure as $key=> $value) {
-				if ($value==' ' || $value==NULL) {
+				if ($value=='   ' || $value==NULL) {
 					$this->User_model->delete('t_measure', 'id_measure', $id_measure[$key]);
 				}else{
 					$data_update = array(
@@ -172,7 +190,7 @@ class Analisis extends CI_Controller {
 		}
 		if (!empty($action)) {
 		foreach ($action as $key=> $value) {
-			if ($value==' ' || $value==NULL) {
+			if ($value=='   ' || $value==NULL) {
 				$this->User_model->delete('t_action', 'id_action', $id_action[$key]);
 			}else{
 				$data_update = array(
@@ -184,11 +202,11 @@ class Analisis extends CI_Controller {
 		}
 		if (!empty($isneed)) {
 		foreach ($isneed as $key=> $value) {
-			if ($value==' ' || $value==NULL) {
+			if ($value=='   ') {
 				$this->User_model->delete('t_isneed', 'id_isneed', $id_isneed[$key]);
 			}else{
 				$data_update = array(
-					'isneed' => $value,
+					'detail' => $value,
 					'Tipe' => $isneed_desc[$key]
 				);
 			$this->User_model->updateData('t_isneed', 'id_isneed', $id_isneed[$key], $data_update);
@@ -198,78 +216,69 @@ class Analisis extends CI_Controller {
 
 		if (!empty($this->input->post('moremeasure'))) {
 			$moremeasure = $this->input->post('moremeasure');
-			$data_input = array('measure' => $moremeasure,
-								'id_objective' => $id_objective,
-								'id_kategori_analisis' => $kategori, 
-								'id_user' => $id
-								 );
-			$this->User_model->insertData('t_measure', $data_input);
+			foreach ($moremeasure as $key => $value) {
+				if (!empty($value)) {
+					$data_input = array('measure' => $value,
+										'id_objective' => $id_objective,
+										'id_kategori_analisis' => $kategori, 
+										'id_user' => $id
+										 );
+					$this->User_model->insertData('t_measure', $data_input);
+				}
+			}
 		}
 		if (!empty($this->input->post('moreaction'))) {
 			$moreaction = $this->input->post('moreaction');
-			$data_input = array('action' => $moreaction,
-								'id_objective' => $id_objective,
-								'id_kategori_analisis' => $kategori, 
-								'id_user' => $id
-								 );
-			$this->User_model->insertData('t_action', $data_input);
+			foreach ($moreaction as $key => $value) {
+				if (!empty($value)) {
+					$data_input = array('action' => $value,
+										'id_objective' => $id_objective,
+										'id_kategori_analisis' => $kategori, 
+										'id_user' => $id
+										 );
+					$this->User_model->insertData('t_action', $data_input);
+				}
+			}
 		}
+		$moreisneed = $this->input->post('moreisneed');
+		print_r($moreisneed);
 		if (!empty($this->input->post('moreisneed'))) {
 			$moreisneed = $this->input->post('moreisneed');
 			$moreisneed_desc = $this->input->post('moreisneed_desc');
-			$data_input = array('isneed' => $moreisneed,
-								'id_objective' => $id_objective,
-								'id_kategori_analisis' => $kategori,
-								'Tipe' => $moreisneed_desc,
-								'id_user' => $id
-								 );
-			$this->User_model->insertData('t_isneed', $data_input);
+			$moreisneed_detail = $this->input->post('moreisneed_detail');
+			foreach ($moreisneed as $key => $value) {
+				if (!empty($value)) {
+					if ($value == "lainnya") {
+						$value = $moreisneed_detail[$key];
+						$moreisneed_detail[$key] = NULL;
+					}else{
+						if ($moreisneed_desc[$key] != "Perbaharui") {
+							$moreisneed_detail[$key] = NULL;
+						}
+					}
+					$data_input = array('isneed' => $value,
+										'id_objective' => $id_objective,
+										'id_kategori_analisis' => $kategori,
+										'Tipe' => $moreisneed_desc[$key],
+										'detail' => $moreisneed_detail[$key],
+										'id_user' => $id
+										 );
+					$this->User_model->insertData('t_isneed', $data_input);
+				}
+			}
 		}
 
-		
-		$moremeasurearray = $this->input->post('measureadd');
-		print_r($moremeasurearray);
-		// if (!empty($moremeasurearray)) {
-		// 	$moremeasurearray = $this->input->post('moremeasurearray');
-		// 	foreach ($moremeasurearray as $key) {
-		// 		$data_insert = array(
-		// 			'id_objective' => $id_objective,
-		// 			'measure' => $key
-		// 		);
-		// 		$this->User_model->insertData('t_measure', $data_insert);
-		// 	}
-		// }
-		// if (!empty($moremeasurearray)) {
-		// 	$moreactionarray = $this->input->post('moreactionrray');
-		// 	foreach ($moreactionrray as $key) {
-		// 		$data_insert = array(
-		// 			'id_objective' => $id_objective,
-		// 			'action' => $key
-		// 		);
-		// 		$this->User_model->insertData('t_action', $data_insert);
-		// 	}
-		// }
-		// if (!empty($moremeasurearray)) {
-		// 	$moreisneedarray = $this->input->post('moreisneedarray');
-		// 	foreach ($moreisneedarray as $key) {
-		// 		$data_insert = array(
-		// 			'id_objective' => $id_objective,
-		// 			'isneed' => $key
-		// 		);
-		// 		$this->User_model->insertData('t_isneed', $data_insert);
-		// 	}
-		// }
-	 //  if ($kategori == 'FNC') {
-		// 	redirect('home/analisis/1','refresh');
-		// }else if ($kategori == 'CST') {
-		// 	redirect('home/analisis/2','refresh');
-		// }else if ($kategori == 'INT') {
-		// 	redirect('home/analisis/3','refresh');
-		// }else if ($kategori == 'LEA') {
-		// 	redirect('home/analisis/4','refresh');
-		// }else{
-		// 	echo $kategori;
-		// }
+	  if ($kategori == 'FNC') {
+			redirect('home/analisis/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/analisis/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/analisis/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/analisis/4','refresh');
+		}else{
+			echo $kategori;
+		}
 	}
 	public function inputkomentar()
 	{
