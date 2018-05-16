@@ -28,7 +28,7 @@
 <script type="text/javascript">
     $(function(){
         $("#isneed_add_input").click(function(event){
-            var isneedadd = "<select name='isneedadd[]'><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
+            var isneedadd = "<select name='isneedadd[]' required><option value=''>Pilih Kebutuhan Sistem Informasi</option><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
             var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
             var isneedadd_detail = "<textarea placeholder='detail' id='isneed_detail' name='isneedadd_detail[]' style='width: 70%; '></textarea>";
             $("#isneed_quotes").append("<br />");
@@ -195,7 +195,10 @@
               <label style="font-size: 10px;">pada bagian ini anda diminta untuk memilih kebutuhan sistem informasi yang akan dibuat</label>
               <label style="font-size: 10px;">*apabila pilihan anda tidak terdapat pada menu pilihan silakan pilih pilihan lainnya, dan tulis di kolom detail</label>
               <label style="font-size: 10px;">*apabila anda bermaksud memperbaharui kebutuhan sistem informasi yang telah tersedia dan hanya akan menambahkan fitur, silakan pilih kebutuhan sistem informasi yang hendak diperbaharui, pilih perbaharui pada tipe pembuatan, dan tuliskan fitur tambahan di kolom detail</label>
-              <select name="isneed">
+              <select name="isneed" required="">
+                <option value="">
+                  Pilih Kebutuhan Sistem Informasi
+                </option>
                 <optgroup label="Key Operational">
                   <?php foreach ($key_operational as $key): ?>
                     <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>

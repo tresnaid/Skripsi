@@ -835,5 +835,46 @@ class Roadmap extends CI_Controller {
     	}
 	}
 
-	
+	public function hardwareneed()
+	{
+		$tombol = $this->input->post('submit');
+
+		$kebutuhan_hardware = $this->input->post('nama_hardware');
+		$detail_kebutuhan_hardware = $this->input->post('detail_kebutuhan_hardware');
+		$jumlah = $this->input->post('jumlah');
+		$id_isneed = $this->input->post('id_isneed');
+		if (!empty($kebutuhan_hardware)) {
+			foreach ($kebutuhan_hardware as $key => $value) {
+				$data_input = array(
+								'id_isneed' => $id_isneed[$key],
+								'nama' => $value,
+								'detail' => $detail_kebutuhan_hardware[$key],
+								'jumlah' => $jumlah[$key]
+				);
+				$this->User_model->insertData('t_kebutuhan_hardware', $data_input);
+			} 
+		}
+		if ($tombol == "end") {
+			$data_update=array('status'=> TRUE);
+			$this->User_model->updateData('t_status', 'nama','hardware', $data_update);
+		}
+		redirect('home/tunggu','refresh');
+	}
+	public function delete()
+	{
+		$id = $this->input->post('id');
+		$this->User_model->delete('t_kebutuhan_hardware', 'id', $id);
+		redirect('home/tunggu','refresh');
+	}
+	public function edit()
+	{
+		$kebutuhan_hardware = $this->input->post('nama_hardware');
+		$detail_kebutuhan_hardware = $this->input->post('detail_kebutuhan_hardware');
+		$jumlah = $this->input->post('jumlah');
+		$id = $this->input->post('id');
+
+		$data_update = array('nama' => $kebutuhan_hardware, 'detail' => $detail_kebutuhan_hardware, 'jumlah' => $jumlah);
+		$this->User_model->updateData('t_kebutuhan_hardware', 'id', $id, $data_update);
+		redirect('home/tunggu','refresh');
+	}
 }

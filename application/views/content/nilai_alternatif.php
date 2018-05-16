@@ -34,7 +34,7 @@
 
 <?php
 	foreach($informasi as $h){
-		$alternatif[]=array($h->id_isneed,$h->isneed, $h->Tipe);
+		$alternatif[]=array($h->id_isneed,$h->isneed, $h->Tipe, $h->detail);
 	}
 	for($i=1;$i<=17;$i++){
 		$selected[$i]='';
@@ -134,7 +134,7 @@
 														$selected[$x]=' checked';
 						                  				 ?>
 														  <tr >
-															<td align="right"><?php echo $alternatif[$i][1]."<br/>[".$alternatif[$i][2]."]" ?></td>
+															<td align="right"><?php echo $alternatif[$i][3]." pada ".$alternatif[$i][1]."<br/>[".$alternatif[$i][2]."]" ?></td>
 															<td align="center">
 																<label class="radioLabel">
 																	<input type="radio" name="nilai_<?php echo $alternatif[$i][0]?>_<?php echo $alternatif[$ii][0]?>" <?php echo $selected[1] ?> value="9">
@@ -251,7 +251,7 @@
 																</label>
 															</td>
 															
-															<td><?php echo $alternatif[$ii][1]."<br/>[".$alternatif[$i][2]."]" ?></td>
+															<td><?php echo $alternatif[$ii][3]." pada ".$alternatif[$ii][1]."<br/>[".$alternatif[$ii][2]."]" ?></td>
 														  </tr>
 														<?php 
 														$selected[$x]='';

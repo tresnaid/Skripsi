@@ -115,7 +115,13 @@ class Home extends CI_Controller {
       	$data['id_user'] = $id;
 		$this->load->view('dashboard.php', $data);
 	}
-
+	public function testing()
+	{
+		$a = $this->input->post('measureadd');
+		$b = $this->input->post('isneedadd');
+		print_r($a);
+		print_r($b);
+	}
 	public function tunggu()
 	{
 		
@@ -130,12 +136,17 @@ class Home extends CI_Controller {
 				$total++;
 			}
     	}
+    	$data['status_hardware'] = $this->User_model->checkstatus('hardware');
+		$data['jenis_hardware'] = $this->User_model->getData('t_jenis_hardware');
+    	$data['teknologi_informasi'] = $this->User_model->getData('t_pilihan_hardware');
     	$data['total'] = $total;
     	$data['total_user'] = count($user);
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
+	        $departement = $row['departemen'];
       	}
+      	$data['departement'] = $departement;
       	$data['perbandingan_kriteria'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_kriteria', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_kriteria.id_kriteria', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'KRITERIA');
       	$data['perbandingan_finance'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_isneed', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_isneed.id_isneed', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'FNC');
       	$data['perbandingan_customer'] = $this->User_model->hasil_fuzzy_perkriteria('t_fuzzy_nilai_hasil_'.$id, 't_isneed', 't_fuzzy_nilai_hasil_'.$id.'.id_kriteria = t_isneed.id_isneed', 't_fuzzy_nilai_hasil_'.$id.'.tipe', 'CST');

@@ -43,6 +43,8 @@
     $jumlah_approval = $this->User_model->count('t_approval');
     $jumlah_objective = $this->User_model->count('t_objective');
     $total = 0;
+    $status_hardware = $this->User_model->checkstatus('hardware');
+
     foreach ($user as $row) {
       $statusalternatif = $row->alternatif;
       if ($statusalternatif == 0) {
@@ -60,7 +62,7 @@
       $status =0;
     }
 
-    if ($total == $jumlah_user) {
+    if (($total == $jumlah_user)&&($status_hardware==1)) {
       $status_tunggu =1;
     }else{
       $status_tunggu =0;
@@ -69,7 +71,6 @@
 
 ?>
 <?php echo $nama ?>
-
 
 <?php if ($_SESSION['login'] == TRUE): ?>
 	<header class="header">
@@ -137,17 +138,6 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/jquery.sticky.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/jquery.scrollTo.min.js"></script>
-    <!-- to use it on your site, change API key for Google Maps -->
-    <script src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/front.js"></script>
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
-    <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
+    
   </body>
 </html>

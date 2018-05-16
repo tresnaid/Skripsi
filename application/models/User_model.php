@@ -215,6 +215,13 @@ class User_model extends CI_Model {
             $query = $this->db->get();
             return $query->row()->departemen;
         }
+        public function checkstatus($status){
+            $this->db->select('status');
+            $this->db->from('t_status');
+            $this->db->where('nama', $status);
+            $query = $this->db->get();
+            return $query->row()->status;
+        }
 
         public function checkrole($email){
             $this->db->select('role');
