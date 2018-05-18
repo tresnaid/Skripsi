@@ -33,6 +33,81 @@
   	<div class="container clearfix">
     	<div class="row services">
       		<div class="col-md-12">
+		    	<h2 class="heading">McFarlan Grid</h2>
+        		<div class="row">
+          			<div class="container" style="margin-top:50px">
+              			<div class="panel-body" style="padding:0px">
+                			<table class="table table-striped table-bordered" style="margin:0px">
+                  				<thead>
+									<tr>
+										<th>Strategic</th>
+										<th>High Potential</th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<?php foreach ($ST as $key): ?>
+													<ul>
+														<li>
+															<?php echo $key['isneed'] ?>
+														</li>
+													</ul>
+
+												<?php endforeach ?>
+											</td>
+											<td>
+												<?php foreach ($HP as $key): ?>
+													<ul>
+														<li>
+															<?php echo $key['isneed'] ?>
+														</li>
+													</ul>
+												<?php endforeach ?>
+											</td>
+										</tr>
+									</tbody>
+									<thead>
+										<tr>
+											<th>Key Operational</th>
+											<th>Support</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<?php foreach ($KO as $key): ?>
+													<ul>
+														<li>
+															<?php echo $key['isneed'] ?>
+														</li>
+													</ul>
+												<?php endforeach ?>
+											</td>
+											<td>
+												<?php foreach ($SP as $key): ?>
+													<ul>
+														<li>
+															<?php echo $key['isneed'] ?>
+														</li>
+													</ul>
+												<?php endforeach ?>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="rekomendasi" class="section-gray">
+  	<div class="container clearfix">
+    	<div class="row services">
+      		<div class="col-md-12">
 		    	<h2 class="heading">KEBUTUHAN TEKNOLOGI INFORMASI</h2>
         		<div class="row">
           			<div class="container" style="margin-top:50px">
@@ -42,6 +117,7 @@
 									<tr>
 										<th style="text-align:center;width:20px;">NO</th>
 										<th>Kebutuhan Sistem Informasi</th>
+										<th>Tipe Pengembangan Sistem Informasi</th>
 										<th style="width:40%">Kebutuhan Teknologi Informasi</th>
 									</tr>
 									</thead>
@@ -54,6 +130,7 @@
 											<tr>
 												<td style="text-align:center;"><?php echo $counter ?></td>
 												<td><?php echo $key->isneed ?></td>
+												<td><?php echo $key->Tipe ?></td>
 												<td>
 												<?php foreach ($kebutuhan_hardware as $kebutuhan_hardware): ?>
 												<?php echo $kebutuhan_hardware['jumlah']." ".$kebutuhan_hardware['nama']." ".$kebutuhan_hardware['detail']; ?>

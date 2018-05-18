@@ -10,6 +10,7 @@ class Analisis extends CI_Controller {
 		$action = $this->input->post('action');
 		$isneed = $this->input->post('isneed');
 		$isneed_desc = $this->input->post('isneed_desc');
+		$isneed_strategic = $this->input->post('isneed_strategic');
 		if ($isneed == "lainnya") {
 			$isneed = $this->input->post('isneed_detail');
 			$isneed_detail = NULL;
@@ -59,7 +60,8 @@ class Analisis extends CI_Controller {
 				'id_kategori_analisis' => $kategori, 
 				'tipe' => $isneed_desc,
 				'id_objective' => $id_objective,
-				'detail' => $isneed_detail
+				'detail' => $isneed_detail,
+				'bagan' => $isneed_strategic
 		);
 
 		$this->User_model->insertData('t_measure', $data_input_measure);
@@ -94,6 +96,7 @@ class Analisis extends CI_Controller {
 			$isneedadd = $this->input->post('isneedadd');
 			$isneedadd_desc = $this->input->post('isneedadd_desc');
 			$isneedadd_detail = $this->input->post('isneedadd_detail'); 
+			$isneedadd_strategic = $this->input->post('isneedadd_strategic'); 
 			for ($i=0; $i < $jumlah_isneed; $i++) { 
 				if ($isneedadd[$i] == "lainnya") {
 					$isneedadd[$i] = $isneedadd_detail[$i];
@@ -109,7 +112,8 @@ class Analisis extends CI_Controller {
 					'id_kategori_analisis' => $kategori, 
 					'tipe' => $isneedadd_desc[$i],
 					'id_objective' => $id_objective,
-					'detail' => $isneedadd_detail[$i]
+					'detail' => $isneedadd_detail[$i],
+					'bagan' => $isneedadd_strategic[$i]
 				);
 				$this->User_model->insertData('t_isneed', $data_input_isneed);			
 			}
@@ -167,6 +171,7 @@ class Analisis extends CI_Controller {
 		$id_action = $this->input->post('id_action');
 		$isneed = $this->input->post('isneed');
 		$isneed_desc = $this->input->post('isneed_desc_edit');
+		$isneed_strategic = $this->input->post('isneed_strategic');
 		$id_isneed = $this->input->post('id_isneed');
 		$kategori = $this->input->post('kategori');
 	
@@ -206,6 +211,7 @@ class Analisis extends CI_Controller {
 				$this->User_model->delete('t_isneed', 'id_isneed', $id_isneed[$key]);
 			}else{
 				$data_update = array(
+					'bagan' => $isneed_strategic,
 					'detail' => $value,
 					'Tipe' => $isneed_desc[$key]
 				);
@@ -241,6 +247,7 @@ class Analisis extends CI_Controller {
 			}
 		}
 		$moreisneed = $this->input->post('moreisneed');
+		$moreisneed_strategic = $this->input->post('moreisneed_strategic');
 		print_r($moreisneed);
 		if (!empty($this->input->post('moreisneed'))) {
 			$moreisneed = $this->input->post('moreisneed');
@@ -261,7 +268,8 @@ class Analisis extends CI_Controller {
 										'id_kategori_analisis' => $kategori,
 										'Tipe' => $moreisneed_desc[$key],
 										'detail' => $moreisneed_detail[$key],
-										'id_user' => $id
+										'id_user' => $id,
+										'bagan' => $moreisneed_strategic[$key]
 										 );
 					$this->User_model->insertData('t_isneed', $data_input);
 				}

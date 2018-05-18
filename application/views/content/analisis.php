@@ -31,10 +31,12 @@
             var isneedadd = "<select name='isneedadd[]' required><option value=''>Pilih Kebutuhan Sistem Informasi</option><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
             var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
             var isneedadd_detail = "<textarea placeholder='detail' id='isneed_detail' name='isneedadd_detail[]' style='width: 70%; '></textarea>";
+            var isneedadd_strategic = "<select name='isneedadd_strategic[]' required=''><option value=''>Pilih Termasuk ke Dalam Strategic Seperti Apa Sistem Informasi Yang Akan Dibangun</option><option value='KO'>Key Operational</option><option value='ST'>Strategic</option><option value='HP'>High Potential</option><option value='SP'>Support</option></select>";
             $("#isneed_quotes").append("<br />");
             $("#isneed_quotes").append(isneedadd);
             $("#isneed_quotes").append(isneedadd_desc);
             $("#isneed_quotes").append(isneedadd_detail);
+            $("#isneed_quotes").append(isneedadd_strategic);
             $("#isneed_quotes").append("\n<br />");
         });
     });
@@ -98,12 +100,14 @@
     }
   }
 
-  function hapus(id,button,button2) {
+  function hapus(id,button,button2, nama, strategi) {
     if(confirm("Yakin akan menghapus ini ? pastikan anda menyimpan perubahan setelah menghapus")){
       document.getElementById(id).value = "   ";     
       document.getElementById(id).style.display = "none";     
       document.getElementById(button).style.display = "none";
       document.getElementById(button2).style.display = "none";
+      document.getElementById(nama).style.display = "none";
+      document.getElementById(strategi).style.display = "none";
     }else{
       return false;
     }
@@ -229,6 +233,13 @@
                 <option value="Beli">Beli</option>
               </select>
               <textarea placeholder="detail" id="isneed_detail" name="isneed_detail" style="width: 70%; "></textarea>
+              <select name="isneed_strategic" required="">
+                <option value="">Pilih Termasuk ke Dalam Strategic Seperti Apa Sistem Informasi Yang Akan Dibangun</option>
+                <option value="KO">Key Operational</option>
+                <option value="ST">Strategic</option>
+                <option value="HP">High Potential</option>
+                <option value="SP">Support</option>
+              </select>
             <div id="isneed_quotes"></div>
               <input type="button" id=isneed_add_input value="+ tambah kebutuhan sistem informasi"  class="btn btn-default" onClick="onClickisneed()">
             </div>
@@ -418,9 +429,24 @@
                               <div class="col-md-10">
                               <?php foreach ($data_isneed as $key): ?>
                                 <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
-                                <label><?php echo $key['isneed']?></label><br>
+                                <label id="isneedname<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>"><?php echo $key['isneed']?></label><br>
 
                                 <textarea id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" style="width: 75%" placeholder="detail"><?php echo $key['detail']?></textarea>
+                                <select name="isneed_strategic" id="isneed_strategic<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>">
+                                  <option value="">Pilih Termasuk ke Dalam Strategic Seperti Apa Sistem Informasi Yang Akan Dibangun</option>
+                                  <option value="KO" <?php if ($key['bagan'] == 'KO'): ?>
+                                    selected
+                                  <?php  endif ?>>Key Operational</option>
+                                  <option value="ST" <?php if ($key['bagan'] == 'ST'): ?>
+                                    selected
+                                  <?php  endif ?>>Strategic</option>
+                                  <option value="HP" <?php if ($key['bagan'] == 'HP'): ?>
+                                    selected
+                                  <?php  endif ?>>High Potential</option>
+                                  <option value="SP" <?php if ($key['bagan'] == 'SP'): ?>
+                                    selected
+                                  <?php  endif ?>>Support</option>
+                                </select>
                                 <select name="isneed_desc_edit[]" id="isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" required="">
                                   <option value="Buat Baru" <?php if ($key['Tipe'] == 'Buat Baru'): ?>
                                     selected
@@ -435,8 +461,10 @@
                                   <?php  endif ?>
                                   >Beli</option>
                                 </select>
-                                <button type="button" onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default" id="isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>">hapus</button>
+                                <button type="button" onclick="hapus('isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedbutton2<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneedname<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>','isneed_strategic<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>');" class="btn btn-default" id="isneedbutton<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>">hapus</button>
                               <?php endforeach ?>
+                              <br/>
+                              <br/>
                               <?php for ($i=1; $i < 6; $i++) : ?>
                               <div id="<?php echo $i ?>isneedbaru<?php echo $row['id_objective']?>" style="display: none">
                                 <select name="moreisneed[]">
@@ -471,6 +499,15 @@
                                   <option value="Beli">Beli</option>
                                 </select>
                                 <textarea placeholder="detail" name="moreisneed_detail[]" style="width: 70%; "></textarea>
+                                <select name="moreisneed_strategic[]">
+                                  <option value="">Pilih Termasuk ke Dalam Strategic Seperti Apa Sistem Informasi Yang Akan Dibangun</option>
+                                  <option value="KO">Key Operational</option>
+                                  <option value="ST">Strategic</option>
+                                  <option value="HP">High Potential</option>
+                                  <option value="SP">Support</option>
+                                </select>
+                                <br/>
+                                <br/>
                               </div>
                               <?php endfor ?>  
                               <button type="button" class="btn btn-default" onclick="tambahIsneed('isneedbaru<?php echo $row['id_objective']?>')">

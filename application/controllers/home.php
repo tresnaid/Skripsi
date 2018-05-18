@@ -186,6 +186,10 @@ class Home extends CI_Controller {
     		);
     		$this->User_model->insertData('t_roadmap', $data_input);
     	}
+    		$data['KO'] = $this->User_model->getDataWhere('t_isneed', 'bagan', 'KO');
+    		$data['SP'] = $this->User_model->getDataWhere('t_isneed', 'bagan', 'SP');
+    		$data['HP'] = $this->User_model->getDataWhere('t_isneed', 'bagan', 'HP');
+    		$data['ST'] = $this->User_model->getDataWhere('t_isneed', 'bagan', 'ST');
 			$data['content'] = "content/rekomendasi.php";
 			$data['page'] = 'roadmap';
 			$data['hasil'] = $this->User_model->hasil_fuzzy('t_isneed','t_roadmap', 't_isneed.id_isneed=t_roadmap.id_isneed');

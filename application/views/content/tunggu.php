@@ -20,17 +20,7 @@
 		border-left: none;
 	}
 </style>
-<?php foreach ($jenis_hardware as $key): ?>
-	
-<?php endforeach ?>
-<?php 
-foreach ($jenis_hardware as $key) {
-	$pilihan = $this->User_model->getDataWhere('t_pilihan_hardware', 'jenis', $key->nama);
-	foreach ($pilihan as $row) {
-		echo $row['nama'];
-	}
-    }
- ?>
+
 <section id="rekomendasi" class="section-gray">
   	<div class="container clearfix">
   			<center>
@@ -68,6 +58,7 @@ foreach ($jenis_hardware as $key) {
 											<th style="text-align:center;" width="20">NO</th>
 											<th>Kebutuhan Sistem Informasi</th>
 											
+											<th>Tipe Pembuatan</th>
 											<th>Kebutuhan Teknologi Informasi</th>
 											<th>Action</th>
 										</tr>
@@ -86,6 +77,7 @@ foreach ($jenis_hardware as $key) {
 														<td><?php echo $key->isneed ?></td>
 													<?php endif ?>
 													
+													<td><?php echo $key->Tipe ?></td>
 													<td id="<?php echo $key->id_isneed; ?>" style="width: 40%;">
 														<?php 
 															$kebutuhan_hardware = $this->User_model->getDataWhere('t_kebutuhan_hardware', 'id_isneed', $key->id_isneed);
