@@ -315,5 +315,10 @@ class Home extends CI_Controller {
 		$this->session->set_userdata($data);
 		redirect('Home','refresh');
 	}
-	
-}
+	public function download()
+	{
+		// As PDF creation takes a bit of memory, we're saving the created file in /downloads/reports/
+		PHP_OS == "Windows" || PHP_OS == "WINNT" ?  define("SEPARATOR", "/"); 
+		echo SEPARATOR;
+		}
+	}

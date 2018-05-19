@@ -1,5 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/roadmap/style.css">
-
+<form action="<?php echo base_url() ?>home/download" method="post">
+	<button class="button" type="submit">Download</button>
+</form>
  <section class="section-gray">
  	<div class="container clearfix">
 		<div class="row services">
