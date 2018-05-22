@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom.css">
     <!-- Favicon-->
   <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/favicon.png">
+<!-- <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/roadmap/style.css"> -->
 </head>
 <body data-spy="scroll" data-target="#navigation" data-offset="120">
 	<?php 
@@ -37,14 +38,15 @@
         $status_alternatif = $row['alternatif'];
         $status_kriteria = $row['kriteria'];
       }
+      $version=$_SESSION['version'];
     }
-    $user = $this->User_model->getData('t_user');
-    $jumlah_user = $this->User_model->count('t_user');
-    $jumlah_approval = $this->User_model->count('t_approval');
-    $jumlah_objective = $this->User_model->count('t_objective');
+    $user = $this->User_model->getDatakumulatif2('t_user', 'status', 1);
+    $jumlah_user = $this->User_model->countwhere('t_user', 'status', 1);
+    $jumlah_approval = $this->User_model->countwhere('t_approval', 'version', $version);
+    $jumlah_objective = $this->User_model->countwhere('t_objective', 'version', $version);
     $total = 0;
-    $status_hardware = $this->User_model->checkstatus('hardware');
-
+    $status_hardware = $this->User_model->checkstatus('hardware', 'version', $version);
+    
     foreach ($user as $row) {
       $statusalternatif = $row->alternatif;
       if ($statusalternatif == 0) {
@@ -53,7 +55,7 @@
       }
     }
     if ($jumlah_objective != 0) {
-      if ($jumlah_approval == $jumlah_user*$jumlah_objective) {
+      if ($jumlah_approval >= $jumlah_user*$jumlah_objective) {
         $status = 1;
       }else{
         $status = 0;
@@ -70,7 +72,6 @@
   }
 
 ?>
-<?php echo $nama ?>
 
 <?php if ($_SESSION['login'] == TRUE): ?>
 	<header class="header">
@@ -86,6 +87,12 @@
                 ><a href="<?php echo base_url(); ?>home/dashboard">Beranda</a>
               </li> -->
                 <li class="
+                  <?php if($page == 'past_analysis'): ?>
+                    active
+                  <?php endif ?>"
+                ><a href="<?php echo base_url(); ?>home/past_analysis">Past Analisis</a>
+              </li>
+              <li class="
                   <?php if($page == 'analisis'): ?>
                     active
                   <?php endif ?>"

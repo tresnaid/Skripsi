@@ -5,17 +5,20 @@ class Roadmap extends CI_Controller {
 
     public function insertBobotKriteria()
     {
+    	$version = $_SESSION['version'];
     	$id = $this->input->post('id');
     	$informasi = $this->User_model->getData('t_kriteria');
     	foreach($informasi as $row){
 			$kriteria[]=array($row->id_kriteria,$row->nama_kriteria);
 		}
 			if(isset($_POST['save'])){
-				$this->db->query("truncate table t_nilai_kriteria_".$id);
+				$this->User_model->delete('t_nilai_kriteria_'.$id, 'version', $version);
+				// $this->db->query("truncate table t_nilai_kriteria_".$id);
 				for($i=0;$i<count($kriteria);$i++){
 					for($ii=0;$ii<count($kriteria);$ii++){
 						if ($i == $ii) {
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria_1' => $kriteria[$i][0],
 							'id_kriteria_2' => $kriteria[$ii][0],
 							'kode' => $kriteria[$i][0].$kriteria[$ii][0],
@@ -55,6 +58,7 @@ class Roadmap extends CI_Controller {
 								$nilaimax = 1;
 							}
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria_1' => $kriteria[$i][0],
 							'id_kriteria_2' => $kriteria[$ii][0],
 							'kode' => $kriteria[$i][0].$kriteria[$ii][0],
@@ -65,6 +69,7 @@ class Roadmap extends CI_Controller {
 							$this->User_model->insertData('t_nilai_kriteria_'.$id, $data_input);
 
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria_1' => $kriteria[$ii][0],
 							'id_kriteria_2' => $kriteria[$i][0],
 							'kode' => $kriteria[$ii][0].$kriteria[$i][0],
@@ -79,16 +84,19 @@ class Roadmap extends CI_Controller {
     			redirect('home/nilaikriteria','refresh');
     		}
     		if(isset($_POST['reset'])){
-				$this->db->query("truncate table t_nilai_kriteria_".$id);
+				$this->User_model->delete('t_nilai_kriteria_'.$id, 'version', $version);
+				// $this->db->query("truncate table t_nilai_kriteria_".$id);
     			redirect('home/nilaikriteria','refresh');
 			
 			}
 			if(isset($_POST['next'])){
-				$this->db->query("truncate table t_nilai_kriteria_".$id);
+				$this->User_model->delete('t_nilai_kriteria_'.$id, 'version', $version);
+				// $this->db->query("truncate table t_nilai_kriteria_".$id);
 				for($i=0;$i<count($kriteria);$i++){
 					for($ii=0;$ii<count($kriteria);$ii++){
 						if ($i == $ii) {
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria_1' => $kriteria[$i][0],
 							'id_kriteria_2' => $kriteria[$ii][0],
 							'kode' => $kriteria[$i][0].$kriteria[$ii][0],
@@ -128,6 +136,7 @@ class Roadmap extends CI_Controller {
 								$nilaimax = 1;
 							}
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria_1' => $kriteria[$i][0],
 							'id_kriteria_2' => $kriteria[$ii][0],
 							'kode' => $kriteria[$i][0].$kriteria[$ii][0],
@@ -138,6 +147,7 @@ class Roadmap extends CI_Controller {
 							$this->User_model->insertData('t_nilai_kriteria_'.$id, $data_input);
 							
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria_1' => $kriteria[$ii][0],
 							'id_kriteria_2' => $kriteria[$i][0],
 							'kode' => $kriteria[$ii][0].$kriteria[$i][0],
@@ -156,7 +166,7 @@ class Roadmap extends CI_Controller {
 		      	$this->User_model->updateData('t_user', 'id_user', $id, $data_update);
 		      	$data = array(
 					'login' => TRUE,
-					'list' => $this->User_model->getOneData('t_user','id_user',$id)
+					'list' => $this->User_model->getDataWhere('t_user','id_user',$id)
 				);
 				$this->session->set_userdata($data);
 				redirect('roadmap/isi_fuzzy_kriteria/'.$id.'/KRITERIA','refresh');
@@ -167,14 +177,15 @@ class Roadmap extends CI_Controller {
     
 	public function insertBobotalternatif($id_kriteria)
 	{
+    	$version = $_SESSION['version'];
 		if ($id_kriteria == 1) {
-			$informasi = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'FNC');
+			$informasi = $this->User_model->getDataSubkriteria2('t_isneed', 'id_kategori_analisis', 'FNC', 'version', $version);
       	}elseif ($id_kriteria == 2) {
-			$informasi = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'CST');
+			$informasi = $this->User_model->getDataSubkriteria2('t_isneed', 'id_kategori_analisis', 'CST', 'version', $version);
       	}elseif ($id_kriteria == 3) {
-			$informasi = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'INT');
+			$informasi = $this->User_model->getDataSubkriteria2('t_isneed', 'id_kategori_analisis', 'INT', 'version', $version);
       	}elseif ($id_kriteria == 4) {
-			$informasi = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', 'LEA');
+			$informasi = $this->User_model->getDataSubkriteria2('t_isneed', 'id_kategori_analisis', 'LEA', 'version', $version);
       	}
       	// $informasi = $this->User_model->getData('t_isneed');
 		$id = $this->input->post('id');
@@ -183,11 +194,12 @@ class Roadmap extends CI_Controller {
 		}
 
 		if(isset($_POST['save'])){
-			$this->User_model->delete('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria);
+			$this->User_model->delete2('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria, 'version', $version);
 			for($i=0;$i<count($alternatif);$i++){
 				for($ii=0;$ii<count($alternatif);$ii++){
 					if ($i == $ii) {
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$i][0],
 							'id_alternatif_2' => $alternatif[$ii][0],
@@ -229,6 +241,7 @@ class Roadmap extends CI_Controller {
 						}
 
 						$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$i][0],
 							'id_alternatif_2' => $alternatif[$ii][0],
@@ -240,6 +253,7 @@ class Roadmap extends CI_Controller {
 						$this->User_model->insertData('t_nilai_alternatif_'.$id, $data_input);
 
 						$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$ii][0],
 							'id_alternatif_2' => $alternatif[$i][0],
@@ -255,11 +269,12 @@ class Roadmap extends CI_Controller {
 		redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
 		}
 		if(isset($_POST['reset'])){
-			$this->User_model->delete('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria);
+			$this->User_model->delete2('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria, 'version', $version);
 			for($i=0;$i<count($alternatif);$i++){
 				for($ii=0;$ii<count($alternatif);$ii++){
 					if($i < $ii){
 						$data_input = array(
+							'version' => $version,
 						'id_kriteria' => $id_kriteria,
 						'id_alternatif_1' => $alternatif[$i][0],
 						'id_alternatif_2' => $alternatif[$ii][0],
@@ -275,15 +290,17 @@ class Roadmap extends CI_Controller {
 		redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
 		}
 		if(isset($_POST['resetall'])){
-			$this->db->query("truncate table t_nilai_alternatif_".$id);
+			$this->User_model->delete('t_nilai_alternatif_'.$id, 'version', $version);
+			// $this->db->query("truncate table t_nilai_alternatif_".$id);
 			redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
 		}
 		if (isset($_POST['next'])) {
-			$this->User_model->delete('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria);
+			$this->User_model->delete2('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria, 'version', $version);
 			for($i=0;$i<count($alternatif);$i++){
 				for($ii=0;$ii<count($alternatif);$ii++){
 					if ($i == $ii) {
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$i][0],
 							'id_alternatif_2' => $alternatif[$ii][0],
@@ -324,6 +341,7 @@ class Roadmap extends CI_Controller {
 							$nilaimax = 1;
 						}
 						$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$i][0],
 							'id_alternatif_2' => $alternatif[$ii][0],
@@ -335,6 +353,7 @@ class Roadmap extends CI_Controller {
 						$this->User_model->insertData('t_nilai_alternatif_'.$id, $data_input);
 
 						$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$ii][0],
 							'id_alternatif_2' => $alternatif[$i][0],
@@ -360,11 +379,12 @@ class Roadmap extends CI_Controller {
 			// redirect('home/nilaialternatif/'.$id_kriteria,'refresh');
 		}
 		if (isset($_POST['selesai'])) {
-			$this->User_model->delete('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria);
+			$this->User_model->delete2('t_nilai_alternatif_'.$id, 'id_kriteria', $id_kriteria, 'version', $version);
 			for($i=0;$i<count($alternatif);$i++){
 				for($ii=0;$ii<count($alternatif);$ii++){
 					if ($i == $ii) {
 							$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$i][0],
 							'id_alternatif_2' => $alternatif[$ii][0],
@@ -405,6 +425,7 @@ class Roadmap extends CI_Controller {
 							$nilaimax = 1;
 						}
 						$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$i][0],
 							'id_alternatif_2' => $alternatif[$ii][0],
@@ -416,6 +437,7 @@ class Roadmap extends CI_Controller {
 						$this->User_model->insertData('t_nilai_alternatif_'.$id, $data_input);
 
 						$data_input = array(
+							'version' => $version,
 							'id_kriteria' => $id_kriteria,
 							'id_alternatif_1' => $alternatif[$ii][0],
 							'id_alternatif_2' => $alternatif[$i][0],
@@ -435,7 +457,7 @@ class Roadmap extends CI_Controller {
 	      	$this->User_model->updateData('t_user', 'id_user', $id, $data_update);
 	      	$data = array(
 					'login' => TRUE,
-					'list' => $this->User_model->getOneData('t_user','id_user',$id)
+					'list' => $this->User_model->getDataWhere('t_user','id_user',$id)
 				);
 			$this->session->set_userdata($data);
 			redirect('roadmap/isi_fuzzy_alternatif/'.$id.'/LEA','refresh');
@@ -447,12 +469,14 @@ class Roadmap extends CI_Controller {
 	
   public function isi_fuzzy_kriteria($id, $tipe)
     {
-    	$this->User_model->delete('t_fuzzy_hasil_kriteria_'.$id, 'tipe', $tipe);
-    	$this->User_model->delete('t_fuzzy_kriteria_'.$id, 'tipe', $tipe);
+    	$version = $_SESSION['version'];
+    	$this->User_model->delete3('t_fuzzy_hasil_kriteria', 'tipe', $tipe, 'id_user', $id, 'version', $version);
+    	$this->User_model->delete3('t_fuzzy_kriteria', 'tipe', $tipe, 'id_user', $id, 'version', $version);
 		$jumlah_total = 0;
 		$jumlah_total_max = 0;
 		$jumlah_total_min = 0;
-			$data = $this->User_model->getData('t_nilai_kriteria_'.$id);
+			// $data = $this->User_model->getData('t_nilai_kriteria_'.$id);
+			$data = $this->User_model->getDatakumulatif2('t_nilai_kriteria_'.$id, 'version', $version);
 			$kriteria = $this->User_model->getData('t_kriteria');
     	
 
@@ -468,44 +492,49 @@ class Roadmap extends CI_Controller {
 				}
 			}
 			$data_input=array(
+				'version' => $version,
 				'tipe' => $tipe,
 				'id_kriteria' => $row->id_kriteria,
 				'jumlah_baris' => $jumlah_baris,
 				'jumlah_baris_min' => $jumlah_baris_min,
 				'jumlah_baris_max' => $jumlah_baris_max,
+				'id_user' => $id
 				
 			);
-			$this->User_model->insertData('t_fuzzy_kriteria_'.$id, $data_input);
+			$this->User_model->insertData('t_fuzzy_kriteria', $data_input);
 			$jumlah_total = $jumlah_total + $jumlah_baris;
 			$jumlah_total_min = $jumlah_total_min + $jumlah_baris_min;
 			$jumlah_total_max = $jumlah_total_max + $jumlah_baris_max;
 		}
 		$data_input=array(
+			'version' => $version,
 			'tipe' => $tipe,
 			'jumlah_total' => $jumlah_total, 
 			'jumlah_total_min' => $jumlah_total_min, 
-			'jumlah_total_max' => $jumlah_total_max
+			'jumlah_total_max' => $jumlah_total_max,
+				'id_user' => $id
 		);
-		$this->User_model->insertData('t_fuzzy_hasil_kriteria_'.$id, $data_input);
+		$this->User_model->insertData('t_fuzzy_hasil_kriteria', $data_input);
 		redirect('roadmap/fuzzy_sintetic/'.$id.'/'.$tipe,'refresh');
 		// redirect('roadmap/fuzzy_sintetic','refresh');
     }
      public function isi_fuzzy_alternatif($id, $tipe)
     {
-    	$this->User_model->delete('t_fuzzy_hasil_kriteria_'.$id, 'tipe', $tipe);
-    	$this->User_model->delete('t_fuzzy_kriteria_'.$id, 'tipe', $tipe);
+    	$version = $_SESSION['version'];
+    	$this->User_model->delete3('t_fuzzy_hasil_kriteria', 'tipe', $tipe, 'id_user', $id, 'version', $version);
+    	$this->User_model->delete3('t_fuzzy_kriteria', 'tipe', $tipe, 'id_user', $id, 'version', $version);
 		$jumlah_total = 0;
 		$jumlah_total_max = 0;
 		$jumlah_total_min = 0;
-		$kriteria = $this->User_model->getDataSubkriteria('t_isneed', 'id_kategori_analisis', $tipe);
+		$kriteria = $this->User_model->getDataSubkriteria2('t_isneed', 'id_kategori_analisis', $tipe, 'version', $version);
 		if ($tipe == "FNC") {
-			$data = $this->User_model->getDataSubkriteria('t_nilai_alternatif_'.$id, 'id_kriteria', 1);
+			$data = $this->User_model->getDataSubkriteria2('t_nilai_alternatif_'.$id, 'id_kriteria', 1, 'version', $version);
 		}elseif ($tipe == "CST") {
-			$data = $this->User_model->getDataSubkriteria('t_nilai_alternatif_'.$id, 'id_kriteria', 2);
+			$data = $this->User_model->getDataSubkriteria2('t_nilai_alternatif_'.$id, 'id_kriteria', 2, 'version', $version);
 		}elseif ($tipe == "INT") {
-			$data = $this->User_model->getDataSubkriteria('t_nilai_alternatif_'.$id, 'id_kriteria', 3);
+			$data = $this->User_model->getDataSubkriteria2('t_nilai_alternatif_'.$id, 'id_kriteria', 3, 'version', $version);
 		}elseif ($tipe == "LEA") {
-			$data = $this->User_model->getDataSubkriteria('t_nilai_alternatif_'.$id, 'id_kriteria', 4);
+			$data = $this->User_model->getDataSubkriteria2('t_nilai_alternatif_'.$id, 'id_kriteria', 4, 'version', $version);
 		}
     	
 
@@ -522,61 +551,68 @@ class Roadmap extends CI_Controller {
 				
 			}
 			$data_input=array(
+				'version' => $version,
 				'tipe' => $tipe,
+				'id_user' => $id,
 				'id_kriteria' => $row->id_isneed,
 				'jumlah_baris' => $jumlah_baris,
 				'jumlah_baris_min' => $jumlah_baris_min,
 				'jumlah_baris_max' => $jumlah_baris_max,
 				
 			);
-			$this->User_model->insertData('t_fuzzy_kriteria_'.$id, $data_input);
+			$this->User_model->insertData('t_fuzzy_kriteria', $data_input);
 			$jumlah_total = $jumlah_total + $jumlah_baris;
 			$jumlah_total_min = $jumlah_total_min + $jumlah_baris_min;
 			$jumlah_total_max = $jumlah_total_max + $jumlah_baris_max;
 		}
 		$data_input=array(
+							'version' => $version,
+				'id_user' => $id,
 			'tipe' => $tipe,
 			'jumlah_total' => $jumlah_total, 
 			'jumlah_total_min' => $jumlah_total_min, 
 			'jumlah_total_max' => $jumlah_total_max
 		);
-		$this->User_model->insertData('t_fuzzy_hasil_kriteria_'.$id, $data_input);
+		$this->User_model->insertData('t_fuzzy_hasil_kriteria', $data_input);
 		redirect('roadmap/fuzzy_sintetic/'.$id.'/'.$tipe,'refresh');
     }
 
     public function fuzzy_sintetic($id, $tipe)
     {
-    	$this->User_model->delete('t_fuzzy_sintetic_'.$id, 'tipe', $tipe);
+    	$version = $_SESSION['version'];
+    	$this->User_model->delete3('t_fuzzy_sintetic', 'tipe', $tipe, 'id_user', $id, 'version', $version);
 
-       	$data = $this->User_model->getDataSubkriteria('t_fuzzy_kriteria_'.$id, 'tipe', $tipe);
-    	$jumlah_kali = $this->User_model->getDataSubkriteria('t_fuzzy_hasil_kriteria_'.$id, 'tipe', $tipe);
+       	$data = $this->User_model->getDataSubkriteria3('t_fuzzy_kriteria', 'tipe', $tipe, 'id_user', $id, 'version', $version);
+    	$jumlah_kali = $this->User_model->getDataSubkriteria3('t_fuzzy_hasil_kriteria', 'tipe', $tipe, 'id_user', $id, 'version', $version);
 
     	foreach ($jumlah_kali as $key) {
     		$jumlahkalimin = round((1/$key->jumlah_total_min),4);
     		$jumlahkali = round((1/$key->jumlah_total),4);
     		$jumlahkalimax = round((1/$key->jumlah_total_max),4);
     	}
-
     	foreach ($data as $key) {
     		$fsmin = $key->jumlah_baris_min * $jumlahkalimax;
     		$fs = $key->jumlah_baris * $jumlahkali;
     		$fsmax = $key->jumlah_baris_max * $jumlahkalimin;
     		$id_kriteria = $key->id_kriteria;
     		$data_input=array(
+							'version' => $version,
     			'id_kriteria' => $id_kriteria, 
     			'tipe' => $tipe, 
     			'fuzzy_sintetic_min' => $fsmin, 
     			'fuzzy_sintetic' => $fs, 
     			'fuzzy_sintetic_max' => $fsmax, 
+    			'id_user' => $id
     		);
-    		$this->User_model->insertData('t_fuzzy_sintetic_'.$id, $data_input);
+    		$this->User_model->insertData('t_fuzzy_sintetic', $data_input);
     	}
-    	redirect('roadmap/fuzzy_vektor/'.$id.'/'.$tipe,'refresh');
+    	 redirect('roadmap/fuzzy_vektor/'.$id.'/'.$tipe,'refresh');
     }
     public function fuzzy_vektor($id, $tipe)
     {
-    	$this->User_model->delete('t_fuzzy_vektor_minimal_'.$id, 'tipe', $tipe);
-    	$data = $this->User_model->getDataSubkriteria('t_fuzzy_sintetic_'.$id, 'tipe', $tipe);
+    	$version = $_SESSION['version'];
+    	$this->User_model->delete3('t_fuzzy_vektor_minimal', 'tipe', $tipe, 'id_user', $id, 'version', $version);
+    	$data = $this->User_model->getDataSubkriteria3('t_fuzzy_sintetic', 'tipe', $tipe, 'id_user', $id, 'version', $version);
     	$jumlahdata = count($data);
     	$nilaitotal = 0;
     	for ($i=0; $i < $jumlahdata; $i++) {
@@ -599,11 +635,13 @@ class Roadmap extends CI_Controller {
     		}
 		// echo "nilai min :".$nilaimin[$i];
     	$data_input = array(
+							'version' => $version,
+    		'id_user' => $id,
     		'tipe' => $tipe,
     		'id_kriteria' => $data[$i]->id_kriteria,
     		'nilai_minimal' => $nilaimin[$i]
     	);
-    	$this->User_model->insertData('t_fuzzy_vektor_minimal_'.$id, $data_input);
+    	$this->User_model->insertData('t_fuzzy_vektor_minimal', $data_input);
 		$nilaitotal = $nilaitotal + $nilaimin[$i];
     	// echo "<br/>";
     	}
@@ -612,9 +650,10 @@ class Roadmap extends CI_Controller {
     }
     public function fuzzy_normalisasi($id, $tipe)
     {
-    	$this->User_model->delete('t_fuzzy_nilai_hasil_'.$id, 'tipe', $tipe);
+    	$version = $_SESSION['version'];
+    	$this->User_model->delete3('t_fuzzy_nilai_hasil', 'tipe', $tipe, 'id_user', $id, 'version', $version);
     	// $this->db->query("truncate table t_fuzzy_nilai_hasil");
-    	$data_normalisasi = $this->User_model->getDataSubkriteria('t_fuzzy_vektor_minimal_'.$id, 'tipe', $tipe);
+    	$data_normalisasi = $this->User_model->getDataSubkriteria3('t_fuzzy_vektor_minimal', 'tipe', $tipe, 'id_user', $id, 'version', $version);
     	$total = 0;
     	foreach ($data_normalisasi as $row) {
     		$total = $total + $row->nilai_minimal;
@@ -622,11 +661,13 @@ class Roadmap extends CI_Controller {
     	foreach ($data_normalisasi as $row) {
     		$normalisasi = $row->nilai_minimal / $total;
     		$data_input= array(
+							'version' => $version,
+    			'id_user' => $id,
     			'tipe' => $tipe,
     			'id_kriteria' => $row->id_kriteria,
     			'nilai_hasil' => $normalisasi
     		);
-    		$this->User_model->insertData('t_fuzzy_nilai_hasil_'.$id, $data_input);
+    		$this->User_model->insertData('t_fuzzy_nilai_hasil', $data_input);
     	}
     	if ($tipe == 'KRITERIA') {
 	    	redirect('home/nilaialternatif/1','refresh');
@@ -643,11 +684,15 @@ class Roadmap extends CI_Controller {
 
     public function hasilkeseluruhanfuzzy($id)
     {
-		$this->db->query("truncate table t_fuzzy_perbandingan_semua_".$id);
-    	$hasil_fuzzy = $this->User_model->getData('t_fuzzy_nilai_hasil_'.$id);
+    	$version = $_SESSION['version'];
+    	$this->User_model->delete2('t_fuzzy_perbandingan_semua', 'id_user', $id, 'version', $version);
+		// $this->db->query("truncate table t_fuzzy_perbandingan_semua_".$id);
+    	$hasil_fuzzy = $this->User_model->getDataSubkriteria2('t_fuzzy_nilai_hasil', 'id_user', $id, 'version', $version);
     	foreach ($hasil_fuzzy as $key => $value){
 			if ($value->tipe == 'KRITERIA'){
 			$data[$value->id_kriteria] = array(
+							'version' => $version,
+				'id_user' => $id,
 				'id_kriteria' => $value->id_kriteria,
 				'nilai_hasil' => $value->nilai_hasil
 			);
@@ -667,11 +712,13 @@ class Roadmap extends CI_Controller {
 				}
 
 				$data_input = array(
+							'version' => $version,
+					'id_user' => $id,
 					'id_isneed' => $value->id_kriteria,
 					'tipe' => $value->tipe,
 					'nilai_hasil' => $nilai_akhir 
 				);
-				$this->User_model->insertData('t_fuzzy_perbandingan_semua_'.$id, $data_input);
+				$this->User_model->insertData('t_fuzzy_perbandingan_semua', $data_input);
 			}
 		}
 		redirect('home/tunggu','refresh');
@@ -680,6 +727,7 @@ class Roadmap extends CI_Controller {
 
     public function isi_nilai_kriteria()
     {
+    	$version = $_SESSION['version'];
 		$this->db->query("truncate table t_nilai_kriteria");
     	$user = $this->User_model->getData('t_user');
     	$jumlah_user = count($user);
@@ -691,7 +739,7 @@ class Roadmap extends CI_Controller {
       	$total_sudah_isi_bobot_alternatif = 0;
     	foreach ($user as $row) {
     		$id = $row->id_user;
-    		$alternatif[$id] = $this->User_model->getDatakumulatif('t_nilai_kriteria_'.$id);
+    		$alternatif[$id] = $this->User_model->getData('t_nilai_kriteria_'.$id);
     		if ($row->alternatif == 1) {
     			$total_sudah_isi_bobot_alternatif++;
     		}
@@ -707,6 +755,7 @@ class Roadmap extends CI_Controller {
 	    		$nilai = $nilai/$jumlah_user;
 
 	    		$data_input = array(
+							'version' => $version,
 	    			'id_kriteria_1' => $value->id_kriteria_1,
 	    			'id_kriteria_2' => $value->id_kriteria_2,
 	    			'kode' => $value->kode,
@@ -724,6 +773,7 @@ class Roadmap extends CI_Controller {
 
     public function isi_nilai_alternatif()
     {
+    	$version = $_SESSION['version'];
 		$this->db->query("truncate table t_nilai_alternatif");
     	$user = $this->User_model->getData('t_user');
     	$jumlah_user = count($user);
@@ -735,7 +785,7 @@ class Roadmap extends CI_Controller {
 
     	foreach ($user as $row) {
     		$id = $row->id_user;
-    		$alternatif[$id] = $this->User_model->getDatakumulatif('t_nilai_alternatif_'.$id);
+    		$alternatif[$id] = $this->User_model->getData('t_nilai_alternatif_'.$id);
     	}
 
     	foreach ($alternatif[$id_user] as $key => $value) {
@@ -748,6 +798,7 @@ class Roadmap extends CI_Controller {
     		$nilai = $nilai/$jumlah_user;
 
     		$data_input = array(
+							'version' => $version,
     			'id_kriteria' => $value->id_kriteria,
     			'id_alternatif_1' => $value->id_alternatif_1,
     			'id_alternatif_2' => $value->id_alternatif_2,
@@ -761,7 +812,8 @@ class Roadmap extends CI_Controller {
 	
 	public function hasilroadmap()
 	{
-		$user = $this->User_model->getData('t_user');
+    	$version = $_SESSION['version'];
+		$user = $this->User_model->getDatakumulatif2('t_user');
 		$total = 0;
 		foreach ($user as $row) {
 			$statusalternatif = $row->alternatif;
@@ -810,6 +862,7 @@ class Roadmap extends CI_Controller {
 				$nilai_global[$i] = $nilai;
 				$nilai_to_sort[] = array($nilai, $alternatif[$i][0]);
 				$data_input = array(
+							'version' => $version,
 					'id_isneed' => $id_alternatif[$i],
 					'nilai' => $nilai,
 					'nilai_kriteria_1' => $nilaialternatif[$i][0],
@@ -837,6 +890,7 @@ class Roadmap extends CI_Controller {
 
 	public function hardwareneed()
 	{
+    	$version = $_SESSION['version'];
 		$tombol = $this->input->post('submit');
 
 		$kebutuhan_hardware = $this->input->post('nama_hardware');
@@ -846,6 +900,7 @@ class Roadmap extends CI_Controller {
 		if (!empty($kebutuhan_hardware)) {
 			foreach ($kebutuhan_hardware as $key => $value) {
 				$data_input = array(
+							'version' => $version,
 								'id_isneed' => $id_isneed[$key],
 								'nama' => $value,
 								'detail' => $detail_kebutuhan_hardware[$key],
@@ -862,6 +917,7 @@ class Roadmap extends CI_Controller {
 	}
 	public function delete()
 	{
+    	$version = $_SESSION['version'];
 		$id = $this->input->post('id');
 		$this->User_model->delete('t_kebutuhan_hardware', 'id', $id);
 		redirect('home/tunggu','refresh');
@@ -869,6 +925,7 @@ class Roadmap extends CI_Controller {
 	public function edit()
 	{
 		$kebutuhan_hardware = $this->input->post('nama_hardware');
+    	$version = $_SESSION['version'];
 		$detail_kebutuhan_hardware = $this->input->post('detail_kebutuhan_hardware');
 		$jumlah = $this->input->post('jumlah');
 		$id = $this->input->post('id');

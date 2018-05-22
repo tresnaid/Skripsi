@@ -36,8 +36,8 @@
 	for($i=1;$i<=17;$i++){
 		$selected[$i]='';
 	}
+$version = $_SESSION['version'];
 ?>
-
 <form action="<?php echo base_url() ?>roadmap/insertBobotkriteria" method="post" enctype="multipart/form-data">
 	<section id="kriteria" class="section-gray">
 	  	<div class="container clearfix">
@@ -61,7 +61,7 @@
 										for($i=0;$i<count($kriteria);$i++){
 											for($ii=0;$ii<count($kriteria);$ii++){
 												if($i < $ii){
-													$q = $this->db->query("select nilai from t_nilai_kriteria_".$id_user." where id_kriteria_1='".$kriteria[$i][0]."' and id_kriteria_2='".$kriteria[$ii][0]."'");
+													$q = $this->db->query("select nilai from t_nilai_kriteria_".$id_user." where id_kriteria_1='".$kriteria[$i][0]."' and id_kriteria_2='".$kriteria[$ii][0]."' and version='".$version."'");
 													if($q->num_rows() >0){
 														$nilai=$q->row('nilai');
 														if ($nilai == 9) {
@@ -101,6 +101,7 @@
 														}
 													}else{
 														$data_input = array(
+															'version' => $version,
 															'id_kriteria_1' => $kriteria[$i][0],
 															'id_kriteria_2' => $kriteria[$ii][0],
 															'kode' => $kriteria[$i][0].$kriteria[$ii][0],

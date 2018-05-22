@@ -1,6 +1,6 @@
 <style type="text/css">
 	.activesub{
-		background-color: yellow;
+		background-color: #bdc3c7;
 	}
 </style>     	
 <?php 
@@ -8,14 +8,15 @@ $datauser = $_SESSION['list'];
   	foreach ($datauser as $row) {
         $id_user = $row['id_user'];
   	}
+  	$version = $_SESSION['version'];
 ?>
-<section class="section-gray">
+<!-- <section class="section-gray"> -->
 	<div class="container clearfix">
 		<div class="row services">
 		  <div class="col-md-12">
-		    <h2 class="heading">Daftar Kebutuhan Sistem Informasi</h2>
+		    <!-- <h2 class="heading">Daftar Kebutuhan Sistem Informasi</h2> -->
         	
-		    <div id="navigation" class="collapse navbar-collapse">
+		    <div id="navigation" class="collapse navbar-collapse" style="background: #f4f4f4">
 		      	<ul class="nav navbar-nav navbar-right">
 			        <li class="
 			          <?php if($kategori == 'FNC'): ?>
@@ -53,6 +54,7 @@ $datauser = $_SESSION['list'];
         		
        			<div class="panel panel-default">
          			<div class="panel-body">
+		    <h4>Daftar Kebutuhan Sistem Informasi</h4>
          				<label style="font-size: 12px;">*dalam laman ini, anda diminta untuk voting untuk analisis yang telah anda setujui, apabila analisis strategi objektif tidak anda setujui silakan diskusikan dalam menu komentar</label>
            				<table class="table table-striped table-bordered" style="margin:0px;">
 			              <thead>
@@ -70,7 +72,7 @@ $datauser = $_SESSION['list'];
 			              	<?php $jumlah_user = count($table); ?>
 			              	<?php foreach ($table as $table): ?>
 			              		<?php $id = $table->id_user; ?>
-			              		<?php $data_objective = $this->User_model->getDataWhere2('t_objective', 'id_user', $id, 'id_kategori_analisis', $kategori); ?>
+			              		<?php $data_objective = $this->User_model->getDataWhere3('t_objective', 'id_user', $id, 'id_kategori_analisis', $kategori,'version', $version); ?>
 								<?php foreach($data_objective as $row): ?>
 				                	<?php $counter=1; ?>
 					                <?php 
@@ -329,4 +331,4 @@ $datauser = $_SESSION['list'];
    			 </div>
 		</div>
 	</div>
-</section>
+<!-- </section> -->

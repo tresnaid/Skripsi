@@ -8,22 +8,43 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
-        public function getDatakumulatif($table)
+        
+        public function getDatakumulatif2($table,$where,$same)
         {
                 $this->db->select("*");
                 $this->db->from($table);
+                $this->db->where($where, $same);
+                $query = $this->db->get();
+                return $query->result();
+        }
+        public function getDataVersi()
+        {
+                $this->db->select("*");
+                $this->db->from('t_version');
+                $this->db->where('status', 0);
+                $this->db->order_by('tanggal', 'desc');
                 $query = $this->db->get();
                 return $query->result();
         }
 
-        public function getOneData($table, $where, $data)
+        public function getDataSubkriteria2($table, $where, $same, $where2, $same2)
         {
-            $query = $this->db->select('*')->from($table)->where($where, $data)->get()->result_array(); 
-            if($query){
-                    return $query;
-            }else{
-                    return 0;
-            } 
+                $this->db->select("*");
+                $this->db->from($table);
+                $this->db->where($where, $same);
+                $this->db->where($where2, $same2);
+                $query = $this->db->get();
+                return $query->result();
+        }
+        public function getDataSubkriteria3($table, $where, $same, $where2, $same2, $where3, $same3)
+        {
+                $this->db->select("*");
+                $this->db->from($table);
+                $this->db->where($where, $same);
+                $this->db->where($where2, $same2);
+                $this->db->where($where3, $same3);
+                $query = $this->db->get();
+                return $query->result();
         }
         
          public function getDataWhere($table, $where, $same)
@@ -31,17 +52,20 @@ class User_model extends CI_Model {
                 $query = $this->db->get_where($table, array($where => $same));
                 return $query->result_array();
         }
-        public function getDataSubkriteria($table, $where, $same)
-        {
-                $query = $this->db->get_where($table, array($where => $same));
-                return $query->result();
-        }
         public function getDataWhere2($table, $where, $same, $where2, $same2)
         {
 
                 $query = $this->db->get_where($table, array($where => $same, $where2 => $same2));
                 return $query->result_array();        
         }
+        public function getDataWhere3($table, $where, $same, $where2, $same2, $where3, $same3)
+        {
+
+                $query = $this->db->get_where($table, array($where => $same, $where2 => $same2, $where3 => $same3));
+                return $query->result_array();        
+        }
+      
+
         public function count($table)
         {
                 $this->db->select("*");
@@ -104,7 +128,7 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
-        public function hasil_fuzzy_perkriteria($table1, $table2, $where, $choose, $same)
+        public function hasil_fuzzy2($table1, $table2, $where, $choose, $same)
         {
                 $this->db->select('*');
                 $this->db->from($table1);
@@ -114,6 +138,40 @@ class User_model extends CI_Model {
                 $query = $this->db->get();
                 return $query->result();
         }
+        public function hasil_fuzzy3($table1, $table2, $where, $choose, $same, $choose2, $same2)
+        {
+                $this->db->select('*');
+                $this->db->from($table1);
+                $this->db->join($table2, $where);
+                $this->db->where($choose, $same);
+                $this->db->where($choose2, $same2);
+                $this->db->order_by('nilai_hasil', 'desc');
+                $query = $this->db->get();
+                return $query->result();
+        }
+        public function hasil_fuzzy_perkriteria($table1, $table2, $where, $choose, $same, $choose2, $same2)
+        {
+                $this->db->select('*');
+                $this->db->from($table1);
+                $this->db->join($table2, $where);
+                $this->db->where($choose, $same);
+                $this->db->where($choose2, $same2);
+                $this->db->order_by('nilai_hasil', 'desc');
+                $query = $this->db->get();
+                return $query->result();
+        } 
+        public function hasil_fuzzy_perkriteria2($table1, $table2, $where, $choose, $same, $choose2, $same2, $choose3, $same3)
+        {
+                $this->db->select('*');
+                $this->db->from($table1);
+                $this->db->join($table2, $where);
+                $this->db->where($choose, $same);
+                $this->db->where($choose2, $same2);
+                $this->db->where($choose3, $same3);
+                $this->db->order_by('nilai_hasil', 'desc');
+                $query = $this->db->get();
+                return $query->result();
+        } 
         public function timeline($table1, $table2, $where, $choose, $id)
         {
                 $this->db->select('*');
@@ -191,6 +249,16 @@ class User_model extends CI_Model {
                         return FALSE;
                 }
         }
+        public function CheckLogin_admin($username, $password){
+                $sql = "SELECT * FROM t_admin WHERE username = '".$username."' and password = '".$password."'";
+
+                $query = $this->db->query($sql);
+                if($query->num_rows()>0){
+                        return TRUE;
+                }else{
+                        return FALSE;
+                }
+        }
         
         public function checkidbaru($username){
             $this->db->select('id_user');
@@ -215,10 +283,11 @@ class User_model extends CI_Model {
             $query = $this->db->get();
             return $query->row()->departemen;
         }
-        public function checkstatus($status){
+        public function checkstatus($status, $where, $same){
             $this->db->select('status');
             $this->db->from('t_status');
             $this->db->where('nama', $status);
+            $this->db->where($where, $same);
             $query = $this->db->get();
             return $query->row()->status;
         }
@@ -227,7 +296,6 @@ class User_model extends CI_Model {
             $this->db->select('role');
             $this->db->from('t_user');
             $this->db->where('email', $email);
-            
             $query = $this->db->get();
             return $query->row()->role;
 
@@ -252,12 +320,41 @@ class User_model extends CI_Model {
         }
         public function checknilaihasilfuzzy($id_isneed, $id){
             $this->db->select('nilai_hasil');
-            $this->db->from('t_fuzzy_perbandingan_semua_'.$id);
+            $this->db->from('t_fuzzy_perbandingan_semua');
             $this->db->where('id_isneed', $id_isneed);
+            $this->db->where('id_user', $id);
             
             $query = $this->db->get();
             return $query->row()->nilai_hasil;
 
+        }
+        public function checknilaihasilfuzzy2($id_isneed, $id, $version){
+            $this->db->select('nilai_hasil');
+            $this->db->from('t_fuzzy_perbandingan_semua');
+            $this->db->where('id_isneed', $id_isneed);
+            $this->db->where('id_user', $id);
+            $this->db->where('version', $version);
+            
+            $query = $this->db->get();
+            return $query->row()->nilai_hasil;
+
+        }
+        public function checkversion()
+        {
+            $this->db->select('version');
+            $this->db->from('t_version');
+            $this->db->where('status', 1);
+            $query = $this->db->get();
+            return $query->row()->version;
+        }
+        public function detailversion()
+        {
+            $this->db->select('*');
+            $this->db->from('t_version');
+            $this->db->where('status', 1);
+            $this->db->limit(1);
+            $query = $this->db->get();
+            return $query->result();
         }
         public function checkidobjective($user){
             $this->db->select('id_objective');
@@ -271,6 +368,19 @@ class User_model extends CI_Model {
         public function delete($table, $where, $clause)
         {
            $this->db->where($where, $clause);
+           $this->db->delete($table); 
+        }
+        public function delete2($table, $where, $clause, $where2, $clause2)
+        {
+           $this->db->where($where, $clause);
+           $this->db->where($where2, $clause2);
+           $this->db->delete($table); 
+        }
+        public function delete3($table, $where, $clause, $where2, $clause2, $where3, $clause3)
+        {
+           $this->db->where($where, $clause);
+           $this->db->where($where2, $clause2);
+           $this->db->where($where3, $clause3);
            $this->db->delete($table); 
         }
         public function fuzzyahpkriteria($id_user)

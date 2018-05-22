@@ -39,6 +39,7 @@
 	for($i=1;$i<=17;$i++){
 		$selected[$i]='';
 	}
+	$version = $_SESSION['version'];
 ?>
 <script language="javascript">
 	function ResetConfirm(){
@@ -81,7 +82,7 @@
 					                  		for($i=0;$i<count($alternatif);$i++){
 												for($ii=0;$ii<count($alternatif);$ii++){
 													if($i < $ii){
-														$q = $this->db->query("select nilai from t_nilai_alternatif_".$id_user." where id_alternatif_1='".$alternatif[$i][0]."' and id_alternatif_2='".$alternatif[$ii][0]."' and  id_kriteria='".$id_kriteria."'");
+														$q = $this->db->query("select nilai from t_nilai_alternatif_".$id_user." where id_alternatif_1='".$alternatif[$i][0]."' and id_alternatif_2='".$alternatif[$ii][0]."' and  id_kriteria='".$id_kriteria."' and version='".$version."'");
 														if($q->num_rows() >0){
 															$nilai=$q->row('nilai');
 															if ($nilai == 9) {
@@ -121,6 +122,7 @@
 															}
 														}else{
 															$data_input = array(
+																'version' => $version,
 																'id_kriteria' => $id_kriteria,
 																'id_alternatif_1' => $alternatif[$i][0],
 																'id_alternatif_2' => $alternatif[$ii][0],

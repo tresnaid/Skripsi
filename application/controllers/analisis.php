@@ -5,6 +5,7 @@ class Analisis extends CI_Controller {
 
 	public function inputAnalisis()
 	{
+		$version = $_SESSION['version'];
 		$objective = $this->input->post('objective');
 		$measure = $this->input->post('measure');
 		$action = $this->input->post('action');
@@ -34,6 +35,7 @@ class Analisis extends CI_Controller {
       	}
 
 		$data_input =  array(
+			'version' => $version,
 			'id_user' => $id,
 			'id_kategori_analisis' => $kategori,
 			'objective' => $objective 
@@ -43,18 +45,21 @@ class Analisis extends CI_Controller {
 		$id_objective = $this->User_model->checkidobjective($id);
 		
 		$data_input_measure = array(
+			'version' => $version,
 				'measure' => $measure,
 				'id_user' => $id,
 				'id_kategori_analisis' => $kategori, 
 				'id_objective' => $id_objective
 		);
 		$data_input_action = array(
+			'version' => $version,
 				'action' => $action,
 				'id_user' => $id,
 				'id_kategori_analisis' => $kategori, 
 				'id_objective' => $id_objective
 		);
 		$data_input_isneed = array(
+			'version' => $version,
 				'isneed' => $isneed,
 				'id_user' => $id,
 				'id_kategori_analisis' => $kategori, 
@@ -72,6 +77,7 @@ class Analisis extends CI_Controller {
 			$measureadd = $this->input->post('measureadd');
 			for ($i=0; $i < $jumlah_measure; $i++) { 
 				$data_input_measure = array(
+			'version' => $version,
 					'measure' => $measureadd[$i],
 					'id_user' => $id,
 					'id_kategori_analisis' => $kategori, 
@@ -84,6 +90,7 @@ class Analisis extends CI_Controller {
 			$actionadd = $this->input->post('actionadd');
 			for ($i=0; $i < $jumlah_action; $i++) { 
 				$data_input_action = array(
+			'version' => $version,
 					'action' => $actionadd[$i],
 					'id_user' => $id,
 					'id_kategori_analisis' => $kategori, 
@@ -107,6 +114,7 @@ class Analisis extends CI_Controller {
 					}
 				}
 				$data_input_isneed = array(
+			'version' => $version,
 					'isneed' => $isneedadd[$i],
 					'id_user' => $id,
 					'id_kategori_analisis' => $kategori, 
@@ -159,6 +167,7 @@ class Analisis extends CI_Controller {
 
 	public function editAnalisis()
 	{
+		$version = $_SESSION['version'];
 		$datauser = $_SESSION['list'];
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];
@@ -224,8 +233,10 @@ class Analisis extends CI_Controller {
 			$moremeasure = $this->input->post('moremeasure');
 			foreach ($moremeasure as $key => $value) {
 				if (!empty($value)) {
-					$data_input = array('measure' => $value,
-										'id_objective' => $id_objective,
+					$data_input = array(
+						'measure' => $value,
+						'version' => $version,
+						'id_objective' => $id_objective,
 										'id_kategori_analisis' => $kategori, 
 										'id_user' => $id
 										 );
@@ -237,7 +248,9 @@ class Analisis extends CI_Controller {
 			$moreaction = $this->input->post('moreaction');
 			foreach ($moreaction as $key => $value) {
 				if (!empty($value)) {
-					$data_input = array('action' => $value,
+					$data_input = array(
+						'version' => $version,
+						'action' => $value,
 										'id_objective' => $id_objective,
 										'id_kategori_analisis' => $kategori, 
 										'id_user' => $id
@@ -248,7 +261,7 @@ class Analisis extends CI_Controller {
 		}
 		$moreisneed = $this->input->post('moreisneed');
 		$moreisneed_strategic = $this->input->post('moreisneed_strategic');
-		print_r($moreisneed);
+		// print_r($moreisneed);
 		if (!empty($this->input->post('moreisneed'))) {
 			$moreisneed = $this->input->post('moreisneed');
 			$moreisneed_desc = $this->input->post('moreisneed_desc');
@@ -263,7 +276,9 @@ class Analisis extends CI_Controller {
 							$moreisneed_detail[$key] = NULL;
 						}
 					}
-					$data_input = array('isneed' => $value,
+					$data_input = array(
+						'version' => $version,
+						'isneed' => $value,
 										'id_objective' => $id_objective,
 										'id_kategori_analisis' => $kategori,
 										'Tipe' => $moreisneed_desc[$key],
@@ -290,11 +305,13 @@ class Analisis extends CI_Controller {
 	}
 	public function inputkomentar()
 	{
+		$version = $_SESSION['version'];
 		$id = $this->input->post('id');
 		$id_objective = $this->input->post('id_objective');
 		$komentar = $this->input->post('komentar');
 		
 		$data_input= array(
+			'version' => $version,
 			'id_user' => $id,
 			'id_objective' => $id_objective,
 			'komentar' => $komentar
@@ -306,11 +323,13 @@ class Analisis extends CI_Controller {
 
 	public function alasanfinalisasi()
 	{
+		$version = $_SESSION['version'];
 		$id = $this->input->post('id');
 		$id_objective = $this->input->post('id_objective');
 		$alasan = $this->input->post('komentar');
 		$kategori = $this->input->post('kategori');
 		$data_input= array(
+			'version' => $version,
 			'id_user' => $id,
 			'id_objective' => $id_objective,
 			'alasan' => $alasan
@@ -331,12 +350,14 @@ class Analisis extends CI_Controller {
 	}
 	public function approve()
 	{
+		$version = $_SESSION['version'];
 		$id = $this->input->post('id');
 		$kategori = $this->input->post('kategori');
 		$id_objective = $this->input->post('id_objective');
 
 		if ($this->User_model->CheckId($id, $id_objective) == TRUE) {
 			$data_input=array(
+				'version' => $version,
 				'id_user' => $id,
 				'id_objective' => $id_objective
 			);
@@ -354,5 +375,78 @@ class Analisis extends CI_Controller {
 			echo $kategori;
 		}	
 
+	}
+	public function usulkan_analisis()
+	{
+		$version = $_SESSION['version'];
+		$objective = $this->input->post('objective');
+		$measure = $this->input->post('measure');
+		$action = $this->input->post('action');
+		$isneed = $this->input->post('isneed');
+		$isneed_desc = $this->input->post('isneed_desc');
+		$isneed_strategic = $this->input->post('isneed_strategic');
+		$isneed_detail = $this->input->post('isneed_detail');
+		$kategori = $this->input->post('kategori');
+
+		$datauser = $_SESSION['list'];
+      	foreach ($datauser as $row) {
+	        $id = $row['id_user'];
+      	}
+
+		$data_input =  array(
+			'version' => $version,
+			'id_user' => $id,
+			'id_kategori_analisis' => $kategori,
+			'objective' => $objective 
+		);
+
+		$this->User_model->insertData('t_objective', $data_input);
+		$id_objective = $this->User_model->checkidobjective($id);
+		foreach ($measure as $key) {
+			$data_input_measure = array(
+				'version' => $version,
+				'measure' => $key,
+				'id_user' => $id,
+				'id_kategori_analisis' => $kategori, 
+				'id_objective' => $id_objective
+			);
+			$this->User_model->insertData('t_measure', $data_input_measure);
+		}
+		foreach ($action as $key) {
+			$data_input_action = array(
+				'version' => $version,
+				'action' => $key,
+				'id_user' => $id,
+				'id_kategori_analisis' => $kategori, 
+				'id_objective' => $id_objective
+			);
+			$this->User_model->insertData('t_action', $data_input_action);
+		}
+		foreach ($isneed as $key => $value) {
+			$data_input_isneed = array(
+				'version' => $version,
+				'isneed' => $value,
+				'id_user' => $id,
+				'id_kategori_analisis' => $kategori, 
+				'tipe' => $isneed_desc[$key],
+				'id_objective' => $id_objective,
+				'detail' => $isneed_detail[$key],
+				'bagan' => $isneed_strategic[$key]
+			);
+			$this->User_model->insertData('t_isneed', $data_input_isneed);
+		}
+
+
+		if ($kategori == 'FNC') {
+			redirect('home/analisis/1','refresh');
+		}else if ($kategori == 'CST') {
+			redirect('home/analisis/2','refresh');
+		}else if ($kategori == 'INT') {
+			redirect('home/analisis/3','refresh');
+		}else if ($kategori == 'LEA') {
+			redirect('home/analisis/4','refresh');
+		}else{
+			echo $kategori;
+		}	
 	}
 }

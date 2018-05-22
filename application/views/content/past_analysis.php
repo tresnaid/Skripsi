@@ -5,15 +5,24 @@
 		padding: 0 0;
 	}
 </style>
-<!-- <form action="<?php echo base_url() ?>home/download" method="post">
-	<button class="button" type="submit">Download</button>
-</form> -->
-<div class="container clearfix">
+<?php if (!empty($data_version)): ?>
+	
+<?php foreach ($data_version as $key): ?>
+	<?php 
+		$hasil = $this->User_model->hasil_fuzzy2('t_isneed','t_roadmap', 't_isneed.id_isneed=t_roadmap.id_isneed', 't_isneed.version', $key->version);
+	 	$KO = $this->User_model->getDataWhere2('t_isneed', 'bagan', 'KO', 'version', $key->version);
+		$SP = $this->User_model->getDataWhere2('t_isneed', 'bagan', 'SP', 'version', $key->version);
+		$HP = $this->User_model->getDataWhere2('t_isneed', 'bagan', 'HP', 'version', $key->version);
+		$ST = $this->User_model->getDataWhere2('t_isneed', 'bagan', 'ST', 'version', $key->version);
+	 ?>
+ <!-- <section class="section-gray"> -->
+ 	<div class="container clearfix">
+		<h3><?php echo $key->version ?></h3>
 		<div class="row services">
 		  	<div class="col-md-12">
+		    	
 				<div class="container">
 		    	<h5>ROADMAP IMPLEMENTASI SISTEM INFORMASI</h5>
-		    	<br><br>
 				 	<div class="flex-parent">
 						<div class="input-flex-container">
 							<?php foreach ($hasil as $row): ?>
@@ -153,3 +162,8 @@
 			</div>
 		</div>
 	</div>
+<!-- </section> -->
+<?php endforeach ?>
+<?php else: ?>
+<center>ini merupakan versi pertama, belum ada hasil dari analisis sebelumnya</center>
+<?php endif ?>

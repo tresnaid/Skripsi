@@ -1,6 +1,6 @@
 <style type="text/css">
   .activesub{
-    background-color: yellow;
+    background-color: #bdc3c7;
   }
 .modal-dialog{
   width: 80%;
@@ -259,12 +259,12 @@
   </div>
 </div>
 
-<section class="section-gray">
+<!-- <section class="section-gray"> -->
+  <!-- <h4 class="heading">Analisis Anda</h4> -->
   <div class="container clearfix">
     <div class="row services">
       <div class="col-md-12">
-        <h2 class="heading">Analisis Anda</h2>
-        <div id="navigation" class="collapse navbar-collapse">
+        <div id="navigation" class="collapse navbar-collapse" style="background: #f4f4f4">
           <ul class="nav navbar-nav navbar-right">
             <li class="
               <?php if($kategori == 'FNC'): ?>
@@ -301,9 +301,10 @@
           <div class="container">
             <div class="panel panel-default">
               <div class="panel-body">
+                <h4>Analisis Anda</h4>
                 <label style="font-size: 12px;">*dalam laman ini, anda diminta untuk mengisi strategi objektif pada perspektif <?php echo $nama_kategori ?></label>
                 <br>
-                <div class="btn-group">
+                <div class="btn-group pull-right">
                   <a class="btn btn-default" data-toggle="modal" data-target="#tambahanalisis">
                     <span>Tambah Analisis</span>
                   </a>
@@ -655,4 +656,210 @@
       </div>
     </div>
   </div>
-</section>
+<!-- </section> -->
+
+<!-- <section class="section-gray"> -->
+    <div class="row services">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="container">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <?php foreach ($data_version as $key): ?>
+                  <?php  
+                  $data_objective_past = $this->User_model->getDataWhere3('t_objective', 'id_user', $id, 'id_kategori_analisis', $kategori,'version', $key['version']);
+                  ?>
+                  <h5>PAST ANALYSIST <?php echo $key['version'] ?></h5>
+                  <table class="table table-striped table-bordered" style="margin:0px;">
+                    <thead>
+                      <tr>
+                        <th>Objective</th>
+                        <th>Measure</th>
+                        <th>Action (CSF)</th>
+                        <th>IS Need</th>
+                        <th>Option</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach($data_objective_past as $row){ ?>
+                        <?php $counter=1; ?>
+                      <?php 
+                        $data_measure = $this->User_model->getDataWhere('t_measure', 'id_objective', $row['id_objective']);
+                        $count_measure = $this->User_model->countwhere('t_measure', 'id_objective', $row['id_objective']);
+
+                        $count_action = $this->User_model->countwhere('t_action', 'id_objective', $row['id_objective']);
+                        $data_action = $this->User_model->getDataWhere('t_action', 'id_objective', $row['id_objective']);
+
+                        $count_isneed = $this->User_model->countwhere('t_isneed', 'id_objective', $row['id_objective']);
+                        $data_isneed = $this->User_model->getDataWhere('t_isneed', 'id_objective', $row['id_objective']);
+                        
+                        $biggest = $this->User_model->countmax($count_measure, $count_action, $count_isneed);
+                        $jumlah_max = $biggest['jumlah'];
+                        $nama_max = $biggest['nama'];
+                        ?>
+                        <div id="upto<?php echo $row['id_objective']?>" class="modal fade" role="dialog" >
+                        <form action="<?php echo base_url();?>analisis/usulkan_analisis" method="POST">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <label class="modal-title">Apakah anda akan mengusulkan kembali analisis ini ? Perubahan dapat dilakukan setelah analisis diusulkan</label>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="kategori" value="<?php echo $kategori ?>">
+                                <input type="hidden" name="objective" value="<?php echo $row['objective']?>">
+                                <b>Objective</b><br>
+                                <label><?php echo $row['objective']?></label><br><br>
+
+                                <b>Measure</b><br>
+                                  <?php foreach ($data_measure as $key): ?>
+                                  <input type="hidden" name="measure[]" value="<?php echo $key['measure']?>">
+                                    <label><?php echo $key['measure']?></label><br>
+                                  <?php endforeach ?><br>
+
+                                <b> Action CSF</b><br>
+                                  <?php foreach ($data_action as $key): ?>
+                                  <input type="hidden" name="action[]" value="<?php echo $key['action']?>">
+                                    <b><label><?php echo $key['action']?></label><br>
+                                  <?php endforeach ?><br>
+
+                                <b>IS Need</b><br>
+                                  <?php foreach ($data_isneed as $key): ?>
+                                  <input type="hidden" name="isneed[]" value="<?php echo $key['isneed']?>">
+                                  <input type="hidden" name="isneed_detail[]" value="<?php echo $key['detail']?>">
+                                  <input type="hidden" name="isneed_strategic[]" value="<?php echo $key['bagan']?>">
+                                  <input type="hidden" name="isneed_desc[]" value="<?php echo $key['Tipe']?>">
+                                    <label><?php echo $key['isneed']?></label><br>
+                                  <?php endforeach ?>
+                            </div>                            
+                              <div class="modal-footer">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-cross"></i>Usulkan</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-cross"></i>Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      
+                        <?php
+
+                        if ($nama_max == 'measure'): {
+                          foreach ($data_measure as $key => $value) {
+                      ?>
+                            <tr>
+                              <?php if ($counter == 1): ?>
+                                <td rowspan="<?php echo $jumlah_max ?>"><?php echo $row['objective']?></td>
+                              <?php endif ?>
+
+                              <td ><?php echo $value['measure']?></td> 
+
+                              <?php if (!empty($data_action[$key]['action'])): ?>
+                                <td ><?php echo $data_action[$key]['action']?></td>
+                              <?php else: ?>
+                                <td> </td>
+                              <?php endif ?>
+                              
+                              <?php if (!empty($data_isneed[$key]['isneed'])): ?>
+                                <td ><?php echo $data_isneed[$key]['isneed']?></td>
+                              <?php else: ?>
+                                <td> </td>
+                              <?php endif ?>
+                             
+                              <?php if ($counter == 1): ?>
+                              <td rowspan="<?php echo $jumlah_max; ?>">
+                                <a href="" data-toggle="modal" data-target="#upto<?php echo $row['id_objective']?>"><i class="fa fa-level-up"></i></a> 
+                                
+                              </td>
+                              <?php endif ?>
+                            </tr>
+                          <?php
+                          $counter++;
+                        }
+                     }elseif ($nama_max == 'action'): {
+                       foreach ($data_action as $key => $value) {
+                      ?>
+                          <tr>
+                            <?php if ($counter == 1): ?>
+                              <td rowspan="<?php echo $jumlah_max ?>"><?php echo $row['objective']?></td>
+                            <?php endif ?>
+                            
+                            <?php if (!empty($data_measure[$key]['measure'])): ?>
+                              <td ><?php echo $data_measure[$key]['measure']?></td>
+                            <?php else: ?>
+                              <td> </td>
+                            <?php endif ?>
+                            
+                            <td ><?php echo $value['action']?></td>
+
+                            <?php if (!empty($data_isneed[$key]['isneed'])): ?>
+                              <td ><?php echo $data_isneed[$key]['isneed']?></td>
+                            <?php else: ?>
+                              <td> </td>
+
+                            <?php endif ?>
+                            
+                            <?php if ($counter == 1): ?>
+                            <td rowspan="<?php echo $jumlah_max; ?>">
+                                <a href="" data-toggle="modal" data-target="#upto<?php echo $row['id_objective']?>"><i class="fa fa-level-up"></i></a> 
+                              
+                            </td>
+                            <?php endif ?>
+                          </tr>
+                          <?php
+                          $counter++;
+                        }
+                     }elseif ($nama_max == 'isneed'): {
+                        foreach ($data_isneed as $key => $value) {
+                    ?>                   
+                       <tr>
+                          <?php if ($counter == 1): ?>
+                            <td rowspan="<?php echo $jumlah_max ?>"><?php echo $row['objective']?></td>
+                          <?php endif ?>
+                          
+                          <?php if (!empty($data_measure[$key]['measure'])): ?>
+                            <td ><?php echo $data_measure[$key]['measure']?></td>
+                          <?php else: ?>
+                            <td> </td>
+                          <?php endif ?>
+                          
+                          <?php if (!empty($data_action[$key]['action'])): ?>
+                              <td ><?php echo $data_action[$key]['action']?></td>
+                            <?php else: ?>
+                              <td> </td>
+                            <?php endif ?>
+
+                            <td ><?php echo $value['isneed']?></td>
+                            
+                            <?php if ($counter == 1): ?>
+                          <td rowspan="<?php echo $jumlah_max; ?>">
+                                <a href="" data-toggle="modal" data-target="#upto<?php echo $row['id_objective']?>"><i class="fa fa-level-up"></i></a> 
+                          </td>
+                          <?php endif ?>
+                        </tr>
+                      <?php
+                      $counter++;
+                     }
+                    }elseif ($nama_max == 'kosong'): {
+                      ?>
+                      <tr>
+                        <td><?php echo $row['objective']; ?></td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td>
+                        <a href="" data-toggle="modal" data-target="#upto<?php echo $row['id_objective']?>"><i class="fa fa-level-up"></i></a> 
+                        </td>
+                      </tr>
+                      <?php
+
+                    } endif ?>
+                    <?php } ?>
+                  </tbody>
+                </table>
+            <?php endforeach ?>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- </section> -->
