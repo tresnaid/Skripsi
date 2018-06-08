@@ -590,13 +590,14 @@ class Roadmap extends CI_Controller {
     		$jumlahkali = round((1/$key->jumlah_total),4);
     		$jumlahkalimax = round((1/$key->jumlah_total_max),4);
     	}
+    	
     	foreach ($data as $key) {
     		$fsmin = $key->jumlah_baris_min * $jumlahkalimax;
     		$fs = $key->jumlah_baris * $jumlahkali;
     		$fsmax = $key->jumlah_baris_max * $jumlahkalimin;
     		$id_kriteria = $key->id_kriteria;
     		$data_input=array(
-							'version' => $version,
+				'version' => $version,
     			'id_kriteria' => $id_kriteria, 
     			'tipe' => $tipe, 
     			'fuzzy_sintetic_min' => $fsmin, 

@@ -432,8 +432,8 @@
                                 <input type="hidden" name="id_isneed[]" value="<?php echo $key['id_isneed'] ?>">
                                 <label id="isneedname<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>"><?php echo $key['isneed']?></label><br>
 
-                                <textarea id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" style="width: 75%" placeholder="detail"><?php echo $key['detail']?></textarea>
-                                <select name="isneed_strategic" id="isneed_strategic<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>">
+                                <textarea id="isneed<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" name="isneed[]" style="width: 88%" placeholder="detail"><?php echo $key['detail']?></textarea>
+                                <select name="isneed_strategic[]" id="isneed_strategic<?php echo $row['id_objective']?><?php echo $key['id_isneed']?>" style="width: 70%">
                                   <option value="">Pilih Termasuk ke Dalam Strategic Seperti Apa Sistem Informasi Yang Akan Dibangun</option>
                                   <option value="KO" <?php if ($key['bagan'] == 'KO'): ?>
                                     selected
@@ -552,7 +552,11 @@
                             <?php endif ?>
                             
                             <?php if (!empty($data_isneed[$key]['isneed'])): ?>
+                              <?php if ($data_isneed[$key]['Tipe'] == "Perbaharui"): ?>
+                              <td ><?php echo $data_isneed[$key]['detail']?> pada <?php echo $data_isneed[$key]['isneed']?></td>
+                              <?php else: ?>
                               <td ><?php echo $data_isneed[$key]['isneed']?></td>
+                              <?php endif ?>
                             <?php else: ?>
                               <td> </td>
                             <?php endif ?>
@@ -584,7 +588,11 @@
                           <td ><?php echo $value['action']?></td>
 
                           <?php if (!empty($data_isneed[$key]['isneed'])): ?>
-                            <td ><?php echo $data_isneed[$key]['isneed']?></td>
+                            <?php if ($data_isneed[$key]['Tipe'] == "Perbaharui"): ?>
+                              <td ><?php echo $data_isneed[$key]['detail']?> pada <?php echo $data_isneed[$key]['isneed']?></td>
+                              <?php else: ?>
+                              <td ><?php echo $data_isneed[$key]['isneed']?></td>
+                              <?php endif ?>
                           <?php else: ?>
                             <td> </td>
 
@@ -619,8 +627,11 @@
                           <?php else: ?>
                             <td> </td>
                           <?php endif ?>
-
-                          <td ><?php echo $value['isneed']?></td>
+                          <?php if ($data_isneed[$key]['Tipe'] == "Perbaharui"): ?>
+                              <td ><?php echo $value['detail']?> pada <?php echo $value['isneed']?></td>
+                              <?php else: ?>
+                              <td ><?php echo $value['isneed']?></td>
+                              <?php endif ?>
                           
                           <?php if ($counter == 1): ?>
                         <td rowspan="<?php echo $jumlah_max; ?>">

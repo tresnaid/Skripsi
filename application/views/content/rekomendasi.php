@@ -20,13 +20,13 @@
 							<div class="input">
 								<?php if ($row->Tipe == "Perbaharui"): ?>
 									<span data-info="<?php echo $row->detail ?> pada <?php echo $row->isneed ?>"></span>
-									<span data-year="tambah fitur <?php echo $row->detail ?>"></span>
+									<span data-year="<?php echo $row->Tipe ?>"></span>
 								<?php else: ?>
 									<span data-info="<?php echo $row->isneed ?>"></span>
 									<span data-year="<?php echo $row->Tipe ?>"></span>
 								<?php endif ?>
+							
 							</div>
-								
 							<?php endforeach ?>
 						</div>
 					</div>
@@ -45,7 +45,11 @@
 									<?php foreach ($ST as $key): ?>
 										<ul>
 											<li>
+												<?php if ($key['Tipe'] == "Perbaharui"): ?>
+												<?php echo $key['detail']." pada ".$key['isneed'] ?>
+												<?php else: ?>
 												<?php echo $key['isneed'] ?>
+												<?php endif ?>
 											</li>
 										</ul>
 
@@ -55,7 +59,11 @@
 									<?php foreach ($HP as $key): ?>
 										<ul>
 											<li>
+												<?php if ($key['Tipe'] == "Perbaharui"): ?>
+												<?php echo $key['detail']." pada ".$key['isneed'] ?>
+												<?php else: ?>
 												<?php echo $key['isneed'] ?>
+												<?php endif ?>
 											</li>
 										</ul>
 									<?php endforeach ?>
@@ -74,7 +82,11 @@
 									<?php foreach ($KO as $key): ?>
 										<ul>
 											<li>
+												<?php if ($key['Tipe'] == "Perbaharui"): ?>
+												<?php echo $key['detail']." pada ".$key['isneed'] ?>
+												<?php else: ?>
 												<?php echo $key['isneed'] ?>
+												<?php endif ?>
 											</li>
 										</ul>
 									<?php endforeach ?>
@@ -83,7 +95,11 @@
 									<?php foreach ($SP as $key): ?>
 										<ul>
 											<li>
+												<?php if ($key['Tipe'] == "Perbaharui"): ?>
+												<?php echo $key['detail']." pada ".$key['isneed'] ?>
+												<?php else: ?>
 												<?php echo $key['isneed'] ?>
+												<?php endif ?>
 											</li>
 										</ul>
 									<?php endforeach ?>
@@ -110,7 +126,11 @@
 							<?php $kebutuhan_hardware = $this->User_model->getDataWhere('t_kebutuhan_hardware', 'id_isneed', $key->id_isneed);?>
 							<tr>
 								<td style="text-align:center;"><?php echo $counter ?></td>
-								<td><?php echo $key->isneed ?></td>
+								<td><?php if ($key->Tipe == "Perbaharui"): ?>
+												<?php echo $key->detail." pada ".$key->isneed ?>
+												<?php else: ?>
+												<?php echo $key->isneed ?>
+												<?php endif ?></td>
 								<td><?php echo $key->Tipe ?></td>
 								<td>
 								<?php foreach ($kebutuhan_hardware as $kebutuhan_hardware): ?>
@@ -141,7 +161,11 @@
 								<?php foreach ($hasil as $key): ?>	
 									<tr>
 										<td style="text-align:center;"><?php echo $counter ?></td>
-										<td><?php echo $key->isneed ?></td>
+										<td><?php if ($key->Tipe == "Perbaharui"): ?>
+												<?php echo $key->detail." pada ".$key->isneed ?>
+												<?php else: ?>
+												<?php echo $key->isneed ?>
+												<?php endif ?></td>
 										<td><?php echo $key->Tipe ?></td>
 										<td><?php echo $key->nilai_hasil ?></td>
 									</tr>

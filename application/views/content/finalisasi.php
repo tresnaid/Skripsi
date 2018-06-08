@@ -111,7 +111,11 @@ $datauser = $_SESSION['list'];
 					                          <?php endif ?>
 					                          
 					                          <?php if (!empty($data_isneed[$key]['isneed'])): ?>
-					                            <td ><?php echo $data_isneed[$key]['isneed']?></td>
+					                          	<?php if ($data_isneed[$key]['Tipe'] == "Perbaharui"): ?>
+					                              <td ><?php echo $data_isneed[$key]['detail']?> pada <?php echo $data_isneed[$key]['isneed']?></td>
+					                              <?php else: ?>
+					                              <td ><?php echo $data_isneed[$key]['isneed']?></td>
+					                              <?php endif ?>
 					                          <?php else: ?>
 					                            <td> </td>
 					                          <?php endif ?>
@@ -158,8 +162,11 @@ $datauser = $_SESSION['list'];
 					                        <td ><?php echo $value['action']?></td>
 
 					                        <?php if (!empty($data_isneed[$key]['isneed'])): ?>
-					                          <td ><?php echo $data_isneed[$key]['isneed']?></td>
-					                        <?php else: ?>
+					                        	<?php if ($data_isneed[$key]['Tipe'] == "Perbaharui"): ?>
+					                              <td ><?php echo $data_isneed[$key]['detail']?> pada <?php echo $data_isneed[$key]['isneed']?></td>
+					                              <?php else: ?>
+					                              <td ><?php echo $data_isneed[$key]['isneed']?></td>
+					                              <?php endif ?>					                        <?php else: ?>
 					                          <td> </td>
 
 					                        <?php endif ?>
@@ -209,7 +216,11 @@ $datauser = $_SESSION['list'];
 						                          <td> </td>
 						                        <?php endif ?>
 
-						                        <td ><?php echo $value['isneed']?></td>
+						                         <?php if ($data_isneed[$key]['Tipe'] == "Perbaharui"): ?>
+					                              <td ><?php echo $value['detail']?> pada <?php echo $value['isneed']?></td>
+					                              <?php else: ?>
+					                              <td ><?php echo $value['isneed']?></td>
+					                              <?php endif ?>
 						                        
 						                        <?php if ($counter == 1): ?>
 						                      <td rowspan="<?php echo $jumlah_max; ?>">

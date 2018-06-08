@@ -220,7 +220,7 @@ class Analisis extends CI_Controller {
 				$this->User_model->delete('t_isneed', 'id_isneed', $id_isneed[$key]);
 			}else{
 				$data_update = array(
-					'bagan' => $isneed_strategic,
+					'bagan' => $isneed_strategic[$key],
 					'detail' => $value,
 					'Tipe' => $isneed_desc[$key]
 				);

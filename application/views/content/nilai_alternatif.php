@@ -136,7 +136,11 @@
 														$selected[$x]=' checked';
 						                  				 ?>
 														  <tr >
+														  	<?php if (!empty($alternatif[$i][3])): ?>
 															<td align="right"><?php echo $alternatif[$i][3]." pada ".$alternatif[$i][1]."<br/>[".$alternatif[$i][2]."]" ?></td>
+															<?php else: ?>
+															<td align="right"><?php echo $alternatif[$i][1]."<br/>[".$alternatif[$i][2]."]" ?></td>
+														  	<?php endif ?>
 															<td align="center">
 																<label class="radioLabel">
 																	<input type="radio" name="nilai_<?php echo $alternatif[$i][0]?>_<?php echo $alternatif[$ii][0]?>" <?php echo $selected[1] ?> value="9">
@@ -252,8 +256,11 @@
 																	<span class="radioSpan">9</span>
 																</label>
 															</td>
-															
+															<?php if (!empty($alternatif[$ii][3])): ?>
 															<td><?php echo $alternatif[$ii][3]." pada ".$alternatif[$ii][1]."<br/>[".$alternatif[$ii][2]."]" ?></td>
+															<?php else: ?>
+															<td><?php echo $alternatif[$ii][1]."<br/>[".$alternatif[$ii][2]."]" ?></td>
+															<?php endif ?>
 														  </tr>
 														<?php 
 														$selected[$x]='';

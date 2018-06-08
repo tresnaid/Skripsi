@@ -52,7 +52,7 @@
             <span class="focus-input100"></span>
           </div>
           <button class="login100-form-btn" type="submit" style="border-radius: 0;">Login</button>
-          <a type="button" class="login100-form-btn" href="<?php echo base_url() ?>home/register">Register</a>
+          <!-- <a type="button" class="login100-form-btn" href="<?php echo base_url() ?>home/register">Register</a> -->
         </form>
       </div>
     </div>

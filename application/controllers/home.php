@@ -342,16 +342,20 @@ class Home extends CI_Controller {
 	{
 		$detail = $this->User_model->detailversion();
 
-		foreach ($detail as $row) {
-			$versi = $row->versi;
-			$tahun = $row->tahun;
-		}
-		
-		if ($tahun == date("Y")) {
-			$versi_sekarang = $versi +1;
+		if (!empty($detail)) {
+			foreach ($detail as $row) {
+				$versi = $row->versi;
+				$tahun = $row->tahun;
+			}
+			if ($tahun == date("Y")) {
+				$versi_sekarang = $versi +1;
+			}else{
+				$versi_sekarang = 1;
+			}
 		}else{
 			$versi_sekarang = 1;
 		}
+		
 		
 		$versi_baru = "ver".$versi_sekarang.".".date("Y");
 		$data_input = array(
