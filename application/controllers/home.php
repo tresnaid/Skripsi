@@ -320,10 +320,10 @@ class Home extends CI_Controller {
 				$this->User_model->updateData('t_user', 'id_user', $key->id_user, $data_update);
 			}
 			$this->session->set_flashdata('message', 'anda telah terdaftar, silakan login menggunakan username dan password yang telah anda daftarkan');
-			redirect('home','refresh');
+			redirect('home/dashboard_admin','refresh');
 		}else{
-			$this->session->set_flashdata('message', 'username telah tersedia');
-			redirect('home/register','refresh');
+			$this->session->set_flashdata('message', 'username telah digunakan sebelumnya');
+			redirect('home/dashboard_admin','refresh');
 		}
 	}
 
