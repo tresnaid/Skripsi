@@ -31,16 +31,21 @@
 		    	<h5>ROADMAP IMPLEMENTASI SISTEM INFORMASI</h5>
 				 	<div class="flex-parent">
 						<div class="input-flex-container">
+							<?php $number = 1; ?>
 							<?php foreach ($hasil as $row): ?>
+
 							<div class="input">
 								<?php if ($row->Tipe == "Perbaharui"): ?>
 									<span data-info="<?php echo $row->detail ?> pada <?php echo $row->isneed ?>"></span>
 									<span data-year="tambah fitur <?php echo $row->detail ?>"></span>
+									<div class="number" style="color: white"><?php echo $number ?></div>
 								<?php else: ?>
 									<span data-info="<?php echo $row->isneed ?>"></span>
 									<span data-year="<?php echo $row->Tipe ?>"></span>
+									<div class="number" style="color: white"><?php echo $number ?></div>
 								<?php endif ?>
 							</div>
+							<?php $number++; ?>
 								
 							<?php endforeach ?>
 						</div>
@@ -59,7 +64,15 @@
 								<?php
 								$counter = 1;
 								?>
-								<?php foreach ($hasil as $key): ?>	
+								<?php foreach ($hasil as $key): ?>
+								<?php 
+									$data_objective = $this->User_model->checkobjective($key->id_objective);
+									$data_measure = $this->User_model->getDataWhere('t_measure', 'id_objective', $key->id_objective);
+					                $data_action = $this->User_model->getDataWhere('t_action', 'id_objective', $key->id_objective);
+					                $data_isneed = $this->User_model->getDataWhere('t_isneed', 'id_objective', $key->id_objective);
+					                $data_nama = $this->User_model->checknama($key->id_user);
+					                $data_departemen = $this->User_model->checkdepartemen($key->id_user);
+								 ?>		
 									<div id="detail<?php echo $key->id_objective?>" class="modal fade" role="dialog" >
 				                      <div class="modal-dialog">
 				                        <div class="modal-content">
@@ -68,7 +81,24 @@
 				                            <label class="modal-title">Detail Analisis</label>
 				                          </div>
 				                          <div class="modal-body">
-				                            <label><?php echo $key->id_objective ?></label>
+				                            <h5>Objective: <?php echo $data_objective; ?></h5>
+					                            <h5>Measure:</h5>
+					                            <?php foreach ($data_measure as $row): ?>
+					                            	<?php echo $row['measure'] ?>
+					                            	<?php echo "<br/>" ?>
+					                            <?php endforeach ?>
+					                            <h5>Action(CSF):</h5>
+					                            <?php foreach ($data_action as $row): ?>
+					                            	<?php echo $row['action'] ?>
+					                            	<?php echo "<br/>" ?>
+					                            <?php endforeach ?>
+					                            <h5>Information System Need:</h5>
+					                            <?php foreach ($data_isneed as $row): ?>
+					                            	<?php echo $row['isneed'] ?>
+					                            	<?php echo "<br/>" ?>
+					                            <?php endforeach ?>
+					                            <h5>Pengusul:</h5>
+					                            <?php echo $data_nama." - departemen ".$data_departemen ?>
 				                          </div>
 				                          <form action="<?php echo base_url();?>analisis/deleteAnalisis" method="POST">
 				                            <div class="modal-footer">

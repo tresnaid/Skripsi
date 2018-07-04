@@ -365,6 +365,13 @@ class User_model extends CI_Model {
             $query = $this->db->get();
             return $query->row()->id_objective;
         }
+        public function checkobjective($id){
+            $this->db->select('objective');
+            $this->db->from('t_objective');
+            $this->db->where('id_objective', $id);
+            $query = $this->db->get();
+            return $query->row()->objective;
+        }
         public function delete($table, $where, $clause)
         {
            $this->db->where($where, $clause);
