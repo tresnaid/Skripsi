@@ -167,14 +167,42 @@
           </thead>
           <tbody>
             <?php foreach ($user as $key): ?>
-
+              <div id="nonaktif<?php echo $key->id_user?>" class="modal fade" role="dialog" >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <label class="modal-title">Nonaktifkan Akun Ini ?</label>
+                    </div>
+                    <div class="modal-body">
+                      <label>Apakah Anda Yakin Ingin Menonaktifkan Akun Ini ?</label>
+                      <br>
+                      <br>
+                      <label><?php echo $key->nama_user." departemen ".$key->departemen ?></label>
+                    </div>
+                    <form action="<?php echo base_url();?>home/nonaktif" method="POST">
+                      <input type="hidden" name="id" value="<?php echo $key->id_user ?>">
+                      <input type="hidden" name="version" value="<?php echo $_SESSION['version'] ?>">
+                      
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-cross"></i>Nonaktifkan</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-cross"></i>Close</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
               <tr>
                 <td><?php echo $key->nama_user ?></td>
                 <td><?php echo $key->departemen ?></td>
                 <td><?php echo $key->status ?></td>
                 <td><?php echo $key->kriteria ?></td>
                 <td><?php echo $key->alternatif ?></td>
-                <td><a href=""><i class="fa fa-trash"></i></a></td>
+                <?php if ($key->status == 1): ?>
+                 <td> <a href="" data-toggle="modal" data-target="#nonaktif<?php echo $key->id_user?>">NONAKTIFKAN</a></td>
+                <?php else: ?>
+                  <td><label>untuk aktivasi akun bisa dengan login seperti biasa</label></td>
+                <?php endif ?>
               </tr>
             <?php endforeach ?>
           </tbody>

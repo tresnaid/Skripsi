@@ -28,7 +28,8 @@
 <script type="text/javascript">
     $(function(){
         $("#isneed_add_input").click(function(event){
-            var isneedadd = "<select name='isneedadd[]' required><option value=''>Pilih Kebutuhan Sistem Informasi</option><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
+          var isneedadd = "<select name='isneedadd[]' required><option value=''>Pilih Kebutuhan Sistem Informasi</option><?php foreach ($jenis_software as $key): ?><optgroup label='<?php echo $key->deskripsi ?>'><?php $pilihan = $this->User_model->getDataWhere('t_portofolio', 'kolom', $key->nama); ?><?php foreach ($pilihan as $row): ?><option value='<?php echo $row['nama'] ?>'><?php echo $row['nama'] ?></option><?php endforeach ?></optgroup><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>"
+            // var isneedadd = "<select name='isneedadd[]' required><option value=''>Pilih Kebutuhan Sistem Informasi</option><optgroup label='Key Operational'><?php foreach ($key_operational as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Strategic'><?php foreach ($strategic as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='High Potential'><?php foreach ($high_potential as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Support'><?php foreach ($support as $key): ?><option value='<?php echo $key['nama'] ?>'><?php echo $key['nama'] ?></option><?php endforeach ?></optgroup><optgroup label='Lainnya'><option value='lainnya'>Lainnya</option></optgroup></select>";
             var isneedadd_desc = "<select name='isneedadd_desc[]'><option value='Buat Baru'>Buat Baru</option><option value='Perbaharui'>Perbaharui</option><option value='Beli'>Beli</option></select>";
             var isneedadd_detail = "<textarea placeholder='detail' id='isneed_detail' name='isneedadd_detail[]' style='width: 70%; '></textarea>";
             var isneedadd_strategic = "<select name='isneedadd_strategic[]' required=''><option value=''>Pilih Termasuk ke Dalam Strategic Seperti Apa Sistem Informasi Yang Akan Dibangun</option><option value='KO'>Key Operational</option><option value='ST'>Strategic</option><option value='HP'>High Potential</option><option value='SP'>Support</option></select>";
@@ -203,7 +204,16 @@
                 <option value="">
                   Pilih Kebutuhan Sistem Informasi
                 </option>
-                <optgroup label="Key Operational">
+                <?php foreach ($jenis_software as $key): ?>
+                  <optgroup label='<?php echo $key->deskripsi ?>'>
+                    <?php $pilihan = $this->User_model->getDataWhere('t_portofolio', 'kolom', $key->nama); ?>
+                    <?php foreach ($pilihan as $row): ?>
+                      <option value='<?php echo $row['nama'] ?>'><?php echo $row['nama'] ?></option>
+                      <?php endforeach ?>
+                    </optgroup>
+                    <?php endforeach ?>
+                  <!-- </optgroup> -->
+                <!-- <optgroup label="Key Operational">
                   <?php foreach ($key_operational as $key): ?>
                     <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
                   <?php endforeach ?>
@@ -222,7 +232,7 @@
                   <?php foreach ($support as $key): ?>
                     <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
                   <?php endforeach ?>
-                </optgroup>
+                </optgroup> -->
                 <optgroup label="Lainnya">
                   <option value="lainnya">Lainnya</option>
                 </optgroup>
@@ -293,7 +303,7 @@
                 activesub
               <?php endif ?>
              ">
-              <a href="<?php echo base_url(); ?>home/analisis/4">Inovation and Growth</a>
+              <a href="<?php echo base_url(); ?>home/analisis/4">Learning and Growth</a>
             </li>
           </ul>
         </div>
@@ -469,27 +479,16 @@
                               <?php for ($i=1; $i < 6; $i++) : ?>
                               <div id="<?php echo $i ?>isneedbaru<?php echo $row['id_objective']?>" style="display: none">
                                 <select name="moreisneed[]">
+
                                   <option value="">Pilih Kebutuhan Sistem Informasi</option>
-                                  <optgroup label="Key Operational">
-                                    <?php foreach ($key_operational as $key): ?>
-                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
-                                    <?php endforeach ?>
-                                  </optgroup>
-                                  <optgroup label="Strategic">
-                                    <?php foreach ($strategic as $key): ?>
-                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
-                                    <?php endforeach ?>
-                                  </optgroup>
-                                  <optgroup label="High Potential">
-                                    <?php foreach ($high_potential as $key): ?>
-                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
-                                    <?php endforeach ?>
-                                  </optgroup>
-                                  <optgroup label="Support">
-                                    <?php foreach ($support as $key): ?>
-                                      <option value="<?php echo $key['nama'] ?>"><?php echo $key['nama'] ?></option>
-                                    <?php endforeach ?>
-                                  </optgroup>
+                                  <?php foreach ($jenis_software as $key): ?>
+                                    <optgroup label='<?php echo $key->deskripsi ?>'>
+                                      <?php $pilihan = $this->User_model->getDataWhere('t_portofolio', 'kolom', $key->nama); ?>
+                                      <?php foreach ($pilihan as $qw): ?>
+                                        <option value='<?php echo $qw['nama'] ?>'><?php echo $qw['nama'] ?></option>
+                                        <?php endforeach ?>
+                                      </optgroup>
+                                      <?php endforeach ?>
                                   <optgroup label="Lainnya">
                                     <option value="lainnya">Lainnya</option>
                                   </optgroup>

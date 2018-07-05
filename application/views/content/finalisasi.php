@@ -45,7 +45,7 @@ $datauser = $_SESSION['list'];
 			            activesub
 			          <?php endif ?>
 			         ">
-				        <a href="<?php echo base_url(); ?>home/finalisasi/4">Inovation and Growth</a>
+				        <a href="<?php echo base_url(); ?>home/finalisasi/4">Learning and Growth</a>
 				    </li>
 		      	</ul>
 		    </div>

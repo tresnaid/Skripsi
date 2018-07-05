@@ -18,6 +18,10 @@
     display:block;
 }
 </style>
+<?php if ($status_kriteria == 0): ?>
+	<?php redirect('home/nilaikriteria','refresh'); ?>
+<?php endif ?>
+
 <div id="navigation" class="collapse navbar-collapse">
 	<ul class="nav navbar-nav navbar-right">
 	 	<?php foreach ($informasi_kriteria as $key ): ?>

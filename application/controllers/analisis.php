@@ -127,6 +127,9 @@ class Analisis extends CI_Controller {
 			}
 		
 		}
+		$data_status = array('kriteria' => 0, 'alternatif' => 0);
+		$this->User_model->updateData('t_user', 'status', 1, $data_status);
+
 		if ($kategori == 'FNC') {
 			redirect('home/analisis/1','refresh');
 		}else if ($kategori == 'CST') {

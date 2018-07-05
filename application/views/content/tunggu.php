@@ -20,6 +20,12 @@
 		border-left: none;
 	}
 </style>
+<?php if ($status_kriteria == 0): ?>
+	<?php redirect('home/nilaikriteria','refresh'); ?>
+<?php else: ?>
+	<?php if ($status_alternatif == 0): ?>
+		<?php redirect('home/nilaialternatif/1','refresh'); ?>
+	<?php endif ?>
 
 <section id="rekomendasi" class="section-gray">
   	<div class="container clearfix">
@@ -360,3 +366,4 @@
 		</div>
 	</div>
 </section>
+<?php endif ?>

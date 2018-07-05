@@ -372,6 +372,22 @@ class User_model extends CI_Model {
             $query = $this->db->get();
             return $query->row()->objective;
         }
+        public function checkstatuskriteria($id)
+        {
+            $this->db->select('kriteria');
+            $this->db->from('t_user');
+            $this->db->where('id_user', $id);
+            $query = $this->db->get();
+            return $query->row()->kriteria;
+        }
+        public function checkstatusalternatif($id)
+        {
+            $this->db->select('alternatif');
+            $this->db->from('t_user');
+            $this->db->where('id_user', $id);
+            $query = $this->db->get();
+            return $query->row()->alternatif;
+        }
         public function delete($table, $where, $clause)
         {
            $this->db->where($where, $clause);

@@ -15,6 +15,12 @@
 <!-- <form action="<?php echo base_url() ?>home/download" method="post">
 	<button class="button" type="submit">Download</button>
 </form> -->
+<?php if ($status_kriteria == 0): ?>
+	<?php redirect('home/nilaikriteria','refresh'); ?>
+<?php else: ?>
+	<?php if ($status_alternatif == 0): ?>
+		<?php redirect('home/nilaialternatif/1','refresh'); ?>
+	<?php endif ?>
 <div class="container clearfix">
 		<div class="row services">
 		  	<div class="col-md-12">
@@ -234,3 +240,4 @@
 			</div>
 		</div>
 	</div>
+	<?php endif ?>

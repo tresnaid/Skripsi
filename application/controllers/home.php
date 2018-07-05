@@ -96,6 +96,7 @@ class Home extends CI_Controller {
       	foreach ($datauser as $row) {
 	        $id = $row['id_user'];     
       	}
+      	$data['status_kriteria'] = $this->User_model->checkstatuskriteria($id);
       	$version = $_SESSION['version'];
       	$data['menu'] = 'content/menu';
       	$data['informasi_kriteria'] = $this->User_model->getData('t_kriteria');
@@ -118,6 +119,7 @@ class Home extends CI_Controller {
 	public function tunggu()
 	{
 		$version = $_SESSION['version'];
+		
 		$data['content'] = "content/tunggu.php";
 		$data['page'] = 'roadmap';
 		$user = $this->User_model->getDatakumulatif2('t_user', 'status', 1);
@@ -129,6 +131,7 @@ class Home extends CI_Controller {
 				$total++;
 			}
     	}
+
     	$data['status_hardware'] = $this->User_model->checkstatus('hardware', 'version', $version);
 		$data['jenis_hardware'] = $this->User_model->getData('t_jenis_hardware');
     	$data['teknologi_informasi'] = $this->User_model->getData('t_pilihan_hardware');
@@ -139,6 +142,8 @@ class Home extends CI_Controller {
 	        $id = $row['id_user'];
 	        $departement = $row['departemen'];
       	}
+      	$data['status_kriteria'] = $this->User_model->checkstatuskriteria($id);
+      	$data['status_alternatif'] = $this->User_model->checkstatusalternatif($id);
       	$data['departement'] = $departement;
       	$data['perbandingan_kriteria'] = $this->User_model->hasil_fuzzy_perkriteria2('t_fuzzy_nilai_hasil', 't_kriteria', 't_fuzzy_nilai_hasil.id_kriteria = t_kriteria.id_kriteria', 't_fuzzy_nilai_hasil.tipe', 'KRITERIA', 't_fuzzy_nilai_hasil.id_user', $id, 't_fuzzy_nilai_hasil.version', $version);
       	$data['perbandingan_finance'] = $this->User_model->hasil_fuzzy_perkriteria2('t_fuzzy_nilai_hasil', 't_isneed', 't_fuzzy_nilai_hasil.id_kriteria = t_isneed.id_isneed', 't_fuzzy_nilai_hasil.tipe', 'FNC', 't_fuzzy_nilai_hasil.id_user', $id, 't_fuzzy_nilai_hasil.version', $version);
@@ -161,6 +166,9 @@ class Home extends CI_Controller {
       	foreach ($datauser as $row) {
 	        $id_user = $row['id_user']; 
       	}
+      	$data['status_kriteria'] = $this->User_model->checkstatuskriteria($id_user);
+      	$data['status_alternatif'] = $this->User_model->checkstatusalternatif($id_user);
+
 		foreach ($user as $key) {
 			$id = $key->id_user;
 			$data_hasil[$id] = $this->User_model->getDataSubkriteria2('t_fuzzy_perbandingan_semua', 'id_user', $id, 'version', $version);
@@ -201,6 +209,7 @@ class Home extends CI_Controller {
 	        
       	}
       	$version = $_SESSION['version'];
+		$data['jenis_software'] = $this->User_model->getData('t_jenis_software');
       	$data['data_version'] = $this->User_model->getDataWhere('t_version', 'status', 0);
       	$data['key_operational'] = $this->User_model->getDataWhere('t_portofolio', 'kolom2', 1);
       	$data['strategic'] = $this->User_model->getDataWhere('t_portofolio', 'kolom2', 2);
@@ -245,6 +254,8 @@ class Home extends CI_Controller {
 					'version' => $version,
 					'list' => $this->User_model->getDataWhere('t_user','username',$username)
 				);
+				$data_update = array('status' => 1);
+				$this->User_model->updateData('t_user', 'username', $username, $data_update);
 				$this->session->set_userdata($data);
 				// redirect('home/dashboard');
 				redirect('home/analisis/1','refresh');
@@ -299,9 +310,10 @@ class Home extends CI_Controller {
 							  `kode` int(11) NOT NULL,
 							  `nilaimin` double(11,4) NOT NULL,
 							  `nilai` double(11,4) NOT NULL,
-							  `nilaimax` double(11,4) NOT NULL
+							  `nilaimax` double(11,4) NOT NULL,
+							  `version` varchar(255) NOT NULL
 							)");
-			$this->db->query("CREATE TABLE `t_nilai_alternatif_".$id."` (
+			$this->db->query("CREATE TABLE `t_nilai_alternatif_".$id."`(
 							  `id_nilai_alternatif` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 							  `id_kriteria` int(11) NOT NULL,
 							  `id_alternatif_1` int(11) NOT NULL,
@@ -309,7 +321,8 @@ class Home extends CI_Controller {
 							  `kode` int(11) NOT NULL,
 							  `nilaimin` double(11,4) NOT NULL,
 							  `nilai` double(11,4) NOT NULL,
-							  `nilaimax` double(11,4) NOT NULL
+							  `nilaimax` double(11,4) NOT NULL,
+							  `version` varchar(255) NOT NULL
 							)");
 
 			$user = $this->User_model->getData('t_user');
@@ -373,6 +386,8 @@ class Home extends CI_Controller {
 		$this->User_model->insertData('t_version', $data_input);
 		$data_input_status = array('nama' => 'hardware', 'version' => $versi_baru, 'status' => 0);
 		$this->User_model->insertData('t_status', $data_input_status);
+		$data_update_user = array('kriteria' => 0, 'alternatif' => 0);
+		$this->User_model->updateData('t_user', 'status', 1, $data_update_user);
 		redirect('home/dashboard_admin','refresh');
 	}
 	public function delete_version()
@@ -416,5 +431,18 @@ class Home extends CI_Controller {
 		$data['page'] = 'past_analysis';
 		$data['data_version'] = $this->User_model->getDataVersi();
 		$this->load->view('dashboard.php', $data);
+	}
+	public function nonaktif()
+	{
+		$id_user = $this->input->post('id');
+		$version = $this->input->post('version');
+		$data_update = array('status' => 0, 'kriteria' => 0, 'alternatif' => 0);
+		$this->User_model->updateData('t_user', 'id_user', $id_user, $data_update);
+		$this->User_model->delete2('t_isneed', 'id_user', $id_user, 'version', $version);
+		$this->User_model->delete2('t_objective', 'id_user', $id_user, 'version', $version);
+		$this->User_model->delete2('t_action', 'id_user', $id_user, 'version', $version);
+		$this->User_model->delete2('t_measure', 'id_user', $id_user, 'version', $version);
+		$this->User_model->delete2('t_approval', 'id_user', $id_user, 'version', $version);
+		redirect('home/dashboard_admin','refresh');
 	}
 }
